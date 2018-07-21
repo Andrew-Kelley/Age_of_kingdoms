@@ -16,10 +16,22 @@
  - iron
 
 #### Sources of food
-Hunting, berry bushes, farms (possibly supplemented with cows and/or chickens)
+Hunting, fruit trees, berry bushes,
+farms (possibly supplemented with cows and/or chickens)
 
 ### Civilizations
  I think for now, there will only be one civilization.
+
+### Units
+    - villager
+    - pikeman
+    - swordsman
+    - archer
+    - knight
+    - battering ram
+    - catapult
+    - trebuchet
+    - merchant
 
 ### Buildings
  - town center
@@ -43,13 +55,6 @@ For defense:
  - blacksmith
  - Library
  - market
-
-## Units
-   - villager
-   - pikeman
-   - swordsman
-   - archer
-   - knight
 
 #### Town center
 (Iron Age) Every player begins with a town center.
@@ -141,4 +146,12 @@ type)?
 Cost: 200 wood, 100 gold
 Can research:
  * Physics (necessary to build trebuchet)
+ * Printing press [But what on earth would this do?]
  * [Fill in more things]
+
+
+#### Market 
+(Bronze Age)
+Cost: 150 wood, 20 gold
+Have the ability trade one resource for another.
+Can build: merchant (which travels between markets for trade)
