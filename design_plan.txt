@@ -44,6 +44,7 @@ farms (possibly supplemented with cows and/or chickens)
 For defense:
  - wood wall (with gates)
  - stone wall (with gates)
+ - wall fortification
  - towers
  - castles
  Military unit producing/training:
@@ -61,6 +62,9 @@ For defense:
 Cost: 300 wood, 200 stone
 Hit points:
 Can build: villagers (50 food)
+  * 2 per turn during Stone Age
+  * 4 per turn during Bronze Age
+  * 6 per turn during Iron Age
 Can research: the next age
 Can garrison: 50 units
 Defensible: True (i.e. units garrisoned shoot arrows at attackers)
@@ -98,6 +102,15 @@ Cost: 5 (or 10?) wood per unit length
 #### Stone wall
 (Bronze Age)
 Cost: 5 (or 10?) stone per unit length
+Can garrison: False (without wall fortification)
+
+#### Wall fortification
+(Bronze Age) Can only be built on stone walls
+Cost: 30 wood, 50 stone
+Can garrison: 8 units
+Defensible: True
+Wall fortifications cannot be built right next to each other. They must be
+spaced out somewhat. 
 
 #### Tower
 (Bronze Age)
@@ -108,7 +121,7 @@ Defensible: True
 #### Castle
 (Iron Age)
 Cost: 500 stone, 200 wood, 100 iron
-Can garrison: 75 units
+Can garrison: 100 units
 Defensible: True
 
 #### Barracks
@@ -150,7 +163,7 @@ Can research:
  * [Fill in more things]
 
 
-#### Market 
+#### Market
 (Bronze Age)
 Cost: 150 wood, 20 gold
 Have the ability trade one resource for another.
