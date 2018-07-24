@@ -179,9 +179,16 @@ each ls in map has len(ls) == n.
 
 Unless the map is very small, only a part of the map can be printed at once.
 
-My plan is that only one unit or building can occupy a given space in the map at
-the same time. Also, I think several/many buildings should take up more than one
-space of the map.
+IMPORTANT SIMPLIFICATION:
+Ideally, only one unit or building can occupy a given space in the map at
+the same time, but it would greatly simplify pathfinding if units can walk
+through everything except walls. So in the first playable version of this game,
+units can walk through all buildings except walls, and multiple units can occupy
+the same space at the same time.
+
+Most buildings should take up more than one space of the map. Buildings cannot
+overlap, with the exception of wall fortifications, which must be built on top
+of stone walls.
 
 Here are the letters I'll use to represent the different objects:
 Resources and units will be lower case letters. Buildings will be upper case
@@ -196,6 +203,8 @@ Resources
  - i: iron:
 
 Units
+For a possible later version of the game, when only one unit can occupy a space
+and also cannot occupy a space a building is in...
   - v: villager
   - p: pikeman
   - s: swordsman (Conflicts with stone. Oh well.)
