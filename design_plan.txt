@@ -190,7 +190,7 @@ letters (except for walls).
 Resources
  - f: food:
  - w: wood:
- - s: stone:
+ - s: stone: (Conflicts with swordsman.)
  - g: gold:
  - b: bronze:
  - i: iron:
@@ -198,18 +198,18 @@ Resources
 Units
   - v: villager
   - p: pikeman
-  - s: swordsman (This conflicts with stone. Oh well.)
+  - s: swordsman (Conflicts with stone. Oh well.)
   - a: archer
   - k: knight
-  - r: battering ram
+  - r: battering ram (To not conflict with bronze.)
   - c: catapult
   - t: trebuchet
   - m: merchant
 (Should I also list deer as d, elk as e?)
 
-Buildings (with the space they take up. The default is 2 x 2)
-  - C: town center: 4x4 (The C is because T is for tower.)
-  - H: house
+Buildings (with the space they take up: the default is 2 x 2)
+  - T: town center: 4x4 (conflicts with tower, but the size difference
+  - H: house                                   makes them distinguishable)
 
   - F: farm
   - L: lumber camp
@@ -230,7 +230,7 @@ Buildings (with the space they take up. The default is 2 x 2)
   - W: siege works (not to conflict with stable): 3 x 3
 
   - B: blacksmith
-  - L: Library (or U if I change to university): 3 x 3
+  - L: Library (Conflicts with lumber camp: U if I change to university): 3 x 3
   - K: market (not to conflict with mining camp) 3 x 3
 
 Spots with nothing in them will be represented by a blank: ' '
