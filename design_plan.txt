@@ -23,15 +23,15 @@ farms (possibly supplemented with cows and/or chickens)
  I think for now, there will only be one civilization.
 
 ### Units
-    - villager
-    - pikeman
-    - swordsman
-    - archer
-    - knight
-    - battering ram
-    - catapult
-    - trebuchet
-    - merchant
+ - villager
+ - pikeman
+ - swordsman
+ - archer
+ - knight
+ - battering ram
+ - catapult
+ - trebuchet
+ - merchant
 
 ### Buildings
  - town center
@@ -110,7 +110,7 @@ Cost: 30 wood, 50 stone
 Can garrison: 8 units
 Defensible: True
 Wall fortifications cannot be built right next to each other. They must be
-spaced out somewhat. 
+spaced out somewhat.
 
 #### Tower
 (Bronze Age)
@@ -168,3 +168,77 @@ Can research:
 Cost: 150 wood, 20 gold
 Have the ability trade one resource for another.
 Can build: merchant (which travels between markets for trade)
+
+--------------------------------------------------------------------------------
+## The map
+I think the map will just be an n x n square grid. (There should be options
+of what to choose for n: say from 100 to 1000. This could be done by choosing a
+number from 1 to 10 and then just multiplying that by 100.) I plan on
+representing a map as a Python list of lists called map. So len(map) == n and
+each ls in map has len(ls) == n.
+
+Unless the map is very small, only a part of the map can be printed at once.
+
+My plan is that only one unit or building can occupy a given space in the map at
+the same time. Also, I think several/many buildings should take up more than one
+space of the map.
+
+Here are the letters I'll use to represent the different objects:
+Resources and units will be lower case letters. Buildings will be upper case
+letters (except for walls).
+
+Resources
+ - f: food:
+ - w: wood:
+ - s: stone:
+ - g: gold:
+ - b: bronze:
+ - i: iron:
+
+Units
+  - v: villager
+  - p: pikeman
+  - s: swordsman (This conflicts with stone. Oh well.)
+  - a: archer
+  - k: knight
+  - r: battering ram
+  - c: catapult
+  - t: trebuchet
+  - m: merchant
+(Should I also list deer as d, elk as e?)
+
+Buildings (with the space they take up. The default is 2 x 2)
+  - C: town center: 4x4 (The C is because T is for tower.)
+  - H: house
+
+  - F: farm
+  - L: lumber camp
+  - Q: stone quarry (not to conflict with stable and siege words)
+  - M: mining camp (market)
+
+  - . (i.e. a period) wood wall: 1 x 1
+  - G: wood wall gates: 1 x 4
+  - * (an asterisk) stone wall 1 x 1
+  - G: stone wall gates: 1 x 4
+  - F: wall fortification (conflicts with farm) 1 x 3
+  - T: tower
+  - C: castle: 5 x 5
+
+  - R: barracks: 3 x 3 (not to conflict with blacksmith)
+  - A: archery range: 3 x 5
+  - S: stable: 3 x 3
+  - W: siege works (not to conflict with stable): 3 x 3
+
+  - B: blacksmith
+  - L: Library (or U if I change to university): 3 x 3
+  - K: market (not to conflict with mining camp) 3 x 3
+
+Spots with nothing in them will be represented by a blank: ' '
+Should each player have their own viewable map? If so, then spots not yet
+examined should be a question mark. Whether or not players have their own
+viewable map, there should be a master map.
+
+I think distances should be calculated using the taxicab metric. i.e.
+distance(map[i1][j1], map[i2][j2]) == abs(i2 - i1) + abs(j2 - j1)
+A consequence of this is that the farthest point from the south-east corner of
+the map is the north-west corner of the map.
