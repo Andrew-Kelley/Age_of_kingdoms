@@ -1,0 +1,32 @@
+Here is where everything is found in this directory:
+
+bldng_class.py
+    -The base class called Building
+
+ other_bldngs.py:
+  -TownCenter
+  -House
+  -Blacksmith
+  -Library
+  -Market
+
+resource_bldngs.py:
+  -Farm
+  -LumberCamp
+  -StoneQuarry
+  -MiningCamp
+
+defense_bldngs.py:
+  -WoodWall
+  -WoodGate
+  -StoneWall
+  -StoneGate
+  -WallFortification
+  -Tower
+  -Castle
+
+military_bldngs.py:
+  -Barracks
+  -ArcheryRange
+  -Stable
+  -SiegeWorks
