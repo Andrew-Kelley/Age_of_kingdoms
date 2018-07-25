@@ -267,20 +267,28 @@ the map is the north-west corner of the map.
 --------------------------------------------------------------------------------
 Stages of development:
 
-What is the simplest version of this game?
+What is the simplest prototype of this game?
  - have some playable map (at least partially fill a small map)
  - enable villagers to be built
  - enable villagers to move
  - enable villagers to collect wood
 
-Next version:
- - enable villagers to build a house
+Next stage:
+ - be able to print a specified part of the map (The default part of the map
+ is a portion surrounding the town center.)
+ - have more of the map discovered as villagers move around
 
-Next version:
+Next stage:
+ - build a house
+  (Only make rudimentary options for building relative to the town center, but
+  write it in such a way as to later be able to build relative to other building
+  locations.)
+
+Next stage:
  - build a barracks
  - build a pikeman from a barracks
 
-Next version:
+Next stage:
  - enable villagers to gather food from fruit trees or berry bushes
  - research the bronze age
- - after researching bronze age, train swordsmen 
+ - after researching bronze age, train swordsmen
