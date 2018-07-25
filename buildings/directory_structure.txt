@@ -3,7 +3,7 @@ Here is where everything is found in this directory:
 bldng_class.py
     -The base class called Building
 
- other_bldngs.py:
+other_bldngs.py:
   -TownCenter
   -House
   -Blacksmith
