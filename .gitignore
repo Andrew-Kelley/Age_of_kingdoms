@@ -1,3 +1,4 @@
 # Because I'm using PyCharm:
 venv/
 *.idea
+__pycache__
