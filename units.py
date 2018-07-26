@@ -12,28 +12,28 @@ class Unit:
 
 
 class Villager(Unit):
-    pass
+    kind = 'villagers'
 
 class Pikeman(Unit):
-    pass
+    kind = 'pikemen'
 
 class Swordsman(Unit):
-    pass
+    kind = 'swordsmen'
 
 class Archer(Unit):
-    pass
+    kind = 'archers'
 
 class Knight(Unit):
-    pass
+    kind = 'knights'
 
 class BatteringRam(Unit):
-    pass
+    kind = 'batteringrams'
 
 class Catapult(Unit):
-    pass
+    kind = 'catapults'
 
 class Trebuchet(Unit):
-    pass
+    kind = 'trebuchets'
 
 class Merchant(Unit):
-    pass
+    kind = 'merchants'

@@ -11,24 +11,29 @@ class TownCenter(Building):
     population_support = 20
     garrison_capacity = 50
     defensible = True
+    kind = 'towncenters'
 
 
 class House(Building):
     size = (2, 2)
     letter_abbreviation = 'H'
+    kind = 'houses'
 
 class Blacksmith(Building):
     size = (3, 3)
     letter_abbreviation = 'X'
+    kind = 'blacksmiths'
 
 class Library(Building):
     size = (3, 3)
     letter_abbreviation = 'L'
+    kind = 'libraries'
 
 # Maybe implement this building last
 class Market(Building):
     size = (3, 3)
     letter_abbreviation = 'M'
+    kind = 'markets'
 
 if __name__ == '__main__':
     t = TownCenter(1)

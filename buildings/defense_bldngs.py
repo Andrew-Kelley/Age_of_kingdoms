@@ -38,7 +38,9 @@ class WallFortificationNorthSouth(WallFortification):
 class Tower(Building):
     size = (2, 2)
     letter_abbreviation = 'T'
+    kind = 'towers'
 
 class Castle(Building):
     size = (5, 5)
     letter_abbreviation = 'C'
+    kind = 'castles'
