@@ -1,13 +1,17 @@
 from buildings.bldng_class import Building
 
 class Farm(Building):
-    pass
+    size = (2, 2)
+    letter_abbreviation = 'F'
 
 class LumberCamp(Building):
-    pass
+    size = (2, 2)
+    letter_abbreviation = 'L'
 
 class StoneQuarry(Building):
-    pass
+    size = (2, 2)
+    letter_abbreviation = 'Q'
 
 class MiningCamp(Building):
-    pass
+    size = (2, 2)
+    letter_abbreviation = 'M'

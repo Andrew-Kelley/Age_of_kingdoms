@@ -3,13 +3,18 @@
 from buildings.bldng_class import Building
 
 class Barracks(Building):
-    pass
+    size = (3, 3)
+    letter_abbreviation = 'B'
+
 
 class ArcheryRange(Building):
-    pass
+    size = (5, 3)
+    letter_abbreviation = 'A'
 
 class Stable(Building):
-    pass
+    size = (3, 3)
+    letter_abbreviation = 'S'
 
 class SiegeWorks(Building):
-    pass
+    size = (3, 3)
+    letter_abbreviation = 'W'

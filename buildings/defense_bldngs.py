@@ -1,22 +1,44 @@
 from buildings.bldng_class import Building
 
 class WoodWall(Building):
-    pass
+    size = (1, 1)
+    letter_abbreviation = '.'
 
 class WoodGate(Building):
-    pass
+    letter_abbreviation = 'G'
+
+class WoodGateEastWest(WoodGate):
+    size = (1, 4)
+
+class WoodGateNorthSouth(WoodGate):
+    size = (4, 1)
 
 class StoneWall(Building):
-    pass
+    size = (1, 1)
+    letter_abbreviation = '*'
 
 class StoneGate(Building):
-    pass
+    letter_abbreviation = 'G'
+
+class StoneGateEastWest(StoneGate):
+    size = (1, 4)
+
+class StoneGateNorthSouth(StoneGate):
+    size = (4, 1)
 
 class WallFortification(Building):
-    pass
+    letter_abbreviation = 'F'
+
+class WallFortificationEastWest(WallFortification):
+    size = (1, 3)
+
+class WallFortificationNorthSouth(WallFortification):
+    size = (3, 1)
 
 class Tower(Building):
-    pass
+    size = (2, 2)
+    letter_abbreviation = 'T'
 
 class Castle(Building):
-    pass
+    size = (5, 5)
+    letter_abbreviation = 'C'
