@@ -13,7 +13,7 @@ class Building:
         self.position = position
 
     def can_build(self, position, game_map):
-        i_init, j_init = position
+        i_init, j_init = position.value
         height, length = self.size
         # First check if the building will be placed within the boundaries of the  map:
         if i_init - (height - 1) < 0:
@@ -42,7 +42,7 @@ class Building:
         return True
 
     def build(self, player, position, game_map):
-        i_init, j_init = position
+        i_init, j_init = position.value
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
         for i in range(i_init, i_final, -1):
