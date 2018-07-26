@@ -233,19 +233,19 @@ Buildings (with the space they take up:)
   - M: mining camp (market) 2 x 2
 
   - . (i.e. a period) wood wall: 1 x 1
-  - G: wood wall gates: 1 x 4
+  - G: wood wall gates: 1 x 4 or 4 x 1
   - * (an asterisk) stone wall 1 x 1
-  - G: stone wall gates: 1 x 4
-  - F: wall fortification (conflicts with farm) 1 x 3
+  - G: stone wall gates: 1 x 4 or 4 x 1
+  - F: wall fortification (conflicts with farm) 1 x 3 or 3 x 1
   - T: tower: 2 x 2
   - C: castle: 5 x 5
 
-  - R: barracks: 3 x 3 (not to conflict with blacksmith)
-  - A: archery range: 3 x 5
+  - B: barracks: 3 x 3
+  - A: archery range: 5 x 3
   - S: stable: 3 x 3
   - W: siege works (not to conflict with stable): 3 x 3
 
-  - B: blacksmith: 3 x 3
+  - X: blacksmith: 3 x 3 (To not conflict with barracks)
   - L: Library (Conflicts with lumber camp: U if I change to university): 3 x 3
   - K: market (not to conflict with mining camp) 3 x 3
 
