@@ -4,17 +4,24 @@ class Position:
         self.value = (i, j)
 
     def __add__(self, other):
+        """Intended use: self is a Position and other is a Vector."""
         i = self.value[0] + other.value[0]
         j = self.value[1] + other.value[1]
         return Position(i, j)
 
     def __sub__(self, other):
+        """Intended use: self is a Position and other is a Position."""
         i = self.value[0] - other.value[0]
         j = self.value[1] - other.value[1]
-        return Position(i, j)
+        return Vector(i, j)
 
     def __repr__(self):
         return str(self.value)
+
+class Vector(Position):
+    @property
+    def magnitude(self):
+        return abs(self.value[0]) + abs(self.value[1])
 
 # Eventually, I should create a function that makes a random map
 game_map  = [[' '] * 100 for i in range(100)]
@@ -35,5 +42,6 @@ def print_map(some_map):
 
 if __name__ == '__main__':
     pos1 = Position(5, 6)
-    pos2 = Position(2, -1)
-    print(pos1 - pos2)
+    vec1 = Vector(2, -1)
+    print(pos1 - vec1)
+    print(vec1.magnitude)

@@ -11,8 +11,10 @@ class Unit:
         self.position = position
 
     def can_move(self, delta, game_map):
-        """Returns bool. Right now, every unit can move the same distance, but that may change."""
-        if abs(delta.value[0]) + abs(delta.value[1]) > 15:
+        """Returns bool. Right now, every unit can move the same distance, but that may change.
+
+        delta must be of type Vector"""
+        if delta.magnitude > 15:
             # Then delta is too big
             return False
         # Next, check if the proposed movement moves the unit outside the map
@@ -25,7 +27,7 @@ class Unit:
         #TODO eventually: add a check to keep the unit from moving across enemy walls
         return True
 
-    def move(self, delta):
+    def move_by(self, delta):
         """delta must of of type Position"""
         self.position += delta
 
@@ -70,33 +72,33 @@ class Merchant(Unit):
 
 
 if __name__ == '__main__':
-    from game_map import Position, game_map
+    from game_map import Position, Vector, game_map
     v1 = Villager(1, Position(50, 50))
     print(v1.number, v1.position)
-    v1.move(Position(5,8))
+    v1.move_by(Vector(5, 8))
     print(v1.number, v1.position)
 
     v2 = Villager(2, Position(5, 5))
     for tpl in ((-5, -5), (7, 8), (-4, 11), (3, 6)):
-        delta = Position(*tpl)
+        delta = Vector(*tpl)
         assert v2.can_move(delta, game_map)
     print(v2.position)
 
     for tpl in ((-6, -5), (-5, -6), (10, 6), (-2, 20)):
-        delta = Position(*tpl)
+        delta = Vector(*tpl)
         assert not v2.can_move(delta, game_map)
 
     v3 = Villager(3, Position(80, 80))
-    v3.move(Position(10,5))
+    v3.move_by(Vector(10, 5))
     # print('Now, v3 is at position ', v3.position)
-    v3.move(Position(5, 10))
+    v3.move_by(Vector(5, 10))
     assert v3.position.value == (95, 95)
 
     for tpl in ((4, 4), (4, -10), (2, 3), (4, 0), (0, 4)):
-        delta = Position(*tpl)
+        delta = Vector(*tpl)
         assert v3.can_move(delta, game_map)
 
     for tpl in ((5, 4), (4, 5), (6, -1), (2, 7)):
-        delta = Position(*tpl)
+        delta = Vector(*tpl)
         assert not v3.can_move(delta, game_map)
 
