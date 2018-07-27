@@ -19,9 +19,7 @@ class Unit:
             return False
         # Next, check if the proposed movement moves the unit outside the map
         new_position = self.position + delta
-        if new_position.value[0] < 0 or new_position.value[1] < 0:
-            return False
-        if new_position.value[0] >= len(game_map) or new_position.value[1] >= len(game_map[0]):
+        if not new_position.is_on_the_map(game_map):
             return False
 
         #TODO eventually: add a check to keep the unit from moving across enemy walls

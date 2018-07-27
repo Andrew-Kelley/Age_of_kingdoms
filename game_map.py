@@ -18,10 +18,18 @@ class Position:
     def __repr__(self):
         return str(self.value)
 
+    def is_on_the_map(self, the_map):
+        if self.value[0] < 0 or self.value[1] < 0:
+            return False
+        if self.value[0] >= len(the_map) or self.value[1] >= len(the_map[0]):
+            return False
+        return True
+
 class Vector(Position):
     @property
     def magnitude(self):
         return abs(self.value[0]) + abs(self.value[1])
+
 
 # Eventually, I should create a function that makes a random map
 game_map  = [[' '] * 100 for i in range(100)]
@@ -45,3 +53,7 @@ if __name__ == '__main__':
     vec1 = Vector(2, -1)
     print(pos1 - vec1)
     print(vec1.magnitude)
+
+    for tpl in ((-1, 5), (100, 20), (90, 100), (120, 200)):
+        position = Position(*tpl)
+        assert not position.is_on_the_map(game_map)
