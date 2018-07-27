@@ -1,9 +1,11 @@
 from buildings.bldng_class import Building
+from units import Villager
+from resources import Resources
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
     More can be built in the Iron Age."""
-    cost = {'wood':300, 'stone':200}
+    cost = Resources({'wood':300, 'stone':200})
     size = (4, 4)
     letter_abbreviation = 'T'
     # hit_points = ?
@@ -13,9 +15,22 @@ class TownCenter(Building):
     defensible = True
     kind = 'towncenters'
 
+    def can_build_villager(self, player):
+        # Check the population
+
+        # Check player's resources
+        pass
+
+    def build_villager(self, player):
+        villager_number = len(player.units[Villager.kind])
+        new_villager = Villager(villager_number, self.build_position)
+        player.units[Villager.kind].append(new_villager)
+        player.resources
+
+
 
 class House(Building):
-    cost = {'wood':100}
+    cost = Resources({'wood':100})
     size = (2, 2)
     letter_abbreviation = 'H'
     kind = 'houses'
@@ -28,20 +43,20 @@ class Blacksmith(Building):
     # -bronze shields (is necessary to build Swordsman)
     # -bronze axes (benefits Villagers which are chopping wood)
     # -bronze picks (benefits Villagers which are mining gold or bronze)
-    cost = {'wood':150, 'stone':25}
+    cost = Resources({'wood':150, 'stone':25})
     size = (3, 3)
     letter_abbreviation = 'X'
     kind = 'blacksmiths'
 
 class Library(Building):
-    cost = {'wood':200, 'gold':100}
+    cost = Resources({'wood':200, 'gold':100})
     size = (3, 3)
     letter_abbreviation = 'L'
     kind = 'libraries'
 
 # Maybe implement this building last
 class Market(Building):
-    cost = {'wood':150, 'gold':20}
+    cost = Resources({'wood':150, 'gold':20})
     size = (3, 3)
     letter_abbreviation = 'M'
     kind = 'markets'
