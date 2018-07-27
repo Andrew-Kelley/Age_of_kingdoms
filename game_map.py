@@ -8,6 +8,11 @@ class Position:
         j = self.value[1] + other.value[1]
         return Position(i, j)
 
+    def __sub__(self, other):
+        i = self.value[0] - other.value[0]
+        j = self.value[1] - other.value[1]
+        return Position(i, j)
+
     def __repr__(self):
         return str(self.value)
 
@@ -26,3 +31,9 @@ for i in range(66, 72):
 def print_map(some_map):
     for ls in game_map:
         print(''.join(ls))
+
+
+if __name__ == '__main__':
+    pos1 = Position(5, 6)
+    pos2 = Position(2, -1)
+    print(pos1 - pos2)
