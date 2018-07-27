@@ -34,17 +34,23 @@ class Villager(Unit):
     cost = {'food':50}
     kind = 'villagers'
 
+# Unless Pikeman are vastly weaker than Swordsman, I think that the cost difference between Pikeman and
+# Swordsman will result in many more Pikeman being built at the beginning of the game. I think that this is OK.
+# I intend Pikeman to only be somewhat weaker than Swordsman
 class Pikeman(Unit):
     """A man with a spear and a shield"""
     cost = {'food':40, 'wood':15}
     kind = 'pikemen'
 
 class Swordsman(Unit):
-    cost = {'food':60, 'gold':25}
+    # After reaching the Bronze Age, before being able to train Swordsman, three things must first be researched
+    # at the Blacksmith: (a) bronze armor, (b) bronze shields, and (b) bronze swords. (The first of these
+    # also benefits Pikeman (by upgrading their armor to bronze)
+    cost = {'food':40, 'gold':25, 'bronze':30}
     kind = 'swordsmen'
 
 class Archer(Unit):
-    cost = {'wood':40, 'gold':35}
+    cost = {'wood':40, 'gold':25, 'bronze':15}
     kind = 'archers'
 
 class Knight(Unit):
