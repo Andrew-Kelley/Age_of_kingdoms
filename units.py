@@ -31,15 +31,20 @@ class Unit:
 
 
 class Villager(Unit):
+    cost = {'food':50}
     kind = 'villagers'
 
 class Pikeman(Unit):
+    """A man with a spear and a shield"""
+    cost = {'food':40, 'wood':15}
     kind = 'pikemen'
 
 class Swordsman(Unit):
+    cost = {'food':60, 'gold':25}
     kind = 'swordsmen'
 
 class Archer(Unit):
+    cost = {'wood':40, 'gold':35}
     kind = 'archers'
 
 class Knight(Unit):
