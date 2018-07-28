@@ -25,7 +25,7 @@ def input_number_of_players(human=True):
 
 done_with_turn = {'finished', 'done'}
 help_commands = {'help', 'commands'}
-possible_first_words = {'select', 'move', 'print', 'set'}.union(done_with_turn).union(help_commands)
+possible_first_words = {'build', 'select', 'move', 'print', 'set'}.union(done_with_turn).union(help_commands)
 
 units = {'villager', 'pikeman', 'swordsman', 'archer', 'knight', 'batteringram',
          'catapult', 'trebuchet', 'merchant'}
@@ -70,29 +70,65 @@ def help():
             print("Type 'exit' to leave this not-very-helpful help mode.")
 
 
+def build_something(inpt_as_ls):
+    pass
+
+def select_something(inpt_as_ls):
+    pass
+
+def move_unit_or_units(inpt_as_ls, selected=None):
+    pass
+
+def set_default_build_position(inpt_as_ls, selected_building):
+    pass
+
+def print_something(inpt_as_ls):
+    pass
+
+
 def input_next_command(player):
     while True:
         inpt = input('Enter a command: ').lower()
         if inpt == '':
             continue
-        parts = inpt.split()
-        if parts[0] in done_with_turn:
-            return
+        inpt_as_ls = inpt.split()
 
-        if parts[0] not in possible_first_words:
+        if inpt_as_ls[0] not in possible_first_words:
             print('The first word of your command did not make perfect sense.')
-            guess = closest_word_to(parts[0], possible_first_words)
+            guess = closest_word_to(inpt_as_ls[0], possible_first_words)
             yes_or_no = input("Is the first word of your command supposed to be '{}'? [y/n?]".format(guess))
             if len(yes_or_no) > 0 and yes_or_no[0].lower() == 'y':
-                parts[0] = guess
+                inpt_as_ls[0] = guess
             else:
                 print("Ok, please type your entire command again.", end=' ')
                 print("For help, type 'help' (without the quote marks).")
                 continue
 
-        if parts[0] == 'help':
+        command = inpt_as_ls[0]
+        # We now know this:
+        # assert command in possible_first_words
+        if command in done_with_turn:
+            return
+        elif command in {'help', 'commands'}:
             help()
             continue
+        elif command == 'build':
+            build_something(inpt_as_ls)
+        elif command == 'select':
+            # I can't just call the function, I'll need to have a variable which somehow 'selects' the desired
+            # unit or units or building.
+            selected = select_something(inpt_as_ls)
+        elif command == 'move':
+            if selected:
+                move_unit_or_units(inpt_as_ls, selected)
+            else:
+                move_unit_or_units(inpt_as_ls)
+        elif command == 'set':
+            # To set a default build position for a unit-producing building, the player must first select
+            # the building.
+            set_default_build_position(inpt_as_ls, selected)
+        elif command == 'print':
+            print_something(inpt_as_ls)
 
 
 
