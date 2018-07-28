@@ -6,31 +6,12 @@ from buildings.bldng_class import Building
 from buildings.other_bldngs import  TownCenter, House, Blacksmith, Library, Market
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.defense_bldngs import Tower, Castle
+
 from units import Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult, Trebuchet, Merchant
 
-class Position:
-    """The i and j coordinates of a position on the map"""
-    def __init__(self, i, j):
-        self.value = (i, j)
+from resources import Resources
 
-    def __add__(self, other):
-        i = self.value[0] + other.value[0]
-        j = self.value[1] + other.value[1]
-        return Position(i, j)
-
-    def __repr__(self):
-        return str(self.value)
-
-
-game_map  = [[' '] * 100 for i in range(100)]
-for i in range(60, 66):
-    for j in range(75, 85):
-        game_map[i][j] = 'w'
-
-# Eh, I feel like adding more wood:
-for i in range(66, 72):
-    for j in range(80, 90):
-        game_map[i][j] = 'w'
+from game_map import game_map, Position, print_map
 
 units_ls = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult, Trebuchet, Merchant]
 buildings_ls = [TownCenter, House, Blacksmith, Library, Market, Barracks, ArcheryRange,
@@ -41,16 +22,18 @@ class Player:
     def __init__(self, number, position, is_human):
         """Players are numbered beginning with 1.
 
-        position is where to place a players beginning TownCenter."""
+        position is where to place a player's beginning TownCenter."""
         global game_map
         self.number = number
         self.is_human = is_human
-        self.resources = {'food':300, 'wood':300, 'stone':200, 'gold':0, 'bronze':0, 'iron':0}
+        self.resources = Resources({'food':300, 'wood':300, 'stone':200, 'gold':0, 'bronze':0, 'iron':0})
 
         # For each player, House number 1 (i.e. the first house that player builds) will be in
-        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a place-holder
-        self.buildings = dict((building.kind, [None]) for building in buildings_ls)
-        self.units = dict((unit.kind, [None]) for unit in units_ls)
+        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a place-holder. But
+        # since I DO have the space, self.buildings[building_kind][0] will be the number of buildings of that
+        # kind that have been destroyed.
+        self.buildings = dict((building.kind, [0]) for building in buildings_ls)
+        self.units = dict((unit.kind, [0]) for unit in units_ls)
 
         Building.build(TownCenter, self, position, game_map)
         self.buildings[TownCenter.kind].append(TownCenter(1, position))
@@ -60,11 +43,20 @@ class Player:
             new_position = position + Position(*delta)
             self.units[Villager.kind].append(Villager(i, new_position))
 
-    def print_resources(self):
-        global resource_ls
-        for resource in resource_ls:
-            print('{}: {}  '.format(resource,self.resources[resource]),end=' ')
-        print()
+    @property
+    def population_cap(self):
+        # Recall that self.buildings[TownCenter.kind][0] is the number of TownCenters that have been destroyed.
+        num_town_centers = len(self.buildings[TownCenter.kind]) - self.buildings[TownCenter.kind][0] - 1
+        num_houses = len(self.buildings[House.kind]) - self.buildings[House.kind][0] - 1
+        return 20 * num_town_centers + 10 * num_houses
+
+    @property
+    def population(self):
+        pop = 0
+        for unit in units_ls:
+            # Recall that self.units[unit.kind][0] is the number of that unit kind that have been killed.
+            pop += len(self.units[unit.kind]) - self.units[unit.kind][0] - 1
+        return pop
 
 
 p1 = Player(1, Position(80, 80), is_human=True)
@@ -74,30 +66,25 @@ for villager in p1.units['villagers'][1:]:
 
 print(p1.buildings)
 print(p1.units)
-p1.print_resources()
+print(p1.resources)
+print(p1.population_cap)
+print(p1.population)
+
+# Testing TownCenter methods can_build_villager and build_villager:
+t = TownCenter(2, Position(50, 50))
+print(t.can_build_villager(p1))
+
+for j in range(4, 12):
+    if t.can_build_villager(p1):
+        t.build_villager(p1)
+        print(p1.resources)
+    print(p1.population)
+
+print(p1.population)
+print('ok folks')
 
 
-#TODO: In the docstring for the Building class, specify that position is the south-west corner of the building
-
-#TODO: Add a file as a place to put my tests for buildings. Maybe name it bldng_tests
-# t = TownCenter(1, (80, 80))
-# Building.build(TownCenter, 1, Position(80,80), game_map)
-# build(TownCenter, 1, (80,80))
-
-for tpl in ((4,4), (2,4), (99,0), (100, 0), (90,96), (90, 97), (10, 0), (10, -1)):
-    position = Position(*tpl)
-    yes_or_no = Building.can_build(TownCenter, position, game_map)
-    print(position, yes_or_no)
-    print()
-
-for tpl in ((82, 80), (81,80), (76,80), (77, 80), (80,84), (80,83)):
-    position = Position(*tpl)
-    yes_or_no = Building.can_build(House, position, game_map)
-    print(position, yes_or_no)
-    print()
-
-for ls in game_map:
-    print(''.join(ls))
+print_map(game_map)
 
 def initial_position_of_player(player_number, game_map):
     """returns the initial position of the player's TownCenter"""
@@ -147,10 +134,4 @@ while True:
         print("It is now Player number {}'s turn".format(player.number))
         if player.is_human:
             print('Yay, you are human')
-
-
-
-
-
-
 
