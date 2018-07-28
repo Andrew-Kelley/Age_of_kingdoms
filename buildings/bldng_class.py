@@ -35,11 +35,6 @@ class Building:
         # TODO: Check that there are no enemy walls between the building's position and the proposed build position
         self.build_position = new_position
 
-    def enough_resources_to_build(self, player):
-        if player.resources >= self.cost:
-            return True
-        else:
-            return False
 
     def can_build_on_map(self, position, game_map):
         """Returns True if the building can be built at stated position."""
