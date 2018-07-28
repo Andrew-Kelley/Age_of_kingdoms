@@ -29,7 +29,15 @@ class Unit:
         """delta must of of type Position"""
         self.position += delta
 
+class Army:
+    """A collection of some units for military purposes."""
+    pass
 
+# Should Group inherit from Army? Or should Group be more general than its docstring states and then have
+# Army inherit from Group?
+class Group:
+    """A collection of villagers."""
+    pass
 
 class Villager(Unit):
     cost = Resources({'food':50})
