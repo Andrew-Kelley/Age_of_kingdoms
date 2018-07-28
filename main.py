@@ -3,11 +3,12 @@
 
 from input_handling import *
 from buildings.bldng_class import Building
-from buildings.other_bldngs import  TownCenter, House, Blacksmith, Library, Market
+from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.defense_bldngs import Tower, Castle
 
-from units import Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult, Trebuchet, Merchant
+from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
+from units import BatteringRam, Catapult, Trebuchet, Merchant
 
 from resources import Resources
 
@@ -58,6 +59,16 @@ class Player:
             pop += len(self.units[unit.kind]) - self.units[unit.kind][0] - 1
         return pop
 
+    def can_build(self, thing, number=1):
+        """If thing is a Unit, number is how many of that Unit that is desired to be built PLUS the number
+        of other units already OK'd to be built during the next turn."""
+        if issubclass(thing, Unit) or isinstance(thing, Unit):
+            if self.population > self.population_cap - number:
+                return False
+        if not self.resources >= thing.cost:
+            return False
+        return True
+
 
 p1 = Player(1, Position(80, 80), is_human=True)
 for villager in p1.units['villagers'][1:]:
@@ -69,21 +80,16 @@ print(p1.units)
 print(p1.resources)
 print(p1.population_cap)
 print(p1.population)
+t = p1.buildings[TownCenter.kind][1]
 
-# Testing TownCenter methods can_build_villager and build_villager:
-t = TownCenter(2, Position(50, 50))
-print(t.can_build_villager(p1))
 
-for j in range(4, 12):
-    if t.can_build_villager(p1):
+for j in range(4, 22):
+    if p1.can_build(Villager):
         t.build_villager(p1)
-        print(p1.resources)
-    print(p1.population)
 
 print(p1.population)
-print('ok folks')
-
-
+print(p1.resources)
+print('ok')
 print_map(game_map)
 
 def initial_position_of_player(player_number, game_map):

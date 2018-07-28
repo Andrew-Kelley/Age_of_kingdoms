@@ -15,14 +15,6 @@ class TownCenter(Building):
     defensible = True
     kind = 'towncenters'
 
-    def can_build_villager(self, player):
-        # Check the population
-        if player.population >= player.population_cap:
-            return False
-        if not player.resources >= Villager.cost:
-            return False
-        return True
-
     def build_villager(self, player):
         villager_number = len(player.units[Villager.kind])
         new_villager = Villager(villager_number, self.build_position)

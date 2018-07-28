@@ -30,6 +30,7 @@ class Unit:
         self.position += delta
 
 
+
 class Villager(Unit):
     cost = Resources({'food':50})
     kind = 'villagers'
