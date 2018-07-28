@@ -27,9 +27,11 @@ class Building:
         delta = new_position - self.position
         if delta.magnitude > 15:
             print("Sorry, the new position must be within 15 of the building's south-west corner.")
+            return
             # SHOULD I CHANGE THIS? Should it instead be within 15 of any part of the building?
         if not new_position.is_on_the_map(game_map):
             print("You must pick a position that is on the map.")
+            return
         # TODO: Check that there are no enemy walls between the building's position and the proposed build position
         self.build_position = new_position
 
