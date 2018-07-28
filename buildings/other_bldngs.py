@@ -22,6 +22,10 @@ class TownCenter(Building):
         player.resources -= Villager.cost
 
 
+    def num_villagers_can_build_in_turn(self, player):
+        key = {'Stone Age':2, 'Bronze Age':4, 'Iron Age':6}
+        return key[player.age]
+
 
 class House(Building):
     cost = Resources({'wood':100})
