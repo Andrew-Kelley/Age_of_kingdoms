@@ -23,11 +23,23 @@ class Resources(dict):
             ls_of_what_to_print.append('{}: {}   '.format(resource,self[resource]))
         return ''.join(ls_of_what_to_print)
 
+    def __ge__(self, other):
+        """self must include every resource that other includes"""
+        return all(self[resource] >= other[resource] for resource in other)
+
+
 
 
 if __name__ == '__main__':
     from units import Villager, Pikeman
+
     my_resources = Resources({'food':300, 'wood':300, 'stone':200, 'gold':0, 'bronze':0, 'iron':0})
+    some_cost = Resources({'food':300, 'wood':300, 'stone':200})
+
+    assert my_resources >= some_cost
+    assert my_resources >= Villager.cost
+    assert my_resources >= Pikeman.cost
+
     print(my_resources)
     Villager.cost = Resources(Villager.cost)
     Pikeman.cost = Resources(Pikeman.cost)
@@ -37,3 +49,5 @@ if __name__ == '__main__':
     print(my_resources)
     my_resources -= Pikeman.cost
     print(my_resources)
+
+
