@@ -2,3 +2,6 @@
 venv/
 *.idea
 __pycache__
+
+# Why was this file added by my mac?
+.DS_Store
