@@ -269,14 +269,10 @@ Stages of development:
 
 What is the simplest prototype of this game?
  - have some playable map (at least partially fill a small map)
+ - be able to print the map
  - enable villagers to be built
  - enable villagers to move
  - enable villagers to collect wood
-
-Next stage:
- - be able to print a specified part of the map (The default part of the map
- is a portion surrounding the town center.)
- - have more of the map discovered as villagers move around
 
 Next stage:
  - build a house
@@ -285,10 +281,32 @@ Next stage:
   locations.)
 
 Next stage:
+ - enable villagers to gather food from fruit trees or berry bushes
+
+Next stage:
  - build a barracks
  - build a pikeman from a barracks
 
 Next stage:
- - enable villagers to gather food from fruit trees or berry bushes
  - research the bronze age
- - after researching bronze age, train swordsmen
+ - enable villagers to mine gold and bronze
+ - build a farm
+
+Next stage:
+ - build a blacksmith, and enable the following things to be researched there:
+   * plow (Should this be necessary to build a farm? Eh, no.)
+   * bronze axes (benefits villagers chopping wood)
+   * bronze picks (benefits villagers mining gold or bronze)
+
+ Next stage:
+ - enable the following to be researched at the blacksmith:
+   * bronze swords (necessary for swordsmen)
+   * bronze shields (necessary for swordsmen)
+   * bronze armor
+ - after the appropriate research, train swordsmen
+
+
+Delayed for now:
+ - be able to print a specified part of the map (The default part of the map
+is a portion surrounding the town center.)
+ - have more of the map discovered as villagers move around
