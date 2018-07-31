@@ -168,6 +168,51 @@ def selected_obj_to_ls_of_units(player, selected_obj):
     return []
 
 
+def extract_selected_obj(inpt_as_ls):
+    """returns the same as the fn select_something"""
+    if len(inpt_as_ls) < 3:
+        return []
+
+    kind = inpt_as_ls[1]
+    not_units = kind not in unit_kinds_singular and kind not in unit_kinds and kind not in {'group', 'army'}
+    not_building = kind not in buildings
+    if not_units and not_building:
+        print("The second word in your command could not be understood.")
+        return []
+
+    if kind in unit_kinds:
+        # inpt_as_ls[2] should be of the form 'num1-num2'
+        num_range = inpt_as_ls[2].split('-')
+        try:
+            num_range = [int(i) for i in num_range]
+        except ValueError:
+            return []
+
+        # In case num_range is a list of a single number...
+        a = num_range[0]
+        b = num_range[-1]
+
+        selected_obj = ['unit', kind, a, b]
+    else:
+        # Now, inpt_as_ls[2] should be of the form 'num'
+        try:
+            num = int(inpt_as_ls[2])
+        except ValueError:
+            return []
+
+    if kind in unit_kinds_singular:
+        kind = unit_singular_to_plural[kind]
+        selected_obj = ['unit', kind, num, num]
+
+    if kind in {'group', 'army'}:
+        selected_obj = [kind, num]
+
+    if kind in buildings:
+        selected_obj = ['building', kind, num]
+
+    return selected_obj
+
+
 ########  NOTE: The following several functions have the same arguments so that they can be called
 # uniformly via **kwargs.
 def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -178,7 +223,8 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
 
 
 def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
-    """returns [] or a list in one of the following formats:
+    """The point of this function is to return an output selected_obj
+    returns [] or a list in one of the following formats:
 
     ['unit', unit.kind, starting_num, ending_num],  1 <= where starting_num <= ending_num
     or
@@ -188,7 +234,10 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     or
     ['building', building.kind, building_num]
     or
-    ['town', town_num]"""
+    ['town', town_num]
+
+    Note: The arguments selected_obj and selected_town_num are not used.
+    """
     if len(inpt_as_ls) < 2:
         return []
 
@@ -235,40 +284,9 @@ def move_unit_or_units(player, inpt_as_ls, selected_obj=None, selected_town_num=
         return ['move', ls_of_units, delta]
 
     else:  # len(inpt_as_ls) > 3
-        if len(inpt_as_ls) < 4:
-            # In this situation, the player must specify within this command what units to move
+        selected_obj = extract_selected_obj(inpt_as_ls)
+        if selected_obj == []:
             return []
-
-        kind = inpt_as_ls[1]
-        if kind not in unit_kinds_singular and kind not in unit_kinds and kind not in {'group', 'army'}:
-            return []
-
-        if kind in unit_kinds:
-            # inpt_as_ls[2] should be of the form 'num1-num2'
-            num_range = inpt_as_ls[2].split('-')
-            try:
-                num_range = [int(i) for i in num_range]
-            except ValueError:
-                return []
-
-            # In case num_range is a list of a single number...
-            a = num_range[0]
-            b = num_range[-1]
-
-            selected_obj = ['unit', kind, a, b]
-        else:
-            # Now, inpt_as_ls[2] should be of the form 'num'
-            try:
-                num = int(inpt_as_ls[2])
-            except ValueError:
-                return []
-
-        if kind in unit_kinds_singular:
-            kind = unit_singular_to_plural[kind]
-            selected_obj = ['unit', kind, num, num]
-
-        if kind in {'group', 'army'}:
-            selected_obj = [kind, num]
 
         ls_of_units = selected_obj_to_ls_of_units(player, selected_obj)
         if len(ls_of_units) == 0:
