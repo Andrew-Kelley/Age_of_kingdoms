@@ -7,6 +7,7 @@ class Building:
     # Perhaps have a method to handle
     # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units garrisoned
     # in it.
+    kind = 'building'
     def __init__(self, number, position):
         """For each player, the first of each building is numbered 1.
         Further buildings built (of the same type) are consecutively numbered.
@@ -20,6 +21,10 @@ class Building:
         # to build units immediately to the north, south, east, or west, of the building, is I would have to
         # include the game_map as a parameter to the class __init__ function.
         self.build_position = position
+
+    def __str__(self):
+        kind = self.kind.capitalize()
+        return '{} {}'.format(kind, self.number)
 
     def change_build_position_to(self, new_position, game_map):
         """Only relevant for unit-producing buildings. This function specifies a new position for where units
