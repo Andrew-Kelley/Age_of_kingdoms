@@ -14,13 +14,13 @@ class ArcheryRange(Building):
     cost = Resources({'wood':150})
     size = (5, 3)
     letter_abbreviation = 'A'
-    kind = 'archeryranges'
+    kind = 'archeryrange'
 
 class Stable(Building):
     cost = Resources({'wood':150})
     size = (3, 3)
     letter_abbreviation = 'S'
-    kind = 'stables'
+    kind = 'stable'
 
 class SiegeWorks(Building):
     cost = Resources({'wood':150})

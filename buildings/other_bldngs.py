@@ -13,7 +13,7 @@ class TownCenter(Building):
     population_support = 20
     garrison_capacity = 50
     defensible = True
-    kind = 'towncenters'
+    kind = 'towncenter'
 
     def build_villager(self, player):
         villager_number = len(player.units[Villager.kind])
@@ -31,7 +31,7 @@ class House(Building):
     cost = Resources({'wood':100})
     size = (2, 2)
     letter_abbreviation = 'H'
-    kind = 'houses'
+    kind = 'house'
 
 class Blacksmith(Building):
     # Can only be built once the Bronze Age is reached.
@@ -44,20 +44,20 @@ class Blacksmith(Building):
     cost = Resources({'wood':150, 'stone':25})
     size = (3, 3)
     letter_abbreviation = 'X'
-    kind = 'blacksmiths'
+    kind = 'blacksmith'
 
 class Library(Building):
     cost = Resources({'wood':200, 'gold':100})
     size = (3, 3)
     letter_abbreviation = 'L'
-    kind = 'libraries'
+    kind = 'library'
 
 # Maybe implement this building last
 class Market(Building):
     cost = Resources({'wood':150, 'gold':20})
     size = (3, 3)
     letter_abbreviation = 'M'
-    kind = 'markets'
+    kind = 'market'
 
 if __name__ == '__main__':
     from game_map import Position
