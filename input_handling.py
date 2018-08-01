@@ -89,7 +89,7 @@ def help():
 def direction_inpt_to_vector(direction_str):
     """direction_str must be a string. Returns a Vector or None.
     In order to not return None, direction_str must be a string of the form
-    'D<num>' where D in 'nsew' (north, south, east, west) and <num> is an integer
+    'D<num>' where D is in 'nsew' (north, south, east, west) and <num> is an integer
     possible inputs: 'n5' 'e17' 's12' """
     if not type(direction_str) is str:
         return None
@@ -191,6 +191,8 @@ def extract_selected_obj(inpt_as_ls):
         # In case num_range is a list of a single number...
         a = num_range[0]
         b = num_range[-1]
+        if a < 1 or b < a:
+            return []
 
         selected_obj = ['unit', kind, a, b]
     else:
@@ -199,6 +201,9 @@ def extract_selected_obj(inpt_as_ls):
             num = int(inpt_as_ls[2])
         except ValueError:
             return []
+
+    if num < 1:
+        return []
 
     if kind in unit_kinds_singular:
         kind = unit_singular_to_plural[kind]
