@@ -169,14 +169,15 @@ def selected_obj_to_ls_of_units(player, selected_obj):
 
 
 def extract_selected_obj(inpt_as_ls):
-    """returns the same as the fn select_something"""
+    """The return format is the same as the fn select_something"""
     if len(inpt_as_ls) < 3:
         return []
 
     kind = inpt_as_ls[1]
     not_units = kind not in unit_kinds_singular and kind not in unit_kinds and kind not in {'group', 'army'}
     not_building = kind not in buildings
-    if not_units and not_building:
+    not_town = kind != 'town'
+    if not_units and not_building and not_town:
         print("The second word in your command could not be understood.")
         return []
 
@@ -186,6 +187,8 @@ def extract_selected_obj(inpt_as_ls):
         try:
             num_range = [int(i) for i in num_range]
         except ValueError:
+            print('The third part of your command could not be understood.', end=' ')
+            print("A number range (such as 1-4) was expected.")
             return []
 
         # In case num_range is a list of a single number...
@@ -195,6 +198,7 @@ def extract_selected_obj(inpt_as_ls):
             return []
 
         selected_obj = ['unit', kind, a, b]
+        return selected_obj
     else:
         # Now, inpt_as_ls[2] should be of the form 'num'
         try:
@@ -214,6 +218,9 @@ def extract_selected_obj(inpt_as_ls):
 
     if kind in buildings:
         selected_obj = ['building', kind, num]
+
+    if kind == 'town':
+        selected_obj = ['town', num]
 
     return selected_obj
 
@@ -241,14 +248,19 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     or
     ['town', town_num]
 
-    Note: The arguments selected_obj and selected_town_num are not used.
+    Note: The arguments player, selected_obj, and selected_town_num are not used.
     """
-    if len(inpt_as_ls) < 2:
+    if len(inpt_as_ls) > 2:
+        # Then the player has specified the building or unit number(s)
+        return extract_selected_obj(inpt_as_ls)
+    elif len(inpt_as_ls) < 2:
         return []
-
-    # Fill in this code
-
-    return []
+    else:
+        # Current Usage: In this case, there is an implied '1' as the building or unit number.
+        # Alternate usage (not used): It would make sense that ['select', 'barracks'] is
+        # selecting the only barracks in the town with the given selected_town_num.
+        inpt_as_ls.append('1')
+        return extract_selected_obj(inpt_as_ls)
 
 
 def move_unit_or_units(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
