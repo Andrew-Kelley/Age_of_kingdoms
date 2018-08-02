@@ -160,12 +160,30 @@ def selected_obj_to_ls_of_units(player, selected_obj):
     # TODO: implement the rest of this function (when the selected object is an army or a group)
     # I first need to implement the Group and Army classes.
     if selected_obj[0] == 'group':
-        pass
+        return []
 
     if selected_obj[0] == 'army':
-        pass
+        return []
 
     return []
+
+def selected_obj_to_actual_building(player, selected_obj):
+    """In order to not return None, selected_obj must be in the following format:
+    ['building', building.kind, building_num]"""
+    if len(selected_obj) != 3:
+        return
+    if selected_obj[0] != 'building':
+        return
+    kind = selected_obj[1]
+    if kind not in buildings:
+        return
+
+    building_num = selected_obj[2]
+    if not 1 <= building_num < len(player.buildings[kind]):
+        print('There is no {} with number {}'.format(kind, building_num))
+        return
+
+    return player.buildings[kind][building_num]
 
 
 def extract_selected_obj(inpt_as_ls):
@@ -319,8 +337,35 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None, selected_t
 
 
 def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
-    # I need to decide on the format of the output
-    return ['print']
+    """returns []"""
+    if selected_obj is None:
+        selected_obj = []
+
+    def print_selected_obj(player, selected_obj):
+        if len(selected_obj) == 0:
+            print('There is nothing to print.')
+            return []
+        if selected_obj[0] == 'building':
+            building = selected_obj_to_actual_building(player, selected_obj)
+            print(building)
+            return []
+        else:
+            ls_of_units = selected_obj_to_ls_of_units(player, selected_obj)
+            for unit in ls_of_units:
+                print(unit)
+            return []
+
+    if len(inpt_as_ls) == 1:
+        # The player is trying to print selected_obj and inpt_as_ls == ['print']
+        return print_selected_obj(player, selected_obj)
+
+    elif len(inpt_as_ls) == 2:
+        inpt_as_ls.append('1')
+
+    selected_obj = extract_selected_obj(inpt_as_ls)
+
+    return print_selected_obj(player, selected_obj)
+
 
 
 functions = {'build': build_something, 'select': select_something, 'move': move_unit_or_units,
@@ -387,5 +432,8 @@ if __name__ == '__main__':
     from game_map import Position
 
     p1 = Player(1, Position(80, 80), is_human=True)
+    print(selected_obj_to_actual_building(p1, ['building', 'towncenter', 1]))
+    assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) == None
+    assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) == None
     a = input_next_command(p1)
-    print(a)
+    # print(a)
