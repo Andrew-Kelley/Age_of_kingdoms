@@ -1,5 +1,5 @@
 from game_map import Vector
-
+from help import help
 
 def input_number_of_players(human=True):
     if human:
@@ -52,7 +52,6 @@ buildings = {'towncenter', 'house', 'farm', 'lumbercamp', 'stonequarry', 'mining
 # For building names that really are two words, I would like to be able to handle a space between those words
 building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood', 'archery', 'siege'}
 
-
 def closest_word_to(word, some_words):
     """This function is not perfect, but it should work well enough."""
     closest = ''
@@ -63,27 +62,6 @@ def closest_word_to(word, some_words):
             distance = this_distance
             closest = target
     return closest
-
-
-def help():
-    # TODO: Fill this in better as I update what possible commands a user can input
-    # Instead of the following, I should describe a use case for each possible first word
-    print()
-    print("Set of possible first words for a command:")
-    print(possible_first_words)
-    while True:
-        print()
-        print("To exit this help mode type 'exit' (without the quotes).")
-        inpt = input('Which possible first word would you like a description for? ').lower()
-        if inpt == 'exit':
-            return
-        print()
-        if inpt in {'finished', 'done'}:
-            print("'{}': ".format(inpt), end='')
-            print("After exiting this help mode, if you are done with your turn, type 'done' or 'finished'.")
-        else:
-            print('Uh, sorry, as it turns out, this help mode cannot yet describe most of the words.')
-            print("Type 'exit' to leave this not-very-helpful help mode.")
 
 
 def direction_inpt_to_vector(direction_str):
@@ -360,7 +338,11 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         return print_selected_obj(player, selected_obj)
 
     elif len(inpt_as_ls) == 2:
-        inpt_as_ls.append('1')
+        if inpt_as_ls[1] == 'commands':
+            # Then inpt_as_ls == ['print', 'commands']
+            help(selected_obj)
+        else:
+            inpt_as_ls.append('1')
 
     selected_obj = extract_selected_obj(inpt_as_ls)
 
@@ -405,7 +387,7 @@ def input_next_command(player, selected_obj=None, selected_town_num=1):
         if first_argument_of_command in done_with_turn:
             return ['end of turn']
         elif first_argument_of_command in help_commands:
-            help()
+            help(selected_obj)
             continue
 
         kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj,
