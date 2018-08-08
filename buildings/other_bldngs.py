@@ -23,7 +23,7 @@ class TownCenter(Building):
 
 
     def num_villagers_can_build_in_turn(self, player):
-        key = {'Stone Age':2, 'Bronze Age':4, 'Iron Age':6}
+        key = {'Stone Age':1, 'Bronze Age':2, 'Iron Age':3}
         return key[player.age]
 
 
