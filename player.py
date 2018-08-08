@@ -10,6 +10,8 @@ from resources import Resources
 
 from game_map import game_map, Position, print_map
 
+from copy import deepcopy
+
 units_ls = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult, Trebuchet, Merchant]
 buildings_ls = [TownCenter, House, Blacksmith, Library, Market, Barracks, ArcheryRange,
                 Stable, SiegeWorks, Tower, Castle]
@@ -25,11 +27,16 @@ class Player:
         self.is_human = is_human
         self.resources = Resources({'food':300, 'wood':300, 'stone':200, 'gold':0, 'bronze':0, 'iron':0})
         self.age = 'Stone Age'
+        # self.commands contains the commands entered by the player:
+        commands_dict = {'move':dict(), 'build unit':dict()}  # This will need to be lengthened.
+        self.commands = {'now':commands_dict, 'later':deepcopy(commands_dict)}
+        # 'now' means at the end of the turn, when all players' commands are run.
+        # 'later' means at some later turn.
 
         # For each player, House number 1 (i.e. the first house that player builds) will be in
-        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a place-holder. But
-        # since I DO have the space, self.buildings[building_kind][0] will be the number of buildings of that
-        # kind that have been destroyed.
+        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a place-holder.
+        # But since I DO have the space, self.buildings[building_kind][0] will be the number of
+        # buildings of that kind that have been destroyed.
         self.buildings = dict((building.kind, [0]) for building in buildings_ls)
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
@@ -43,10 +50,12 @@ class Player:
 
     @property
     def population_cap(self):
-        # Recall that self.buildings[TownCenter.kind][0] is the number of TownCenters that have been destroyed.
+        total_cap = 300
+        # Recall that self.buildings[TownCenter.kind][0] is the number of TownCenters that have
+        # been destroyed.
         num_town_centers = len(self.buildings[TownCenter.kind]) - self.buildings[TownCenter.kind][0] - 1
         num_houses = len(self.buildings[House.kind]) - self.buildings[House.kind][0] - 1
-        return 20 * num_town_centers + 10 * num_houses
+        return min(20 * num_town_centers + 10 * num_houses, total_cap)
 
     @property
     def population(self):
@@ -67,30 +76,6 @@ class Player:
         return True
 
 
-
-p1 = Player(1, Position(80, 80), is_human=True)
-for villager in p1.units['villagers'][1:]:
-    print(villager.number, villager.position)
-
-
-
-print(p1.buildings)
-print(p1.units)
-print(p1.resources)
-print(p1.population_cap)
-print(p1.population)
-t = p1.buildings[TownCenter.kind][1]
-
-
-for j in range(4, 22):
-    if p1.can_build(Villager):
-        t.build_villager(p1)
-
-print(p1.population)
-print(p1.resources)
-print('ok')
-print_map(game_map)
-
 def initial_position_of_player(player_number, game_map):
     """returns the initial position of the player's TownCenter"""
     assert player_number >= 1
@@ -107,3 +92,30 @@ def initial_position_of_player(player_number, game_map):
         return Position(small, small)
     if player_number == 4:
         return Position(small, large)
+
+
+if __name__ == '__main__':
+    from input_handling import input_next_command
+
+
+    p1 = Player(1, Position(80, 80), is_human=True)
+    for villager in p1.units['villagers'][1:]:
+        print(villager.number, villager.position)
+
+    inpt = input_next_command(p1)
+
+    print(p1.buildings)
+    print(p1.units)
+    print(p1.resources)
+    print(p1.population_cap)
+    print(p1.population)
+    t = p1.buildings[TownCenter.kind][1]
+
+    for j in range(4, 22):
+        if p1.can_build(Villager):
+            t.build_villager(p1)
+
+    print(p1.population)
+    print(p1.resources)
+    print('ok')
+    print_map(game_map)
