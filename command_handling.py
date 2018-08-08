@@ -1,5 +1,4 @@
 # This module handles the commands which are returned by the function input_next_command
-# The main function of this module is insert_command
 
 from game_map import Vector
 
@@ -59,4 +58,24 @@ def insert_a_move_command(player, command):
             del player.commands['later']['move'][unit]
     for unit in move_later:
         player.commands['later']['move'][unit] = move_later[unit]
+    return
 
+
+# The following is called at the beginning of each player's turn.
+def update_now_and_later_commands(player):
+    update_now_and_later_move_commands(player)
+
+
+def update_now_and_later_move_commands(player):
+    for unit in player.commands['now']['move']:
+        del player.commands['now']['move'][unit]
+
+    for unit in player.commands['later']['move']:
+        delta = player.commands['later']['move'][unit]
+        if delta.magnitude > 15:
+            beginning, the_rest = delta.beginning_plus_the_rest()
+            player.commands['now']['move'][unit] = beginning
+            player.commands['later']['move'][unit] = the_rest
+        else:
+            player.commands['now']['move'][unit] = delta
+            del player.commands['later']['move'][unit]
