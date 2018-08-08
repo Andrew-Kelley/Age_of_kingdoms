@@ -45,5 +45,18 @@ def insert_a_move_command(player, command):
         move_now = dict((unit, delta) for unit in ls_of_units)
         move_later = dict()
 
-    player.commands['now']['move'] = move_now
-    player.commands['later']['move'] = move_later
+    # NOTE: THE FOLLOWING TWO LINES DOES NOT WORK! The reason is that the player might make multiple
+    # move commands during a turn (each of which might move different units). What the following two
+    # lines would do would be to erase all previous move commands and replace them with the most current
+    # one.
+    # player.commands['now']['move'] = move_now
+    # player.commands['later']['move'] = move_later
+
+    # The following only replaces old move commands with new ones if they are about the same unit.
+    for unit in move_now:
+        player.commands['now']['move'][unit] = move_now[unit]
+        if unit in player.commands['later']['move']:
+            del player.commands['later']['move'][unit]
+    for unit in move_later:
+        player.commands['later']['move'][unit] = move_later[unit]
+
