@@ -67,10 +67,10 @@ def update_now_and_later_commands(player):
 
 
 def update_now_and_later_move_commands(player):
-    for unit in player.commands['now']['move']:
+    for unit in list(player.commands['now']['move']):
         del player.commands['now']['move'][unit]
 
-    for unit in player.commands['later']['move']:
+    for unit in list(player.commands['later']['move']):
         delta = player.commands['later']['move'][unit]
         if delta.magnitude > 15:
             beginning, the_rest = delta.beginning_plus_the_rest()
