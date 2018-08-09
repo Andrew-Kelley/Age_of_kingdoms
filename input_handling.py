@@ -1,3 +1,5 @@
+# The main function this module defines is input_next_command, which is at the bottom of this file.
+
 from game_map import Vector
 from help import help
 
@@ -49,7 +51,8 @@ buildings = {'towncenter', 'house', 'farm', 'lumbercamp', 'stonequarry', 'mining
              'stonewall', 'wallfortification', 'tower', 'castle', 'barracks', 'archeryrange',
              'stable', 'siegeworks', 'blacksmith', 'library', 'market'}
 
-# For building names that really are two words, I would like to be able to handle a space between those words
+# For building names that really are two words, I would like to be able to handle a space between those
+# words, but as of now, the code doesn't use the following set:
 building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood', 'archery', 'siege'}
 
 def closest_word_to(word, some_words):
@@ -103,6 +106,7 @@ def get_direction_vector(inpt_as_ls):
 
     delta1 = direction_inpt_to_vector(inpt_as_ls[-1])
     if delta1 is None:
+        print('The last direction vector input was not understood.')
         return None
 
     delta2 = direction_inpt_to_vector(inpt_as_ls[-2])
@@ -208,26 +212,92 @@ def extract_selected_obj(inpt_as_ls):
     if kind in unit_kinds_singular:
         kind = unit_singular_to_plural[kind]
         selected_obj = ['unit', kind, num, num]
-
-    if kind in {'group', 'army'}:
+    elif kind in {'group', 'army'}:
         selected_obj = [kind, num]
-
-    if kind in buildings:
+    elif kind in buildings:
         selected_obj = ['building', kind, num]
-
-    if kind == 'town':
+    elif kind == 'town':
         selected_obj = ['town', num]
+    else:
+        # Due to the second conditional statement in this function, this code should never be reached.
+        selected_obj = []
 
     return selected_obj
 
 
-########  NOTE: The following several functions have the same arguments so that they can be called
-# uniformly via **kwargs.
+########  NOTE: Most of the following several functions have the same arguments so that they can be
+# called uniformly via **kwargs.
 def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
-    # selected_obj could be the villager(s) which will build the building
+    """In order to not return [], selected_obj must either be
+    (a) a villager, or villagers, or group of villagers OR
+    (b) a building (which builds units)"""
     # selected_town_num will be used when building walls.
-    # I need to decide on the format of the output
-    return ['build']
+    if len(inpt_as_ls) < 2:
+        return []
+    if not selected_obj or not type(selected_obj) is list:
+        return []
+    if len(selected_obj) < 2:
+        return []
+
+    if selected_obj[0] == 'building':
+        return build_unit(player, inpt_as_ls, selected_obj, selected_town_num)
+
+    elif selected_obj[0] == 'unit':
+        if selected_obj[1] == 'villagers':
+            return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
+        else:
+            return []
+    elif selected_obj[0] == 'group':
+        return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
+    else:
+        return []
+
+
+
+
+# The following is intended to only be used by the function build_something
+def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
+    """Returns a list.
+
+    In order to not return [],
+    (a) The building which builds the unit(s) must be selected as selected_obj, and
+    (b) inpt_as_ls must be of the following type:
+    ['build', <unit type>], or
+    ['build', 'num', <unit type>]
+
+    If not returning [], this function returns a list of the following format:
+    ['build unit', <building>, <unit type>, num_to_be_built]"""
+    if not selected_obj or not type(selected_obj) is list:
+        return []
+    if len(selected_obj) < 2:
+        return []
+
+    building = selected_obj_to_actual_building(player, selected_obj)
+    if not building:
+        return []
+
+    unit_type = inpt_as_ls[-1]
+    if unit_type not in unit_kinds and unit_type not in unit_kinds_singular:
+        print('The last part of your command (which type of unit to be built) was not understood.')
+        return []
+    if unit_type in unit_kinds_singular:
+        unit_type = unit_singular_to_plural[unit_type]
+
+    if len(inpt_as_ls) == 3:
+        try:
+            num = int(inpt_as_ls[1])
+        except ValueError:
+            print('The second part of your command (how many units to be built) was not understood.')
+            return []
+    else:
+        num = 1
+
+    return ['build unit', building, unit_type, num]
+
+
+# The following is intended to only be used by the function build_something
+def build_building(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+    return ['build building']
 
 
 def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -240,9 +310,9 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     or
     ['group', group_num], where 1 <= group_num
     or
-    ['building', building.kind, building_num]
+    ['building', building.kind, building_num], where 1 <= building_num
     or
-    ['town', town_num]
+    ['town', town_num], where 1 <= town_num
 
     Note: The arguments player, selected_obj, and selected_town_num are not used.
     """
@@ -257,6 +327,39 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
         # selecting the only barracks in the town with the given selected_town_num.
         inpt_as_ls.append('1')
         return extract_selected_obj(inpt_as_ls)
+
+def is_a_selected_obj(ls):
+    """Returns True if ls is a non-empty list of the format of what select_something returns"""
+    if type(ls) != list:
+        return False
+    if len(ls) < 2 or len(ls) > 4:
+        return False
+    if ls[0] not in ('unit', 'army', 'group', 'building', 'town'):
+        return False
+
+    if ls[0] == 'unit':
+        if len(ls) != 4:
+            return False
+        if ls[1] not in unit_kinds:
+            return False
+        if not type(ls[2]) is int or not type(ls[3]) is int:
+            return False
+        if not 1 <= ls[2] <= ls[3]:
+            return False
+        return True
+
+    if ls[0] in ('army', 'group',  'town'):
+        if len(ls) != 2:
+            return False
+        return type(ls[1]) is int and 1 <= ls[1]
+
+    if ls[0] == 'building':
+        if len(ls) != 3:
+            return False
+        if ls[1] not in buildings:
+            return False
+        return type(ls[2]) is int and 1 <= ls[2]
+
 
 
 def move_unit_or_units(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -341,6 +444,7 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         if inpt_as_ls[1] == 'commands':
             # Then inpt_as_ls == ['print', 'commands']
             help(selected_obj)
+            return []
         else:
             inpt_as_ls.append('1')
 
@@ -418,4 +522,4 @@ if __name__ == '__main__':
     assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) == None
     assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) == None
     a = input_next_command(p1)
-    # print(a)
+    print(a)
