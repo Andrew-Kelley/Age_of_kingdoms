@@ -15,6 +15,9 @@ class TownCenter(Building):
     defensible = True
     kind = 'towncenter'
 
+    def units_which_can_be_built(self, player):
+        return ['villagers']
+
     def build_villager(self, player):
         villager_number = len(player.units[Villager.kind])
         new_villager = Villager(villager_number, self.build_position)

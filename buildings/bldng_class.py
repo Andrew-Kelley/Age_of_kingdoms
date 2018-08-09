@@ -8,6 +8,9 @@ class Building:
     # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units garrisoned
     # in it.
     kind = 'building'
+    size = (2, 2)
+    letter_abbreviation = '?'
+
     def __init__(self, number, position):
         """For each player, the first of each building is numbered 1.
         Further buildings built (of the same type) are consecutively numbered.
@@ -26,6 +29,10 @@ class Building:
         kind = self.kind.capitalize()
         return '{} {}'.format(kind, self.number)
 
+    def units_which_can_be_built(self, player):
+        # This function needs to be re-implemented for every building which produces units.
+        return []
+
     def change_build_position_to(self, new_position, game_map):
         """Only relevant for unit-producing buildings. This function specifies a new position for where units
         built by the building self should begin their existence."""
@@ -39,7 +46,6 @@ class Building:
             return
         # TODO: Check that there are no enemy walls between the building's position and the proposed build position
         self.build_position = new_position
-
 
     def can_build_on_map(self, position, game_map):
         """Returns True if the building can be built at stated position."""

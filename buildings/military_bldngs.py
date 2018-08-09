@@ -3,27 +3,47 @@
 from buildings.bldng_class import Building
 from resources import Resources
 
+
 class Barracks(Building):
-    cost = Resources({'wood':150})
+    cost = Resources({'wood': 150})
     size = (3, 3)
     letter_abbreviation = 'B'
     kind = 'barracks'
 
+    def units_which_can_be_built(self, player):
+        ls = ['pikemen']
+        if player.age in ('Bronze Age', 'Iron Age'):
+            pass
+            # if <player has researched bronze shields and bronze swords>:
+            #     ls.append('swordsmen')
+        return ls
+
 
 class ArcheryRange(Building):
-    cost = Resources({'wood':150})
+    cost = Resources({'wood': 150})
     size = (5, 3)
     letter_abbreviation = 'A'
     kind = 'archeryrange'
 
+    def units_which_can_be_built(self, player):
+        return ['archers']
+
+
 class Stable(Building):
-    cost = Resources({'wood':150})
+    cost = Resources({'wood': 150})
     size = (3, 3)
     letter_abbreviation = 'S'
     kind = 'stable'
 
+    def units_which_can_be_built(self, player):
+        return []
+
+
 class SiegeWorks(Building):
-    cost = Resources({'wood':150})
+    cost = Resources({'wood': 150})
     size = (3, 3)
     letter_abbreviation = 'W'
     kind = 'siegeworks'
+
+    def units_which_can_be_built(self, player):
+        return []
