@@ -1,6 +1,6 @@
 # This module handles the commands which are returned by the function input_next_command
 
-from game_map import Vector
+from game_map import Vector, game_map
 
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
@@ -61,12 +61,14 @@ def insert_a_move_command(player, command):
     return
 
 
+############################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
-    update_now_and_later_move_commands(player)
+    update_move_commands(player)
 
-
-def update_now_and_later_move_commands(player):
+# The following removes all the old commands in player.commands['now']['move'], and it updates
+# player.commands['now']['move'] based on what player.commands['later']['move'] is.
+def update_move_commands(player):
     for unit in list(player.commands['now']['move']):
         del player.commands['now']['move'][unit]
 
@@ -79,3 +81,18 @@ def update_now_and_later_move_commands(player):
         else:
             player.commands['now']['move'][unit] = delta
             del player.commands['later']['move'][unit]
+
+############################################################################################
+def implement_commands_if_possible(player):
+    implement_move_commands(player)
+    # Eventually, this will probably be replaced with the following code, where functions is a list
+    # of all the functions which need to be run.
+    # for function in functions:
+    #     function(player)
+
+
+def implement_move_commands(player):
+    for unit in player.commands['now']['move']:
+        delta = player.commands['now']['move'][unit]
+        if unit.can_move(delta, game_map):
+            unit.move_by(delta)
