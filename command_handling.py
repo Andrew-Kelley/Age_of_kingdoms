@@ -62,13 +62,7 @@ def insert_build_unit_command(player, command):
         print(cannot_build_unit_yet_error_message(player, building, unit_type))
         return
 
-    if isinstance(building, TownCenter):
-        # assert unit_type == 'villagers'
-        num_can_build = building.num_villagers_can_build_in_turn(player)
-    else:
-        # I may later want to change this and allow some units besides villagers to be built more
-        # than 1 per turn per building.
-        num_can_build = 1
+    num_can_build = number_of_units_can_build_in_one_turn(player, building, unit_type)
 
     num_to_build_now = min(num_can_build, num_to_be_built)
     num_to_build_later = num_to_be_built - num_to_build_now
@@ -76,6 +70,19 @@ def insert_build_unit_command(player, command):
     if num_to_build_later > 0:
         player.commands['later']['build unit'][building] = [unit_type, num_to_build_later]
     return
+
+
+def number_of_units_can_build_in_one_turn(player, building, unit_type):
+    if isinstance(building, TownCenter):
+        if unit_type == 'villagers':
+            num_can_build = building.num_villagers_can_build_in_turn(player)
+        else:
+            num_can_build = 0
+    else:
+        # I may later want to change this and allow some units besides villagers to be built more
+        # than 1 per turn per building.
+        num_can_build = 1
+    return num_can_build
 
 
 def cannot_build_unit_yet_error_message(player, building, unit_type):
@@ -149,8 +156,24 @@ def update_move_commands(player):
             player.commands['now']['move'][unit] = delta
             del player.commands['later']['move'][unit]
 
+
 def update_build_unit_commands(player):
-    pass
+    for building in list(player.commands['now']['build unit']):
+        del player.commands['now']['build unit'][building]
+
+    for building in list(player.commands['later']['build unit']):
+        unit_type = player.commands['later']['build unit'][building][0]
+        num_left_to_build = player.commands['later']['build unit'][building][1]
+        num_can_build = number_of_units_can_build_in_one_turn(player, building, unit_type)
+
+        num_to_build_now = min(num_can_build, num_left_to_build)
+        num_to_build_later = num_left_to_build - num_to_build_now
+        player.commands['now']['build unit'][building] = [unit_type, num_to_build_now]
+        if num_to_build_later > 0:
+            player.commands['later']['build unit'][building] = [unit_type, num_to_build_later]
+        else:
+            del player.commands['later']['build unit'][building]
+
 
 ############################################################################################
 def implement_commands_if_possible(player):
