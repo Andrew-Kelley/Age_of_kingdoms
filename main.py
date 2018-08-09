@@ -1,7 +1,8 @@
 # Age of Kingdoms - A text-based, turn-based strategy game inspired by Age of Empires.
 # Started July 21, 2018.
 
-from input_handling import *
+from input_handling import input_next_command, is_a_selected_obj
+from command_handling import insert_command, update_now_and_later_commands, implement_commands_if_possible
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
@@ -13,7 +14,6 @@ from units import BatteringRam, Catapult, Trebuchet, Merchant
 from resources import Resources
 from game_map import game_map, Position, print_map
 from player import Player, initial_position_of_player
-
 
 
 print("Starting a game of Age of Kingdoms...")
@@ -38,12 +38,31 @@ for player in players[1:]:
 turn_number = 0
 while True:
     turn_number += 1
-    if turn_number > 100: # This should eventually be changed to 1000
+    if turn_number > 20:  # This should eventually be changed to 1000
         print('The limit of {} turns has been reached. Game over.'.format(turn_number - 1))
         break
 
     for player in players[1:]:
         print("It is now Player number {}'s turn".format(player.number))
-        if player.is_human:
-            print('Yay, you are human')
+        selected_obj = []
+        update_now_and_later_commands(player)
 
+        if not player.is_human:
+            continue  # Even a rudimentary AI will have to wait quite some time.
+        while True:
+            command = input_next_command(player, selected_obj)
+            if is_a_selected_obj(command):
+                selected_obj = command
+                continue
+            if command == ['end of turn']:
+                break
+            insert_command(player, command)
+
+    # Every other turn, the order in which the players' commands are implemented is switched.
+    if turn_number % 2 == 1:
+        player_iterator = players[1:]
+    else:
+        player_iterator = reversed(players[1:])
+
+    for player in player_iterator:
+        implement_commands_if_possible(player)
