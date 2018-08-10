@@ -3,7 +3,7 @@
 from game_map import Vector, game_map
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter
-from input_handling import unit_kinds
+from units import unit_kinds, unit_kind_to_class, unit_kind_to_singular
 
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
@@ -199,7 +199,15 @@ def implement_build_unit_commands(player):
         unit_type, num_to_build = player.commands['now']['build unit'][building]
         for i in range(num_to_build):
             if player.population < player.population_cap:
-                building.build_unit(player, unit_type)
+                if not unit_type in unit_kind_to_class:
+                    continue
+                unit = unit_kind_to_class[unit_type]
+                if player.can_build(unit):
+                    building.build_unit(player, unit_type)
+                else:
+                    unit_type = unit_kind_to_singular[unit.kind].capitalize()
+                    print('You do not have enough resources to build a ', unit_type)
+                    continue
             else:
                 print('Population cap reached. You cannot build more units.')
                 return
