@@ -195,8 +195,8 @@ def implement_move_commands(player):
 
 
 def implement_build_unit_commands(player):
-    for building in player.commands['later']['build unit']:
-        unit_type, num_to_build = player.commands['later']['build unit'][building]
+    for building in player.commands['now']['build unit']:
+        unit_type, num_to_build = player.commands['now']['build unit'][building]
         for i in range(num_to_build):
             if player.population < player.population_cap:
                 building.build_unit(player, unit_type)
