@@ -18,7 +18,10 @@ class TownCenter(Building):
     def units_which_can_be_built(self, player):
         return ['villagers']
 
-    def build_villager(self, player):
+    def build_unit(self, player, unit_type='villagers'):
+        if unit_type != 'villagers':
+            print('Error! A TownCenter can only build Villagers.')
+            return
         villager_number = len(player.units[Villager.kind])
         new_villager = Villager(villager_number, self.build_position)
         player.units[Villager.kind].append(new_villager)

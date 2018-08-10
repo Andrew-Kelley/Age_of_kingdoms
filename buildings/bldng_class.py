@@ -33,6 +33,12 @@ class Building:
         # This function needs to be re-implemented for every building which produces units.
         return []
 
+    def build_unit(self, player, unit_type):
+        """This function (in the Building class) should NEVER be called."""
+        print("ERROR! You are trying to build a unit from a building that does not yet have",
+              "a build_unit method defined.")
+        return
+
     def change_build_position_to(self, new_position, game_map):
         """Only relevant for unit-producing buildings. This function specifies a new position for where units
         built by the building self should begin their existence."""
