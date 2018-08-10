@@ -2,6 +2,7 @@
 
 from game_map import Vector
 from help import help
+from units import unit_kinds
 
 def input_number_of_players(human=True):
     if human:
@@ -34,9 +35,6 @@ possible_first_words = main_commands.union(done_with_turn).union(help_commands)
 
 unit_kinds_singular = ['villager', 'pikeman', 'swordsman', 'archer', 'knight', 'batteringram',
                        'catapult', 'trebuchet', 'merchant']
-
-unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights', 'batteringrams',
-              'catapults', 'trebuchets', 'merchants']
 
 # In case I change units or unit_kinds and forget to change the other:
 assert len(unit_kinds_singular) == len(unit_kinds)
@@ -235,6 +233,10 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     if len(inpt_as_ls) < 2:
         return []
     if not selected_obj or not type(selected_obj) is list:
+        print('Command rejected:')
+        print('You must first select an object before building something.')
+        print('For building a building, you must first select which villagers to build it.')
+        print('To build units, you must first select which building to build them from.')
         return []
     if len(selected_obj) < 2:
         return []
@@ -246,13 +248,13 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         if selected_obj[1] == 'villagers':
             return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
         else:
+            print('In order to build a building, the selected object needs to be some villager(s)',
+                  "--possibly a 'group' of villagers.")
             return []
     elif selected_obj[0] == 'group':
         return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
     else:
         return []
-
-
 
 
 # The following is intended to only be used by the function build_something
@@ -262,11 +264,12 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
     In order to not return [],
     (a) The building which builds the unit(s) must be selected as selected_obj, and
     (b) inpt_as_ls must be of the following type:
-    ['build', <unit type>], or
+    ['build', <unit type>], (which builds 1 of the given unit type) or
     ['build', 'num', <unit type>]
 
     If not returning [], this function returns a list of the following format:
-    ['build unit', <building>, <unit type>, num_to_be_built]"""
+    ['build unit', <building>, <unit type>, num_to_be_built], where
+    num_to_be_built >= 1"""
     if not selected_obj or not type(selected_obj) is list:
         return []
     if len(selected_obj) < 2:
@@ -285,14 +288,17 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
 
     if len(inpt_as_ls) == 3:
         try:
-            num = int(inpt_as_ls[1])
+            num_to_be_built = int(inpt_as_ls[1])
+            if num_to_be_built < 1:
+                print('Your command must specify a positive number of units to be built.')
+                return []
         except ValueError:
             print('The second part of your command (how many units to be built) was not understood.')
             return []
     else:
-        num = 1
+        num_to_be_built = 1
 
-    return ['build unit', building, unit_type, num]
+    return ['build unit', building, unit_type, num_to_be_built]
 
 
 # The following is intended to only be used by the function build_something
@@ -328,6 +334,7 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
         inpt_as_ls.append('1')
         return extract_selected_obj(inpt_as_ls)
 
+
 def is_a_selected_obj(ls):
     """Returns True if ls is a non-empty list of the format of what select_something returns"""
     if type(ls) != list:
@@ -359,7 +366,6 @@ def is_a_selected_obj(ls):
         if ls[1] not in buildings:
             return False
         return type(ls[2]) is int and 1 <= ls[2]
-
 
 
 def move_unit_or_units(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -444,6 +450,9 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         if inpt_as_ls[1] == 'commands':
             # Then inpt_as_ls == ['print', 'commands']
             help(selected_obj)
+            return []
+        elif inpt_as_ls[1] == 'resources':
+            print(player.resources)
             return []
         else:
             inpt_as_ls.append('1')
