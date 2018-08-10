@@ -26,13 +26,49 @@ def insert_command(player, command):
     if not type(command) is list or len(command) == 0:
         return
 
-    # MAYBE call any of the functions with one call
+    # MAYBE call all of the functions with one call (and a dictionary of functions).
     if command[0] == 'move':
         insert_move_command(player, command)
         return
     elif command[0] == 'build unit':
         insert_build_unit_command(player, command)
         return
+
+
+# The following function could instead be named insert_a_command_of_type_move
+def insert_move_command(player, command):
+    if len(command) != 3:
+        return
+    ls_of_units = command[1]
+    if not type(ls_of_units) is list:
+        return
+    delta = command[2]
+    if not isinstance(delta, Vector):
+        return
+
+    if delta.magnitude > 15:
+        beginning, the_rest = delta.beginning_plus_the_rest()
+        move_now = dict((unit, beginning) for unit in ls_of_units)
+        move_later = dict((unit, the_rest) for unit in ls_of_units)
+    else:
+        move_now = dict((unit, delta) for unit in ls_of_units)
+        move_later = dict()
+
+    # NOTE: THE FOLLOWING TWO LINES DO NOT WORK! The reason is that the player might make multiple
+    # move commands during a turn (each of which might move different units). What the following two
+    # lines would do would be to erase all previous move commands and replace them with the most
+    # current one.
+    # player.commands['now']['move'] = move_now
+    # player.commands['later']['move'] = move_later
+
+    # The following only replaces old move commands with new ones if they are about the same unit.
+    for unit in move_now:
+        player.commands['now']['move'][unit] = move_now[unit]
+        if unit in player.commands['later']['move']:
+            del player.commands['later']['move'][unit]
+    for unit in move_later:
+        player.commands['later']['move'][unit] = move_later[unit]
+    return
 
 
 def insert_build_unit_command(player, command):
@@ -96,45 +132,9 @@ def cannot_build_unit_yet_error_message(player, building, unit_type):
         message = ''
     return message
 
-
-
-# The following function could instead be named insert_a_command_of_type_move
-def insert_move_command(player, command):
-    if len(command) != 3:
-        return
-    ls_of_units = command[1]
-    if not type(ls_of_units) is list:
-        return
-    delta = command[2]
-    if not isinstance(delta, Vector):
-        return
-
-    if delta.magnitude > 15:
-        beginning, the_rest = delta.beginning_plus_the_rest()
-        move_now = dict((unit, beginning) for unit in ls_of_units)
-        move_later = dict((unit, the_rest) for unit in ls_of_units)
-    else:
-        move_now = dict((unit, delta) for unit in ls_of_units)
-        move_later = dict()
-
-    # NOTE: THE FOLLOWING TWO LINES DO NOT WORK! The reason is that the player might make multiple
-    # move commands during a turn (each of which might move different units). What the following two
-    # lines would do would be to erase all previous move commands and replace them with the most
-    # current one.
-    # player.commands['now']['move'] = move_now
-    # player.commands['later']['move'] = move_later
-
-    # The following only replaces old move commands with new ones if they are about the same unit.
-    for unit in move_now:
-        player.commands['now']['move'][unit] = move_now[unit]
-        if unit in player.commands['later']['move']:
-            del player.commands['later']['move'][unit]
-    for unit in move_later:
-        player.commands['later']['move'][unit] = move_later[unit]
-    return
-
-
-############################################################################################
+###################################################################################################
+###################################################################################################
+###################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
     update_move_commands(player)
@@ -175,9 +175,12 @@ def update_build_unit_commands(player):
             del player.commands['later']['build unit'][building]
 
 
-############################################################################################
+###################################################################################################
+###################################################################################################
+###################################################################################################
 def implement_commands_if_possible(player):
     implement_move_commands(player)
+    implement_build_unit_commands(player)
     # Eventually, this will probably be replaced with the following code, where functions is a list
     # of all the functions which need to be run.
     # for function in functions:
@@ -192,4 +195,11 @@ def implement_move_commands(player):
 
 
 def implement_build_unit_commands(player):
-    pass
+    for building in player.commands['later']['build unit']:
+        unit_type, num_to_build = player.commands['later']['build unit'][building]
+        for i in range(num_to_build):
+            if player.population < player.population_cap:
+                building.build_unit(player, unit_type)
+            else:
+                print('Population cap reached. You cannot build more units.')
+                return
