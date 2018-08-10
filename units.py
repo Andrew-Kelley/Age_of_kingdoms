@@ -1,13 +1,16 @@
 from resources import Resources
 
 unit_kind_to_singular = {'villagers': 'villager', 'pikemen': 'pikeman', 'swordsmen': 'swordsman',
-                      'archers':'archer', 'knights':'knight', 'batteringrams':'batteringram',
-                      'catapults':'catapult', 'trebuchets':'trebuchet', 'units':'unit',
-                      'merchants':'merchant'}
+                         'archers': 'archer', 'knights': 'knight', 'batteringrams': 'batteringram',
+                         'catapults': 'catapult', 'trebuchets': 'trebuchet', 'units': 'unit',
+                         'merchants': 'merchant'}
+
 
 class Unit:
     """e.g. villager, swordsman, knight, catapult"""
     kind = 'units'
+    # The following should never be accessed. It will always be overridden by the subclasses.
+    cost = Resources({'food': 1000, 'wood': 1000, 'gold': 1000})
 
     def __init__(self, number, position):
         """For each player, the first of each unit is numbered 1.
@@ -21,7 +24,6 @@ class Unit:
     def __str__(self):
         kind_singular = unit_kind_to_singular[self.kind].capitalize()
         return '{} {} at position {}'.format(kind_singular, self.number, self.position)
-
 
     def can_move(self, delta, game_map):
         """Returns bool. Right now, every unit can move the same distance, but that may change.
@@ -102,6 +104,16 @@ class Trebuchet(Unit):
 class Merchant(Unit):
     kind = 'merchants'
 
+
+unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights', 'batteringrams',
+              'catapults', 'trebuchets', 'merchants']
+
+unit_classes = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam,
+                Catapult, Trebuchet, Merchant]
+
+assert len(unit_kinds) == len(unit_classes)
+
+unit_kind_to_class = dict((k, c) for k, c in zip(unit_kinds, unit_classes))
 
 if __name__ == '__main__':
     from game_map import Position, Vector, game_map

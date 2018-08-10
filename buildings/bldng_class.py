@@ -1,5 +1,6 @@
 # To see which files contain which buildings, see directory_structure.txt
 
+from resources import Resources
 
 class Building:
     # Have a method to handle when a building is being attacked. Also have a method to handle building
@@ -8,8 +9,10 @@ class Building:
     # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units garrisoned
     # in it.
     kind = 'building'
+    # The following three attributes should never be accessed.
     size = (2, 2)
     letter_abbreviation = '?'
+    cost = Resources({'wood':1000, 'stone':1000, 'bronze':1000})
 
     def __init__(self, number, position):
         """For each player, the first of each building is numbered 1.
