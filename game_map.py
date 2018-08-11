@@ -1,5 +1,9 @@
+from resources import Wood
+
+
 class Position:
     """The i and j coordinates of a position on the map"""
+
     def __init__(self, i, j):
         self.value = (i, j)
 
@@ -26,6 +30,7 @@ class Position:
         if self.value[0] >= len(the_map) or self.value[1] >= len(the_map[0]):
             return False
         return True
+
 
 class Vector(Position):
     def __add__(self, other):
@@ -68,7 +73,6 @@ class Vector(Position):
         return (beginning, the_rest)
 
 
-
 def special_min(x, other=7):
     """returns x, other, or -1 * other"""
     value = min(other, abs(x))
@@ -77,25 +81,27 @@ def special_min(x, other=7):
     return value
 
 
-
 # Eventually, I should create a function that makes a random map
-game_map  = [[' '] * 100 for i in range(100)]
+game_map = [[' '] * 100 for i in range(100)]
 for i in range(60, 66):
     for j in range(75, 85):
-        game_map[i][j] = 'w'
+        game_map[i][j] = Wood(Position(i, j))
 
 # Eh, I feel like adding more wood:
 for i in range(66, 72):
     for j in range(80, 90):
-        game_map[i][j] = 'w'
+        game_map[i][j] = Wood(Position(i, j))
 
-# For larger maps, this function should really only print part of the map (which would need to be specified).
+
+# For larger maps, this function should really only print part of the map (which would need to
+# be specified).
 def print_map(some_map):
     for ls in game_map:
-        print(''.join(ls))
+        print(''.join(map(str, ls)))
 
 
 if __name__ == '__main__':
+    print_map(game_map)
     # pos1 = Position(5, 6)
     # vec1 = Vector(2, -1)
     # print(pos1 - vec1)
@@ -122,5 +128,3 @@ if __name__ == '__main__':
     #             wrong.append(v)
     # print(len(wrong)) #  Great! len(wrong) == 0
     # print(wrong[:5])
-
-
