@@ -81,6 +81,44 @@ def special_min(x, other=7):
     return value
 
 
+def everything_within_given_distance_on(the_map, distance, position):
+    """Iterates through everything on the_map that is within the given distance of position.
+
+    position must be of type Position
+    distance must be a non-negative int"""
+    if not type(distance) is int:
+        print('distance must be an int')
+        return
+    if distance < 0:
+        print('distance must not be negative')
+        return
+    i0, j0 = position.value
+
+    # The following iterates through the left half of the_map (including the middle vertical strip)
+    for j_delta in range(-1 * distance, 1):
+        height = distance + j_delta
+        # height is how far up or down the map, we need to go
+        for i_delta in range(-1 * height, height + 1):
+            i = i0 + i_delta
+            j = j0 + j_delta
+            this_position = Position(i, j)
+            if this_position.is_on_the_map(the_map):
+                # the_map[i][j] = '*'  # This was used for testing purposes only.
+                yield the_map[i][j]
+
+    # The following iterates through the right half of the_map
+    for j_delta in range(1, distance + 1):
+        height = distance - j_delta
+        for i_delta in range(-1 * height, height + 1):
+            i = i0 + i_delta
+            j = j0 + j_delta
+            this_position = Position(i, j)
+            if this_position.is_on_the_map(the_map):
+                # the_map[i][j] = '*'  # This was used for testing purposes only.
+                yield the_map[i][j]
+
+
+
 # Eventually, I should create a function that makes a random map
 game_map = [[' '] * 100 for i in range(100)]
 for i in range(60, 66):
@@ -96,12 +134,19 @@ for i in range(66, 72):
 # For larger maps, this function should really only print part of the map (which would need to
 # be specified).
 def print_map(some_map):
-    for ls in game_map:
+    for ls in some_map:
         print(''.join(map(str, ls)))
 
 
 if __name__ == '__main__':
-    print_map(game_map)
+    # print_map(game_map)
+    # The following code was run for various values of distance and Position(i, j):
+    # When it was run, the code within the function everything_within_given_distance_on
+    # was uncommented so that the map was modified.
+    # for i in everything_within_given_distance_on(game_map, 40, Position(-5, 30)):
+    #     pass
+    # print_map(game_map)
+
     # pos1 = Position(5, 6)
     # vec1 = Vector(2, -1)
     # print(pos1 - vec1)
