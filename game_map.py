@@ -83,6 +83,7 @@ def special_min(x, other=7):
 
 def everything_within_given_distance_on(the_map, distance, position):
     """Iterates through everything on the_map that is within the given distance of position.
+    This portion of the_map is in the shape of a diamond.
 
     position must be of type Position
     distance must be a non-negative int"""
@@ -92,11 +93,14 @@ def everything_within_given_distance_on(the_map, distance, position):
     if distance < 0:
         print('distance must not be negative')
         return
+
     i0, j0 = position.value
 
-    # The following iterates through the left half of the_map (including the middle vertical strip)
-    for j_delta in range(-1 * distance, 1):
-        height = distance + j_delta
+    # The following iterates through the diamond shaped portion of the_map from left to right,
+    # bottom to top.
+    for j_delta in range(-1 * distance, distance + 1):
+        sign = 1 if j_delta <= 0 else -1
+        height = distance + j_delta * sign
         # height is how far up or down the map, we need to go
         for i_delta in range(-1 * height, height + 1):
             i = i0 + i_delta
@@ -106,16 +110,6 @@ def everything_within_given_distance_on(the_map, distance, position):
                 # the_map[i][j] = '*'  # This was used for testing purposes only.
                 yield the_map[i][j]
 
-    # The following iterates through the right half of the_map
-    for j_delta in range(1, distance + 1):
-        height = distance - j_delta
-        for i_delta in range(-1 * height, height + 1):
-            i = i0 + i_delta
-            j = j0 + j_delta
-            this_position = Position(i, j)
-            if this_position.is_on_the_map(the_map):
-                # the_map[i][j] = '*'  # This was used for testing purposes only.
-                yield the_map[i][j]
 
 
 
@@ -143,7 +137,7 @@ if __name__ == '__main__':
     # The following code was run for various values of distance and Position(i, j):
     # When it was run, the code within the function everything_within_given_distance_on
     # was uncommented so that the map was modified.
-    # for i in everything_within_given_distance_on(game_map, 40, Position(-5, 30)):
+    # for i in everything_within_given_distance_on(game_map, 20, Position(5, 92)):
     #     pass
     # print_map(game_map)
 
