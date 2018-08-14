@@ -3,6 +3,7 @@
 from game_map import Vector
 from help import help
 from units import unit_kinds
+from resources import resource_kind_to_class, Wood, Stone, Gold, Bronze, Iron
 
 def input_number_of_players(human=True):
     if human:
@@ -30,7 +31,7 @@ done_with_turn = {'finished', 'done'}
 help_commands = {'help', 'commands'}
 # NOTE: If main_commands is changed, then so should the functions dictionary, defined just before
 # the input_next_command function.
-main_commands = {'build', 'select', 'move', 'print', 'set'}
+main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine'}
 possible_first_words = main_commands.union(done_with_turn).union(help_commands)
 
 unit_kinds_singular = ['villager', 'pikeman', 'swordsman', 'archer', 'knight', 'batteringram',
@@ -147,6 +148,7 @@ def selected_obj_to_ls_of_units(player, selected_obj):
 
     return []
 
+
 def selected_obj_to_actual_building(player, selected_obj):
     """In order to not return None, selected_obj must be in the following format:
     ['building', building.kind, building_num]"""
@@ -165,6 +167,25 @@ def selected_obj_to_actual_building(player, selected_obj):
 
     return player.buildings[kind][building_num]
 
+
+def selected_obj_consists_of_villagers(selected_obj):
+    if not selected_obj:
+        print('You must first select some villager(s) before giving a command to ',
+              'collect a resource or build a building.')
+        return False
+
+    if not type(selected_obj) is list or len(selected_obj) < 2:
+        print('Error: selected_obj is not proper')
+        return False
+
+    if not selected_obj[0] in ('unit', 'group'):
+        return False
+
+    if selected_obj[0] == 'unit' and not selected_obj[1] == 'villagers':
+        print('Only villagers can collect resources. Your selected object was not a ',
+              'group of villagers.')
+        return False
+    return True
 
 def extract_selected_obj(inpt_as_ls):
     """The return format is the same as the fn select_something"""
@@ -304,6 +325,45 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
 # The following is intended to only be used by the function build_something
 def build_building(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     return ['build building']
+
+
+def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+    """In order to not return [], selected_obj must be of villager type.
+
+    If not returning [], returns
+    ['collect', <resource>, ls_of_villagers], where ls_of_villagers is non-empty"""
+    if not selected_obj_consists_of_villagers(selected_obj):
+        return []
+
+    ls_of_villagers = selected_obj_to_ls_of_units(player, selected_obj)
+    if len(ls_of_villagers) == 0:
+        print('Command to collect resources rejected since the selected object was empty.')
+        return []
+
+    if len(inpt_as_ls) != 2:
+        print('Your command was not understood. Any command to collect resources must consist',
+              'of two words.')
+        return []
+
+    resource = inpt_as_ls[1]
+    if not resource in resource_kind_to_class:
+        print('The resource you want to collect was not understood.')
+        return []
+
+    resource = resource_kind_to_class[resource]
+    command = inpt_as_ls[0]
+    if command == 'chop':
+        if not resource is Wood:
+            print('Only wood can be chopped.')
+            return []
+
+    if command == 'mine':
+        if not resource in {Stone, Gold, Bronze, Iron}:
+            print('Only stone, gold, bronze, and iron can be mined.')
+            return []
+
+    return ['collect', resource, ls_of_villagers]
+
 
 
 def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -466,6 +526,10 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
 functions = {'build': build_something, 'select': select_something, 'move': move_unit_or_units,
              'set': set_default_build_position, 'print': print_something}
 
+# Intended use: 'collect <any resource>', 'chop wood', 'mine gold', 'mine bronze', 'mine iron'
+for word in ('collect', 'chop', 'mine'):
+    functions[word] = collect_resource
+
 assert set(functions) == main_commands
 
 
@@ -530,5 +594,22 @@ if __name__ == '__main__':
     print(selected_obj_to_actual_building(p1, ['building', 'towncenter', 1]))
     assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) == None
     assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) == None
-    a = input_next_command(p1)
-    print(a)
+    # a = input_next_command(p1)
+    # print(a)
+
+    # Testing the function collect_resource
+    # inpt_as_ls = ['collect', 'wood']
+    # for selected_obj in ([], None, ['unit', 'swordsmen', 1, 4]):
+    #     assert collect_resource(p1, inpt_as_ls, selected_obj) == []
+    #
+    # selected_obj = ['unit', 'villagers', 4, 4]
+    # assert collect_resource(p1, inpt_as_ls, selected_obj) == []
+    #
+    # selected_obj = ['unit', 'villagers', 2, 3]
+    # print(collect_resource(p1, inpt_as_ls, selected_obj))
+
+    # for inpt_as_ls in (['chop', 'gold'], ['mine', 'wood'], ['collect', 'blah']):
+    #     print(collect_resource(p1, inpt_as_ls, selected_obj))
+
+
+
