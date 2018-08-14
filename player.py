@@ -113,9 +113,9 @@ if __name__ == '__main__':
 
     for j in range(4, 22):
         if p1.can_build(Villager):
-            t.build_villager(p1)
+            t.build_unit(p1, Villager.kind)
 
     print(p1.population)
     print(p1.resources)
     print('ok')
-    print_map(game_map)
+    print(game_map)
