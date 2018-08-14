@@ -111,10 +111,27 @@ def everything_within_given_distance_on(the_map, distance, position):
                 yield the_map[i][j]
 
 
+def within_given_distance(obj1, obj2, distance):
+    vector = obj1.position - obj2.position
+    return vector.magnitude <= distance
+
+
+# One reason I see now for why I want this class for representing the map is that given a position
+# object, I can use it directly to find what is at that position, rather than re-implementing
+# the code in __call__ every time.
+class GameMap(list):
+    def __call__(self, position):
+        i, j = position.value
+        return self[i][j]
+
+    def __str__(self):
+        rows = [''.join(map(str, ls)) for ls in self]
+        return '\n'.join(rows)
+
 
 
 # Eventually, I should create a function that makes a random map
-game_map = [[' '] * 100 for i in range(100)]
+game_map = GameMap([[' '] * 100 for i in range(100)])
 for i in range(60, 66):
     for j in range(75, 85):
         game_map[i][j] = Wood(Position(i, j))
@@ -133,6 +150,13 @@ def print_map(some_map):
 
 
 if __name__ == '__main__':
+    for tpl in ((60, 75), (62, 78), (64, 84), (50, 50)):
+        position = Position(*tpl)
+        print(position, game_map(position))
+
+    print('ok now...')
+    print(game_map)
+    print('finished')
     # print_map(game_map)
     # The following code was run for various values of distance and Position(i, j):
     # When it was run, the code within the function everything_within_given_distance_on
