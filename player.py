@@ -2,6 +2,7 @@ from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.defense_bldngs import Tower, Castle
+from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
 from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
 from units import BatteringRam, Catapult, Trebuchet, Merchant
@@ -12,9 +13,10 @@ from game_map import game_map, Position
 
 from copy import deepcopy
 
-units_ls = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult, Trebuchet, Merchant]
+units_ls = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult,
+            Trebuchet, Merchant]
 buildings_ls = [TownCenter, House, Blacksmith, Library, Market, Barracks, ArcheryRange,
-                Stable, SiegeWorks, Tower, Castle]
+                Stable, SiegeWorks, Tower, Castle, Farm, LumberCamp, StoneQuarry, MiningCamp]
 
 
 class Player:
@@ -25,7 +27,7 @@ class Player:
         global game_map
         self.number = number
         self.is_human = is_human
-        self.resources = Resources({'food':300, 'wood':300, 'stone':200, 'gold':0, 'bronze':0, 'iron':0})
+        self.resources = Resources({'food':300,'wood':300,'stone':200,'gold':0,'bronze':0,'iron':0})
         self.age = 'Stone Age'
         # self.commands contains the commands entered by the player:
         commands_dict = {'move':dict(), 'build unit':dict()}  # This will need to be lengthened.
@@ -34,9 +36,9 @@ class Player:
         # 'later' means at some later turn.
 
         # For each player, House number 1 (i.e. the first house that player builds) will be in
-        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a place-holder.
-        # But since I DO have the space, self.buildings[building_kind][0] will be the number of
-        # buildings of that kind that have been destroyed.
+        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a
+        # placeholder. But since I DO have the space, self.buildings[building_kind][0] will be
+        # the number of buildings of that kind that have been destroyed.
         self.buildings = dict((building.kind, [0]) for building in buildings_ls)
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
@@ -53,21 +55,25 @@ class Player:
         total_cap = 300
         # Recall that self.buildings[TownCenter.kind][0] is the number of TownCenters that have
         # been destroyed.
-        num_town_centers = len(self.buildings[TownCenter.kind]) - self.buildings[TownCenter.kind][0] - 1
-        num_houses = len(self.buildings[House.kind]) - self.buildings[House.kind][0] - 1
+        num_towncenters_destroyed = self.buildings[TownCenter.kind][0]
+        num_town_centers = len(self.buildings[TownCenter.kind]) - num_towncenters_destroyed - 1
+        num_houses_destroyed = self.buildings[House.kind][0]
+        num_houses = len(self.buildings[House.kind]) - num_houses_destroyed - 1
         return min(20 * num_town_centers + 10 * num_houses, total_cap)
 
     @property
     def population(self):
         pop = 0
         for unit in units_ls:
-            # Recall that self.units[unit.kind][0] is the number of that unit kind that have been killed.
-            pop += len(self.units[unit.kind]) - self.units[unit.kind][0] - 1
+            # Recall that self.units[unit.kind][0] is the number of that unit kind that
+            # have been killed.
+            num_units_killed = self.units[unit.kind][0]
+            pop += len(self.units[unit.kind]) - num_units_killed - 1
         return pop
 
     def can_build(self, thing, number=1):
-        """If thing is a Unit, number is how many of that Unit that is desired to be built PLUS the number
-        of other units already OK'd to be built during the next turn."""
+        """If thing is a Unit, number is how many of that Unit that is desired to be built PLUS
+        the number of other units already OK'd to be built during the next turn."""
         if issubclass(thing, Unit) or isinstance(thing, Unit):
             if self.population > self.population_cap - number:
                 return False
