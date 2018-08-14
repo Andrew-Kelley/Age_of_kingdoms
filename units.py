@@ -100,7 +100,21 @@ class Villager(Unit):
         return False
 
     def collect_resource_here(self, resource, player):
-        pass
+        resource_instance = game_map(self.position)
+        if not isinstance(resource_instance, resource):
+            # This should never happen.
+            print('ERROR! The function collect_resource_here was called when with the argument ',
+                  "resource {},".format(resource),
+                  "but the object at the villager's position was {}".format(resource_instance))
+            return
+
+        amount_to_collect = min(player.collecting_capacity[resource], resource_instance.amount_left)
+        resource_instance.amount_left -= amount_to_collect
+        player.resources[resource] += amount_to_collect
+        if resource_instance.amount_left <= 0:
+            # Then delete resource_instance on the map
+            i, j = self.position.value
+            game_map[i][j] = ' '
 
     def collect_resource(self, resource, player):
         ls = list(self.resource_iter_within_given_distance_of_me(0, resource, player))
@@ -232,6 +246,13 @@ if __name__ == '__main__':
     v7.collect_resource(Wood, p1)
     assert v7.position in (Position(66, 80), Position(65, 79))
 
-
-
-
+    print(p1.resources)
+    position = Position(70, 80)
+    v8 = Villager(8, position)
+    assert v8.can_collect_resource_now(Wood, p1)
+    assert isinstance(game_map(position), Wood)
+    for i in range(30):
+        v8.collect_resource(Wood, p1)
+    assert game_map(position) == ' '
+    print(p1.resources)
+    print(game_map)
