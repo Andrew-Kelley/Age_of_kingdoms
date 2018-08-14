@@ -142,13 +142,6 @@ for i in range(66, 72):
         game_map[i][j] = Wood(Position(i, j))
 
 
-# For larger maps, this function should really only print part of the map (which would need to
-# be specified).
-def print_map(some_map):
-    for ls in some_map:
-        print(''.join(map(str, ls)))
-
-
 if __name__ == '__main__':
     for tpl in ((60, 75), (62, 78), (64, 84), (50, 50)):
         position = Position(*tpl)

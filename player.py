@@ -8,7 +8,7 @@ from units import BatteringRam, Catapult, Trebuchet, Merchant
 
 from resources import Resources
 
-from game_map import game_map, Position, print_map
+from game_map import game_map, Position
 
 from copy import deepcopy
 

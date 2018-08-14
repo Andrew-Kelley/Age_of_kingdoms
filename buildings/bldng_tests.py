@@ -1,6 +1,6 @@
 #Here are some tests for the Building class (and subclasses)
 
-from game_map import Position, game_map, print_map
+from game_map import Position, game_map
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter, House
 
@@ -22,4 +22,4 @@ for tpl in ((82, 80), (81,80), (76,80), (77, 80), (80,84), (80,83)):
     print()
 
 
-print_map(game_map)
+print(game_map)

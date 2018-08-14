@@ -2,7 +2,8 @@
 # Started July 21, 2018.
 
 from input_handling import input_next_command, is_a_selected_obj
-from command_handling import insert_command, update_now_and_later_commands, implement_commands_if_possible
+from command_handling import insert_command, update_now_and_later_commands
+from command_handling import implement_commands_if_possible
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
@@ -12,7 +13,7 @@ from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
 from units import BatteringRam, Catapult, Trebuchet, Merchant
 
 from resources import Resources
-from game_map import game_map, Position, print_map
+from game_map import game_map, Position
 from player import Player, initial_position_of_player
 
 
@@ -22,14 +23,16 @@ print("Starting a game of Age of Kingdoms...")
 # Note: for testing purposes, I'll start off with only 1 human player (and no computer players).
 n1 = 1
 n2 = 0
-print("""Ok folks, starting a game with {} human player(s) and {} computer player(s).""".format(n1, n2))
+print("""Starting a game with {} human player(s) and {} computer player(s).""".format(n1, n2))
 
-
+# The actual players are listed starting at index 1. Thus players[i] == player number i.
 players = [None]
 for i in range(1, n1+1):
-    players.append(Player(number=i, position=initial_position_of_player(i, game_map), is_human=True))
+    initial_position = initial_position_of_player(i, game_map)
+    players.append(Player(number=i, position=initial_position, is_human=True))
 for i in range(n1+1, n1 + n2 + 1):
-    players.append(Player(number=i, position=initial_position_of_player(i, game_map), is_human=False))
+    initial_position = initial_position_of_player(i, game_map)
+    players.append(Player(number=i, position=initial_position, is_human=False))
 
 for player in players[1:]:
     print("Is player number {} human? {}".format(player.number, player.is_human))
