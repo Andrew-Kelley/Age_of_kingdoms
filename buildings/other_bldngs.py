@@ -1,11 +1,12 @@
 from buildings.bldng_class import Building
 from units import Villager
-from resources import Resources
+from resources import Resources, Wood, Stone, Gold
+
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
     More can be built in the Iron Age."""
-    cost = Resources({'wood':300, 'stone':200})
+    cost = Resources({Wood: 300, Stone: 200})
     size = (4, 4)
     letter_abbreviation = 'T'
     # hit_points = ?
@@ -27,17 +28,17 @@ class TownCenter(Building):
         player.units[Villager.kind].append(new_villager)
         player.resources -= Villager.cost
 
-
     def num_villagers_can_build_in_turn(self, player):
-        key = {'Stone Age':1, 'Bronze Age':2, 'Iron Age':3}
+        key = {'Stone Age': 1, 'Bronze Age': 2, 'Iron Age': 3}
         return key[player.age]
 
 
 class House(Building):
-    cost = Resources({'wood':100})
+    cost = Resources({Wood: 100})
     size = (2, 2)
     letter_abbreviation = 'H'
     kind = 'house'
+
 
 class Blacksmith(Building):
     # Can only be built once the Bronze Age is reached.
@@ -47,27 +48,31 @@ class Blacksmith(Building):
     # -bronze shields (is necessary to build Swordsman)
     # -bronze axes (benefits Villagers which are chopping wood)
     # -bronze picks (benefits Villagers which are mining gold or bronze)
-    cost = Resources({'wood':150, 'stone':25})
+    cost = Resources({Wood: 150, Stone: 25})
     size = (3, 3)
     letter_abbreviation = 'X'
     kind = 'blacksmith'
 
+
 class Library(Building):
-    cost = Resources({'wood':200, 'gold':100})
+    cost = Resources({Wood: 200, Gold: 100})
     size = (3, 3)
     letter_abbreviation = 'L'
     kind = 'library'
 
+
 # Maybe implement this building last
 class Market(Building):
-    cost = Resources({'wood':150, 'gold':20})
+    cost = Resources({Wood: 150, Gold: 20})
     size = (3, 3)
     letter_abbreviation = 'M'
     kind = 'market'
 
+
 if __name__ == '__main__':
     from game_map import Position
-    t = TownCenter(1, Position(50,50))
+
+    t = TownCenter(1, Position(50, 50))
     print(t.cost)
     print(t.number)
     print(t.position)

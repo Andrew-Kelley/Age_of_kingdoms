@@ -1,11 +1,11 @@
 # This includes all buildings that produce military units
 
 from buildings.bldng_class import Building
-from resources import Resources
+from resources import Resources, Wood
 
 
 class Barracks(Building):
-    cost = Resources({'wood': 150})
+    cost = Resources({Wood: 150})
     size = (3, 3)
     letter_abbreviation = 'B'
     kind = 'barracks'
@@ -20,7 +20,7 @@ class Barracks(Building):
 
 
 class ArcheryRange(Building):
-    cost = Resources({'wood': 150})
+    cost = Resources({Wood: 150})
     size = (5, 3)
     letter_abbreviation = 'A'
     kind = 'archeryrange'
@@ -30,7 +30,7 @@ class ArcheryRange(Building):
 
 
 class Stable(Building):
-    cost = Resources({'wood': 150})
+    cost = Resources({Wood: 150})
     size = (3, 3)
     letter_abbreviation = 'S'
     kind = 'stable'
@@ -40,7 +40,7 @@ class Stable(Building):
 
 
 class SiegeWorks(Building):
-    cost = Resources({'wood': 150})
+    cost = Resources({Wood: 150})
     size = (3, 3)
     letter_abbreviation = 'W'
     kind = 'siegeworks'

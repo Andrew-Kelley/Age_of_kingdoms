@@ -1,6 +1,7 @@
 # To see which files contain which buildings, see directory_structure.txt
 
-from resources import Resources
+from resources import Resources, Wood, Stone, Bronze
+
 
 class Building:
     # Have a method to handle when a building is being attacked. Also have a method to handle building
@@ -12,7 +13,7 @@ class Building:
     # The following three attributes should never be accessed.
     size = (2, 2)
     letter_abbreviation = '?'
-    cost = Resources({'wood':1000, 'stone':1000, 'bronze':1000})
+    cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000})
 
     def __init__(self, number, position):
         """For each player, the first of each building is numbered 1.

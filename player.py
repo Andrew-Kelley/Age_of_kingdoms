@@ -27,15 +27,15 @@ class Player:
         global game_map
         self.number = number
         self.is_human = is_human
-        self.resources = Resources({'food':300,'wood':300,'stone':200,'gold':0,'bronze':0,'iron':0})
+        self.resources = Resources({Food: 300, Wood: 300, Stone: 200, Gold: 0, Bronze: 0, Iron: 0})
         self.age = 'Stone Age'
 
         # The following is how much of a given resource a single villager can collect in one turn.
-        self.collecting_capacity = {Wood:8, Food:10, Stone:6, Gold:6, Bronze:6, Iron:8}
+        self.collecting_capacity = {Wood: 8, Food: 10, Stone: 6, Gold: 6, Bronze: 6, Iron: 8}
 
         # self.commands contains the commands entered by the player:
-        commands_dict = {'move':dict(), 'build unit':dict()}  # This will need to be lengthened.
-        self.commands = {'now':commands_dict, 'later':deepcopy(commands_dict)}
+        commands_dict = {'move': dict(), 'build unit': dict()}  # This will need to be lengthened.
+        self.commands = {'now': commands_dict, 'later': deepcopy(commands_dict)}
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 
@@ -50,7 +50,7 @@ class Player:
         self.buildings[TownCenter.kind].append(TownCenter(1, position))
 
         # Each player begins with 3 villagers
-        for i, delta in enumerate([(-2, -2), (2,-2), (2, 2)], start=1):
+        for i, delta in enumerate([(-2, -2), (2, -2), (2, 2)], start=1):
             new_position = position + Position(*delta)
             self.units[Villager.kind].append(Villager(i, new_position))
 
@@ -106,7 +106,6 @@ def initial_position_of_player(player_number, game_map):
 
 if __name__ == '__main__':
     from input_handling import input_next_command
-
 
     p1 = Player(1, Position(80, 80), is_human=True)
     for villager in p1.units['villagers'][1:]:

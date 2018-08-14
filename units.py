@@ -1,6 +1,6 @@
-from resources import Resources, Wood, Food, Stone, Bronze, Iron
+from resources import Resources, Wood, Food, Stone, Gold, Bronze, Iron
 from game_map import game_map, everything_within_given_distance_on
-
+from random import choice
 
 unit_kind_to_singular = {'villagers': 'villager', 'pikemen': 'pikeman', 'swordsmen': 'swordsman',
                          'archers': 'archer', 'knights': 'knight', 'batteringrams': 'batteringram',
@@ -12,7 +12,7 @@ class Unit:
     """e.g. villager, swordsman, knight, catapult"""
     kind = 'units'
     # The following should never be accessed. It will always be overridden by the subclasses.
-    cost = Resources({'food': 1000, 'wood': 1000, 'gold': 1000})
+    cost = Resources({Food: 1000, Wood: 1000, Gold: 1000})
 
     def __init__(self, number, position):
         """For each player, the first of each unit is numbered 1.
@@ -60,7 +60,7 @@ class Group:
 
 
 class Villager(Unit):
-    cost = Resources({'food': 50})
+    cost = Resources({Food: 50})
     kind = 'villagers'
 
     def resource_ls_within_given_distance_of_me(self, distance, resource):
@@ -78,13 +78,29 @@ class Villager(Unit):
         return resource_ls
 
     def can_collect_resource_now(self, resource):
+        """The word 'now' means this turn. If the given resource is within 6 spots of the villager,
+        then the villager is allowed to instantly move to a nearby resource instance and collect
+        that resource this turn."""
+        if len(self.resource_ls_within_given_distance_of_me(6, resource)) > 0:
+            return True
+
+    def collect_resource_here(self, resource):
         pass
 
-    def collect_wood_here(self):
-        pass
+    def collect_resource(self, resource):
+        ls = self.resource_ls_within_given_distance_of_me(0, resource)
+        if len(ls) > 0:
+            self.collect_resource_here(resource)
+            return
 
-    def collect_wood(self):
-        pass
+        for distance in (1, 2, 4, 6):
+            ls = self.resource_ls_within_given_distance_of_me(distance, resource)
+            if len(ls) > 0:
+                resource_instance = choice(ls)
+                delta = resource_instance.position - self.position
+                self.move_by(delta)
+                self.collect_resource_here(resource)
+                return
 
 
 # Unless pikemen are vastly weaker than Swordsman, I think that the cost difference between Pikeman
@@ -93,7 +109,7 @@ class Villager(Unit):
 # I intend Pikeman to only be somewhat weaker than Swordsman
 class Pikeman(Unit):
     """A man with a spear and a shield"""
-    cost = Resources({'food': 40, 'wood': 15})
+    cost = Resources({Food: 40, Wood: 15})
     kind = 'pikemen'
 
 
@@ -101,12 +117,12 @@ class Swordsman(Unit):
     # After reaching the Bronze Age, before being able to train Swordsman, two things must first be
     # researched at the Blacksmith: (a) bronze shields, and (b) bronze swords.
     # The first of these also benefits Pikeman (by upgrading their armor to bronze).
-    cost = Resources({'food': 40, 'gold': 25, 'bronze': 30})
+    cost = Resources({Food: 40, Gold: 25, Bronze: 30})
     kind = 'swordsmen'
 
 
 class Archer(Unit):
-    cost = Resources({'wood': 40, 'gold': 25, 'bronze': 15})
+    cost = Resources({Wood: 40, Gold: 25, Bronze: 15})
     kind = 'archers'
 
 
@@ -172,12 +188,23 @@ if __name__ == '__main__':
         delta = Vector(*tpl)
         assert not v3.can_move(delta, game_map)
 
-
-    # NOTE: The following code may break if I change game_map
+    # NOTE: The following four blocks of code may break if I change game_map
     v4 = Villager(4, Position(70, 85))
     ls = v4.resource_ls_within_given_distance_of_me(0, Wood)
     assert len(ls) == 1
     assert isinstance(ls[0], Wood)
 
+    v5 = Villager(5, Position(67, 90))
+    assert v5.can_collect_resource_now(Wood)
+    v5.collect_resource(Wood)
+    assert v5.position == Position(67, 89)
+
+    v6 = Villager(6, Position(54, 77))
+    v6.collect_resource(Wood)
+    assert v6.position == Position(60, 77)
+
+    v7 = Villager(7, Position(66, 79))
+    v7.collect_resource(Wood)
+    assert v7.position in (Position(66, 80), Position(65, 79))
 
 
