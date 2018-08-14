@@ -1,4 +1,6 @@
-from resources import Resources
+from resources import Resources, Wood, Food, Stone, Bronze, Iron
+from game_map import game_map, everything_within_given_distance_on
+
 
 unit_kind_to_singular = {'villagers': 'villager', 'pikemen': 'pikeman', 'swordsmen': 'swordsman',
                          'archers': 'archer', 'knights': 'knight', 'batteringrams': 'batteringram',
@@ -50,8 +52,8 @@ class Army:
     pass
 
 
-# Should Group inherit from Army? Or should Group be more general than its docstring states and then have
-# Army inherit from Group?
+# Should Group inherit from Army? Or should Group be more general than its docstring states and
+# then have Army inherit from Group?
 class Group:
     """A collection of villagers."""
     pass
@@ -61,9 +63,32 @@ class Villager(Unit):
     cost = Resources({'food': 50})
     kind = 'villagers'
 
+    def resource_ls_within_given_distance_of_me(self, distance, resource):
+        """Returns a list of all instances of the given resource within the stated distance of self.
 
-# Unless pikemen are vastly weaker than Swordsman, I think that the cost difference between Pikeman and
-# Swordsman will result in many more Pikeman being built at the beginning of the game.
+        resource must be in [Wood, Food, Stone, Bronze, Iron]."""
+        global game_map
+        if not type(distance) is int or distance < 0:
+            return []
+
+        resource_ls = []
+        for obj in everything_within_given_distance_on(game_map, distance, self.position):
+            if isinstance(obj, resource):
+                resource_ls.append(obj)
+        return resource_ls
+
+    def can_collect_resource_now(self, resource):
+        pass
+
+    def collect_wood_here(self):
+        pass
+
+    def collect_wood(self):
+        pass
+
+
+# Unless pikemen are vastly weaker than Swordsman, I think that the cost difference between Pikeman
+# and Swordsman will result in many more Pikeman being built at the beginning of the game.
 # I think that this is OK.
 # I intend Pikeman to only be somewhat weaker than Swordsman
 class Pikeman(Unit):
@@ -116,7 +141,7 @@ assert len(unit_kinds) == len(unit_classes)
 unit_kind_to_class = dict((k, c) for k, c in zip(unit_kinds, unit_classes))
 
 if __name__ == '__main__':
-    from game_map import Position, Vector, game_map
+    from game_map import Position, Vector
 
     v1 = Villager(1, Position(50, 50))
     print(v1.number, v1.position)
@@ -146,3 +171,13 @@ if __name__ == '__main__':
     for tpl in ((5, 4), (4, 5), (6, -1), (2, 7)):
         delta = Vector(*tpl)
         assert not v3.can_move(delta, game_map)
+
+
+    # NOTE: The following code may break if I change game_map
+    v4 = Villager(4, Position(70, 85))
+    ls = v4.resource_ls_within_given_distance_of_me(0, Wood)
+    assert len(ls) == 1
+    assert isinstance(ls[0], Wood)
+
+
+
