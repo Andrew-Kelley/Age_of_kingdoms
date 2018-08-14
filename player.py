@@ -7,7 +7,7 @@ from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
 from units import BatteringRam, Catapult, Trebuchet, Merchant
 
-from resources import Resources
+from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
 
 from game_map import game_map, Position
 
@@ -29,6 +29,10 @@ class Player:
         self.is_human = is_human
         self.resources = Resources({'food':300,'wood':300,'stone':200,'gold':0,'bronze':0,'iron':0})
         self.age = 'Stone Age'
+
+        # The following is how much of a given resource a single villager can collect in one turn.
+        self.collecting_capacity = {Wood:8, Food:10, Stone:6, Gold:6, Bronze:6, Iron:8}
+
         # self.commands contains the commands entered by the player:
         commands_dict = {'move':dict(), 'build unit':dict()}  # This will need to be lengthened.
         self.commands = {'now':commands_dict, 'later':deepcopy(commands_dict)}
