@@ -1,6 +1,8 @@
 from resources import Resources, Wood, Food, Stone, Gold, Bronze, Iron
-from game_map import game_map, everything_within_given_distance_on
+from game_map import game_map, everything_within_given_distance_on, within_given_distance
+from buildings.resource_bldngs import LumberCamp, StoneQuarry, MiningCamp
 from random import choice
+from copy import copy
 
 unit_kind_to_singular = {'villagers': 'villager', 'pikemen': 'pikeman', 'swordsmen': 'swordsman',
                          'archers': 'archer', 'knights': 'knight', 'batteringrams': 'batteringram',
@@ -63,43 +65,59 @@ class Villager(Unit):
     cost = Resources({Food: 50})
     kind = 'villagers'
 
-    def resource_ls_within_given_distance_of_me(self, distance, resource):
-        """Returns a list of all instances of the given resource within the stated distance of self.
+    def resource_ls_within_given_distance_of_me(self, distance, resource, player):
+        """Returns a list of instances of the given resource within the stated distance of self which
+        are also within 15 spots of an appropriate building.
 
         resource must be in [Wood, Food, Stone, Bronze, Iron]."""
         global game_map
         if not type(distance) is int or distance < 0:
             return []
 
+        buildings_ls = copy(player.buildings['towncenter'][1:])
+        resource_to_building = {Wood: LumberCamp, Stone: StoneQuarry, Gold: MiningCamp,
+                                Bronze: MiningCamp, Iron: MiningCamp}
+        if resource in resource_to_building:
+            building = resource_to_building[resource]
+            buildings_ls.extend(copy(player.buildings[building.kind][1:]))
+
         resource_ls = []
         for obj in everything_within_given_distance_on(game_map, distance, self.position):
             if isinstance(obj, resource):
-                resource_ls.append(obj)
+                for building in buildings_ls:
+                    if within_given_distance(obj, building, distance=15):
+                        resource_ls.append(obj)
+                        break
         return resource_ls
 
-    def can_collect_resource_now(self, resource):
-        """The word 'now' means this turn. If the given resource is within 6 spots of the villager,
+    def can_collect_resource_now(self, resource, player):
+        """The word 'now' means this turn. The villager self must be within 6 spots of a resource instance
+        that is also within 15 spots of an appropriate building.
+
+        If the given resource is within 6 spots of the villager,
         then the villager is allowed to instantly move to a nearby resource instance and collect
         that resource this turn."""
-        if len(self.resource_ls_within_given_distance_of_me(6, resource)) > 0:
+        ls = self.resource_ls_within_given_distance_of_me(6, resource, player)
+        if len(ls) > 0:
             return True
+        return False
 
-    def collect_resource_here(self, resource):
+    def collect_resource_here(self, resource, player):
         pass
 
-    def collect_resource(self, resource):
-        ls = self.resource_ls_within_given_distance_of_me(0, resource)
+    def collect_resource(self, resource, player):
+        ls = self.resource_ls_within_given_distance_of_me(0, resource, player)
         if len(ls) > 0:
-            self.collect_resource_here(resource)
+            self.collect_resource_here(resource, player)
             return
 
         for distance in (1, 2, 4, 6):
-            ls = self.resource_ls_within_given_distance_of_me(distance, resource)
+            ls = self.resource_ls_within_given_distance_of_me(distance, resource, player)
             if len(ls) > 0:
                 resource_instance = choice(ls)
                 delta = resource_instance.position - self.position
                 self.move_by(delta)
-                self.collect_resource_here(resource)
+                self.collect_resource_here(resource, player)
                 return
 
 
@@ -158,6 +176,9 @@ unit_kind_to_class = dict((k, c) for k, c in zip(unit_kinds, unit_classes))
 
 if __name__ == '__main__':
     from game_map import Position, Vector
+    from player import Player
+    from buildings.bldng_class import Building
+    from buildings.resource_bldngs import LumberCamp
 
     v1 = Villager(1, Position(50, 50))
     print(v1.number, v1.position)
@@ -189,22 +210,31 @@ if __name__ == '__main__':
         assert not v3.can_move(delta, game_map)
 
     # NOTE: The following four blocks of code may break if I change game_map
+    p1 = Player(1, Position(80, 80), is_human=True)
     v4 = Villager(4, Position(70, 85))
-    ls = v4.resource_ls_within_given_distance_of_me(0, Wood)
+    ls = v4.resource_ls_within_given_distance_of_me(0, Wood, p1)
     assert len(ls) == 1
     assert isinstance(ls[0], Wood)
 
+    lumber_camp = LumberCamp(1, Position(67, 92))
+    Building.build(lumber_camp, p1, Position(67, 92), game_map)
+    p1.buildings[LumberCamp.kind].append(lumber_camp)
+    print(game_map)
     v5 = Villager(5, Position(67, 90))
-    assert v5.can_collect_resource_now(Wood)
-    v5.collect_resource(Wood)
+    assert v5.can_collect_resource_now(Wood, p1)
+    v5.collect_resource(Wood, p1)
     assert v5.position == Position(67, 89)
 
     v6 = Villager(6, Position(54, 77))
-    v6.collect_resource(Wood)
-    assert v6.position == Position(60, 77)
+    assert not v6.can_collect_resource_now(Wood, p1)
+    v6.collect_resource(Wood, p1)
+    assert v6.position == Position(54, 77)
+    # assert v6.position == Position(60, 77)
 
     v7 = Villager(7, Position(66, 79))
-    v7.collect_resource(Wood)
+    v7.collect_resource(Wood, p1)
     assert v7.position in (Position(66, 80), Position(65, 79))
+
+
 
 
