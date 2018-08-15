@@ -1,4 +1,4 @@
-from resources import Wood
+from resources import Wood, Stone, Food, Gold
 
 
 class Position:
@@ -52,6 +52,13 @@ class Vector(Position):
         if self.magnitude <= 15:
             return (self, Vector(0, 0))
 
+        def special_min(x, other=7):
+            """returns x, other, or -1 * other"""
+            value = min(other, abs(x))
+            if x < 0:
+                value *= -1
+            return value
+
         i0, j0 = self.value
         i = special_min(i0, 7)
         j = special_min(j0, 8)
@@ -73,12 +80,58 @@ class Vector(Position):
         return (beginning, the_rest)
 
 
-def special_min(x, other=7):
-    """returns x, other, or -1 * other"""
-    value = min(other, abs(x))
-    if x < 0:
-        value *= -1
-    return value
+# One reason I see now for why I want this class for representing the map is that given a position
+# object, I can use it directly to find what is at that position, rather than re-implementing
+# the code in __call__ every time.
+class GameMap(list):
+    def __call__(self, position):
+        i, j = position.value
+        return self[i][j]
+
+    def __str__(self):
+        rows = [''.join(map(str, ls)) for ls in self]
+        return '\n'.join(rows)
+
+    def print_centered_at(self, position, width=100, height=24):
+
+        # The following is used to print the same number of digits when printing row or column
+        # numbers:
+        num_digits = 2 if len(self) <= 100 else 3
+        def int_to_str(i):
+            """Returns the i as a string with num_digits digits if i is a multiple of 5. Otherwise
+            this returns num_digits spaces"""
+            if i % 5 == 0:
+                return str(i).zfill(num_digits)
+            else:
+                return ' ' * num_digits
+
+        if not position.is_on_the_map(self):
+            print('You must choose a position that is on the map.')
+            return
+
+        horizontal_delta = width // 2
+        vertical_delta = height // 2
+
+        i0, j0 = position.value
+
+        i_start = max(0, i0 - vertical_delta)
+        i_stop = min(len(self) - 1, i0 + vertical_delta)
+
+        j_start = max(0, j0 - horizontal_delta)
+        j_stop = min(len(self[0]) - 1, j0 + horizontal_delta)
+
+        def print_column_numbers():
+            pass
+
+        def print_row(i):
+            margin = int_to_str(i)
+            row_content = ''.join(map(str, self[i][j_start:j_stop]))
+            print(margin + row_content + margin)
+
+        print_column_numbers()
+        for i in range(i_start, i_stop):
+            print_row(i)
+        print_column_numbers()
 
 
 def everything_within_given_distance_on(the_map, distance, position):
@@ -116,20 +169,6 @@ def within_given_distance(obj1, obj2, distance):
     return vector.magnitude <= distance
 
 
-# One reason I see now for why I want this class for representing the map is that given a position
-# object, I can use it directly to find what is at that position, rather than re-implementing
-# the code in __call__ every time.
-class GameMap(list):
-    def __call__(self, position):
-        i, j = position.value
-        return self[i][j]
-
-    def __str__(self):
-        rows = [''.join(map(str, ls)) for ls in self]
-        return '\n'.join(rows)
-
-
-
 # Eventually, I should create a function that makes a random map
 game_map = GameMap([[' '] * 100 for i in range(100)])
 for i in range(60, 66):
@@ -141,15 +180,52 @@ for i in range(66, 72):
     for j in range(80, 90):
         game_map[i][j] = Wood(Position(i, j))
 
+# Filling the top left corner with wood:
+for i in range(30):
+    for j in range(30 - i):
+        game_map[i][j] = Wood(Position(i, j))
+
+# Filling the bottom left corner with wood:
+for i in range(80, 100):
+    for j in range(i - 80):
+        game_map[i][j] = Wood(Position(i, j))
+
+# Filling the top right corner with wood:
+for i in range(30):
+    for j in range(70 + i, 100):
+        game_map[i][j] = Wood(Position(i, j))
+
+# Filling the bottom right corner with wood:
+for i in range(80, 100):
+    for j in range(179 - i, 100):
+        game_map[i][j] = Wood(Position(i, j))
+
+# Fill the middle with stone:
+for i in range(40, 60):
+    for j in range(40, 60):
+        game_map[i][j] = Stone(Position(i, j))
+
+# Put gold around the corners of the large stone deposit:
+for i_offset, j_offset in ((-15, -15), (-15, 10), (10, -15), (10, 10)):
+    for i in range(50 + i_offset, 50 + i_offset + 5):
+        for j in range(50 + j_offset, 50 + j_offset + 5):
+            game_map[i][j] = Gold(Position(i, j))
+
+# Adding Food:
+for i_start, j_start in ((80, 80), (80, 20), (20, 80), (20, 20)):
+    for i in range(i_start, i_start + 4):
+        for j in range(j_start - 7, j_start - 4):
+            game_map[i][j] = Food(Position(i, j))
+
 
 if __name__ == '__main__':
     for tpl in ((60, 75), (62, 78), (64, 84), (50, 50)):
         position = Position(*tpl)
         print(position, game_map(position))
 
-    print('ok now...')
     print(game_map)
-    print('finished')
+    print('----------------------------------------------------------------------------')
+    game_map.print_centered_at(Position(50, 52))
     # print_map(game_map)
     # The following code was run for various values of distance and Position(i, j):
     # When it was run, the code within the function everything_within_given_distance_on
