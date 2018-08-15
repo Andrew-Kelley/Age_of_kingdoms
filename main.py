@@ -41,7 +41,7 @@ for player in players[1:]:
 turn_number = 0
 while True:
     turn_number += 1
-    if turn_number > 20:  # This should eventually be changed to 1000
+    if turn_number > 5000:
         print('The limit of {} turns has been reached. Game over.'.format(turn_number - 1))
         break
 
