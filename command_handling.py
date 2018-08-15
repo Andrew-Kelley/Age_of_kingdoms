@@ -182,8 +182,16 @@ def cannot_build_unit_yet_error_message(player, building, unit_type):
 ###################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
+    update_collect_resource_command(player)
     update_move_commands(player)
     update_build_unit_commands(player)
+
+
+# The following will only be used if I eventually end up using
+# player.commands['later']['collect resource']
+def update_collect_resource_command(player):
+    pass
+
 
 # The following removes all the old commands in player.commands['now']['move'], and it updates
 # player.commands['now']['move'] based on what player.commands['later']['move'] is.
@@ -224,12 +232,20 @@ def update_build_unit_commands(player):
 ###################################################################################################
 ###################################################################################################
 def implement_commands_if_possible(player):
+    implement_collect_resource_command(player)
     implement_move_commands(player)
     implement_build_unit_commands(player)
     # Eventually, this will probably be replaced with the following code, where functions is a list
     # of all the functions which need to be run.
     # for function in functions:
     #     function(player)
+
+
+def implement_collect_resource_command(player):
+    for villager in player.commands['now']['collect resource']:
+        resource = player.commands['now']['collect resource'][villager]
+        if villager.can_collect_resource_now(resource, player):
+            villager.collect_resource(resource, player)
 
 
 def implement_move_commands(player):
