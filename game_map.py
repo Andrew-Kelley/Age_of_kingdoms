@@ -115,10 +115,10 @@ class GameMap(list):
         i0, j0 = position.value
 
         i_start = max(0, i0 - vertical_delta)
-        i_stop = min(len(self) - 1, i0 + vertical_delta)
+        i_stop = min(len(self), i0 + vertical_delta)
 
         j_start = max(0, j0 - horizontal_delta)
-        j_stop = min(len(self[0]) - 1, j0 + horizontal_delta)
+        j_stop = min(len(self[0]), j0 + horizontal_delta)
 
         def print_column_numbers():
             for digit in range(num_digits):
@@ -225,15 +225,18 @@ for i_start, j_start in ((80, 80), (80, 20), (20, 80), (20, 20)):
             game_map[i][j] = Food(Position(i, j))
 
 
-# The following demonstrates that the indexes printed by the GameMap method print_centered_at
-# are correct.
-for j in range(0, 100, 5):
-    for i in (38, 61):
-        game_map[i][j] = Bronze(Position(37, j))
+for i_start, j_start in ((85, 70), (85, 10), (5, 70), (15, 25)):
+    for i in range(i_start, i_start + 2):
+        for j in range(j_start, j_start + 1):
+            game_map[i][j] = Bronze(Position(i, j))
 
-for i in range(0, 100, 5):
-    game_map[i][0] = Bronze(Position(i, 0))
+# The following can be printed, even though it is in the far right column of the map:
+game_map[50][99] = Iron(Position(50, 99))
 
+# Adding some Iron at the bottom of the map (which now can be printed):
+for i in range(97, 100):
+    for j in range(60, 61):
+        game_map[i][j] = Iron(Position(i, j))
 
 if __name__ == '__main__':
     for tpl in ((60, 75), (62, 78), (64, 84), (50, 50)):
@@ -242,7 +245,9 @@ if __name__ == '__main__':
 
     # print(game_map)
     # print('----------------------------------------------------------------------------')
-    game_map.print_centered_at(Position(50, 50))
+    game_map.print_centered_at(Position(50, 60))
+    print('----------------------------------------------------------------------------')
+    game_map.print_centered_at(Position(90, 50))
     # print_map(game_map)
     # The following code was run for various values of distance and Position(i, j):
     # When it was run, the code within the function everything_within_given_distance_on
