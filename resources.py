@@ -9,6 +9,7 @@
 
 from copy import copy
 
+
 # NOTE: Do not confuse this class with the Resources (plural) class.
 class Resource:
     pass
@@ -84,6 +85,7 @@ class Iron(Resource):
 
 
 resource_ls = [Food, Wood, Stone, Gold, Bronze, Iron]
+resource_kind_to_class = dict((resource.kind, resource) for resource in resource_ls)
 
 
 # The purpose of having this class is to enable subtraction of the dictionaries whenever resources
