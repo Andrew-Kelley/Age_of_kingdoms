@@ -3,7 +3,8 @@
 from game_map import Vector, game_map
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter
-from units import unit_kinds, unit_kind_to_class, unit_kind_to_singular
+from units import unit_kinds, unit_kind_to_class, unit_kind_to_singular, Villager
+from resources import resource_ls
 
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
@@ -33,6 +34,9 @@ def insert_command(player, command):
     elif command[0] == 'build unit':
         insert_build_unit_command(player, command)
         return
+    elif command[0] == 'collect resource':
+        insert_collect_resource_command(player, command)
+        return
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
@@ -45,6 +49,31 @@ def remove_unit_from_command_if_there(player, unit, command_type):
         return
     if unit in player.commands['now'][command_type]:
         del player.commands['now'][command_type][unit]
+
+
+def insert_collect_resource_command(player, command):
+    if len(command) != 3:
+        return
+    resource = command[1]
+    if not resource in resource_ls:
+        return
+    ls_of_villagers = command[2]
+    if not type(ls_of_villagers) is list or len(ls_of_villagers)  == 0:
+        return
+    if not all((lambda u:isinstance(u, Villager) for u in ls_of_villagers)):
+        return
+
+    for unit in ls_of_villagers:
+        for command_type in ('move', 'build building'):
+            remove_unit_from_command_if_there(player, unit, command_type)
+
+    for villager in ls_of_villagers:
+        if villager.can_collect_resource_now(resource, player):
+            player.commands['now']['collect resource'][villager] = resource
+        else:
+            print('Player {}:'.format(player.number),
+                  villager, ' cannot collect {} now.'.format(resource.kind))
+
 
 
 # The following function could instead be named insert_a_command_of_type_move
