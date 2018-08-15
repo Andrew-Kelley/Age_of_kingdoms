@@ -1,4 +1,4 @@
-from resources import Wood, Stone, Food, Gold
+from resources import Wood, Stone, Food, Gold, Bronze, Iron
 
 
 class Position:
@@ -121,7 +121,14 @@ class GameMap(list):
         j_stop = min(len(self[0]) - 1, j0 + horizontal_delta)
 
         def print_column_numbers():
-            pass
+            for digit in range(num_digits):
+                # The following line is to print an offset for the margin, which (in the main part)
+                # is used to print the row numbers.
+                print(' ' * num_digits, end='')
+                for j in range(j_start, j_stop):
+                    end = '' if j < j_stop - 1 else '\n'
+                    print(int_to_str(j)[digit], end=end)
+
 
         def print_row(i):
             margin = int_to_str(i)
@@ -218,14 +225,24 @@ for i_start, j_start in ((80, 80), (80, 20), (20, 80), (20, 20)):
             game_map[i][j] = Food(Position(i, j))
 
 
+# The following demonstrates that the indexes printed by the GameMap method print_centered_at
+# are correct.
+for j in range(0, 100, 5):
+    for i in (38, 61):
+        game_map[i][j] = Bronze(Position(37, j))
+
+for i in range(0, 100, 5):
+    game_map[i][0] = Bronze(Position(i, 0))
+
+
 if __name__ == '__main__':
     for tpl in ((60, 75), (62, 78), (64, 84), (50, 50)):
         position = Position(*tpl)
         print(position, game_map(position))
 
-    print(game_map)
-    print('----------------------------------------------------------------------------')
-    game_map.print_centered_at(Position(50, 52))
+    # print(game_map)
+    # print('----------------------------------------------------------------------------')
+    game_map.print_centered_at(Position(50, 50))
     # print_map(game_map)
     # The following code was run for various values of distance and Position(i, j):
     # When it was run, the code within the function everything_within_given_distance_on
