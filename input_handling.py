@@ -331,7 +331,7 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     """In order to not return [], selected_obj must be of villager type.
 
     If not returning [], returns
-    ['collect', <resource>, ls_of_villagers], where ls_of_villagers is non-empty"""
+    ['collect resource', <resource>, ls_of_villagers], where ls_of_villagers is non-empty"""
     if not selected_obj_consists_of_villagers(selected_obj):
         return []
 
@@ -362,7 +362,7 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
             print('Only stone, gold, bronze, and iron can be mined.')
             return []
 
-    return ['collect', resource, ls_of_villagers]
+    return ['collect resource', resource, ls_of_villagers]
 
 
 
