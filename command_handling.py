@@ -35,6 +35,18 @@ def insert_command(player, command):
         return
 
 
+def remove_unit_from_command_if_there(player, unit, command_type):
+    """If unit is in player.commands['now'][command_type], then this function removes the unit from
+    that command. If unit is not in player.commands['now'][command_type], this function does nothing.
+
+    command_type should be one of the following:
+    'move', 'build building', 'collect resource'"""
+    if command_type not in ('move', 'build building', 'collect resource'):
+        return
+    if unit in player.commands['now'][command_type]:
+        del player.commands['now'][command_type][unit]
+
+
 # The following function could instead be named insert_a_command_of_type_move
 def insert_move_command(player, command):
     if len(command) != 3:
@@ -45,6 +57,10 @@ def insert_move_command(player, command):
     delta = command[2]
     if not isinstance(delta, Vector):
         return
+
+    for unit in ls_of_units:
+        for command_type in ('build building', 'collect resource'):
+            remove_unit_from_command_if_there(player, unit, command_type)
 
     if delta.magnitude > 15:
         beginning, the_rest = delta.beginning_plus_the_rest()
@@ -211,3 +227,6 @@ def implement_build_unit_commands(player):
             else:
                 print('Population cap reached. You cannot build more units.')
                 return
+
+if __name__ == '__main__':
+    pass
