@@ -1,19 +1,12 @@
 # Age of Kingdoms - A text-based, turn-based strategy game inspired by Age of Empires.
 # Started July 21, 2018.
 
-from input_handling import input_next_command, is_a_selected_obj
+from input_handling.handle_input import input_next_command
+from input_handling.select_an_object import is_a_selected_obj
 from command_handling import insert_command, update_now_and_later_commands
 from command_handling import implement_commands_if_possible
-from buildings.bldng_class import Building
-from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
-from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
-from buildings.defense_bldngs import Tower, Castle
 
-from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
-from units import BatteringRam, Catapult, Trebuchet, Merchant
-
-from resources import Resources
-from game_map import game_map, Position
+from game_map import game_map
 from player import Player, initial_position_of_player
 
 

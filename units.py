@@ -9,6 +9,8 @@ unit_kind_to_singular = {'villagers': 'villager', 'pikemen': 'pikeman', 'swordsm
                          'catapults': 'catapult', 'trebuchets': 'trebuchet', 'units': 'unit',
                          'merchants': 'merchant'}
 
+unit_kinds_singular = ['villager', 'pikeman', 'swordsman', 'archer', 'knight', 'batteringram',
+                       'catapult', 'trebuchet', 'merchant']
 
 class Unit:
     """e.g. villager, swordsman, knight, catapult"""
@@ -178,12 +180,17 @@ class Merchant(Unit):
 unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights', 'batteringrams',
               'catapults', 'trebuchets', 'merchants']
 
+# In case I change units or unit_kinds and forget to change the other:
+assert len(unit_kinds_singular) == len(unit_kinds)
+
 unit_classes = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam,
                 Catapult, Trebuchet, Merchant]
 
 assert len(unit_kinds) == len(unit_classes)
 
 unit_kind_to_class = dict((k, c) for k, c in zip(unit_kinds, unit_classes))
+
+unit_singular_to_plural = dict((s, p) for s, p in zip(unit_kinds_singular, unit_kinds))
 
 if __name__ == '__main__':
     from game_map import Position, Vector
