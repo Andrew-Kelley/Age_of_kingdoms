@@ -1,6 +1,6 @@
 # The main function this module defines is input_next_command, which is at the bottom of this file.
 
-from game_map import Vector
+from game_map import Position, Vector, game_map
 from help import help
 from units import unit_kinds
 from resources import resource_kind_to_class, Wood, Stone, Gold, Bronze, Iron
@@ -505,7 +505,6 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     if len(inpt_as_ls) == 1:
         # The player is trying to print selected_obj and inpt_as_ls == ['print']
         return print_selected_obj(player, selected_obj)
-
     elif len(inpt_as_ls) == 2:
         if inpt_as_ls[1] == 'commands':
             # Then inpt_as_ls == ['print', 'commands']
@@ -517,11 +516,40 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         else:
             inpt_as_ls.append('1')
 
+    if len(inpt_as_ls) >= 4:
+        if inpt_as_ls[1] == 'map':
+            return print_part_of_map(player, inpt_as_ls)
+
     selected_obj = extract_selected_obj(inpt_as_ls)
 
     return print_selected_obj(player, selected_obj)
 
 
+def print_part_of_map(player, inpt_as_ls):
+    """In order to print properly, inpt_as_ls must be of the following form:
+    ['print', 'map',...,'num1', 'num2']
+    where anything at all can be placed in the ellipsis. Also, of course,
+    Position(num1, num2) must be on the map. The reason why the first two entries of
+    inpt_as_ls must be 'print' 'map' is that that is necessary for this function to
+    even be called by the function print_something."""
+
+    # I may eventually change this function so that each player has their own copy of the map,
+    # and this would then print their copy. In this case, the variable player would be used.
+
+    def str_to_int(s):
+        try:
+            return int(s)
+        except ValueError:
+            return None
+
+    i = str_to_int(inpt_as_ls[-2])
+    j = str_to_int(inpt_as_ls[-1])
+
+    if i is None or j is None:
+        return []
+
+    game_map.print_centered_at(Position(i, j))
+    return []
 
 functions = {'build': build_something, 'select': select_something, 'move': move_unit_or_units,
              'set': set_default_build_position, 'print': print_something}
@@ -588,7 +616,6 @@ if __name__ == '__main__':
     #     print(s, direction_inpt_to_vector(s))
 
     from player import Player
-    from game_map import Position
 
     p1 = Player(1, Position(80, 80), is_human=True)
     print(selected_obj_to_actual_building(p1, ['building', 'towncenter', 1]))
@@ -610,6 +637,19 @@ if __name__ == '__main__':
 
     # for inpt_as_ls in (['chop', 'gold'], ['mine', 'wood'], ['collect', 'blah']):
     #     print(collect_resource(p1, inpt_as_ls, selected_obj))
+
+    # Testing the function print_part_of_map
+    # inpt_as_ls = ['print', 'map', '80', '80']
+    # print_part_of_map(p1, inpt_as_ls)
+    # print("--------------------------------------------------------------------------------------")
+    # inpt_as_ls = ['print', 'map', 'n10', 'e15']
+    # print_part_of_map(p1, inpt_as_ls)
+    # inpt_as_ls = ['print','map','blah','yeah']
+    # print_part_of_map(p1, inpt_as_ls)
+    # print("--------------------------------------------------------------------------------------")
+    # inpt_as_ls = ['print', 'map', 'centered', 'on', '40', '60']
+    # print_part_of_map(p1, inpt_as_ls)
+
 
 
 
