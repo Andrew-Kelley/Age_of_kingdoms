@@ -1,6 +1,7 @@
 from game_map import game_map
 from input_handling.select_an_object import selected_obj_to_actual_building
 from input_handling.select_an_object import selected_obj_to_ls_of_units, extract_selected_obj
+from game_map import Position
 
 
 def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -74,7 +75,6 @@ def print_part_of_map(player, inpt_as_ls):
 
 if __name__ == '__main__':
     from player import Player
-    from game_map import Position
 
     p1 = Player(1, Position(80, 80), is_human=True)
 
