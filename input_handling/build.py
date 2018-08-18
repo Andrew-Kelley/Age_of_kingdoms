@@ -1,8 +1,11 @@
 from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
+from game_map import Position, game_map
 from input_handling.select_an_object import selected_obj_to_actual_building
 from input_handling.select_an_object import selected_obj_consists_of_villagers
-
+from input_handling.select_an_object import selected_obj_to_ls_of_units
 from input_handling.print import str_to_int
+from buildings.bldng_class import stone_age_buildings, bronze_age_buildings, buildings
+from buildings.other_bldngs import building_kind_to_class
 
 unit_kinds_singular = set(unit_kinds_singular)
 unit_kinds = set(unit_kinds)
@@ -10,8 +13,9 @@ units_plural = unit_kinds
 
 
 # For building names that really are two words, I would like to be able to handle a space between those
-# words, but as of now, the code doesn't use the following set:
+# words:
 building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood', 'archery', 'siege'}
+
 
 def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     """In order to not return [], selected_obj must either be
@@ -88,8 +92,81 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
 
 
 # The following is intended to only be used by the function build_something
-def build_building(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
-    return ['build building']
+def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
+    """In order to not return [],  inpt_as_ls must be of the following format:
+     ['build', <building name>, 'num1', 'num2']. Also, the player must first have advanced
+     to the appropriate age for the building they wish to build.
+
+     Returns [] or the following:
+     ['build building', ls_of_villagers, building_class, position]"""
+    if len(inpt_as_ls) != 4:
+        print('Your command to build a building was not understood since it did not have 4',
+              'parts/words.')
+        return []
+
+    ls_of_villagers = selected_obj_to_ls_of_units(player, selected_obj)
+    if len(ls_of_villagers) < 1:
+        print('No villagers were selected that could build the building.')
+        return []
+
+    building_kind = inpt_as_ls[1]
+    if building_kind not in buildings:
+        if building_kind in building_first_words:
+            if inpt_as_ls[1] + inpt_as_ls[2] in buildings:
+                building_kind = inpt_as_ls[1] + inpt_as_ls[2]
+            else:
+                print('The building kind you want to build was not understood.')
+                return []
+        else:
+            print('The building kind you want to build was not understood.')
+            return []
+
+    if player.age == 'Stone Age':
+        if building_kind not in stone_age_buildings:
+            print('That building cannot be built in the Stone Age.')
+            return []
+    elif player.age == 'Bronze Age':
+        if building_kind not in stone_age_buildings.union(bronze_age_buildings):
+            print('That building can only be built in the Iron Age.')
+            return []
+
+    if building_kind == 'wallfortification':
+        return build_wall_fortification(player, inpt_as_ls)
+
+    if building_kind in ('woodwall', 'stonewall'):
+        return build_wall(player, inpt_as_ls)
+
+    if building_kind not in building_kind_to_class:
+        # This should never happen because I already checked that building_kind is in buildings
+        print('The building you want to build was not understood.')
+        return []
+
+    building_class = building_kind_to_class[building_kind]
+
+    i = str_to_int(inpt_as_ls[2])
+    j = str_to_int(inpt_as_ls[3])
+    if i is None or j is None:
+        return []
+
+    position = Position(i, j)
+    if not building_class.can_build_on_map(position, game_map):
+        print('Command rejected. Try a different position.')
+        return []
+
+    return ['build building', ls_of_villagers, building_class, position]
+
+
+def build_wall(player, inpt_as_ls):
+    """Returns a list"""
+    print('Sorry this game is not yet finished. You cannot yet build walls.')
+    return []
+
+
+def build_wall_fortification(player, inpt_as_ls):
+    """Returns a list"""
+    print('You must first build a wall before building a wallfortification.',
+          'But unfortunatelly, this game is not finished, and you cannot build walls either.')
+    return []
 
 
 def set_default_build_position(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
