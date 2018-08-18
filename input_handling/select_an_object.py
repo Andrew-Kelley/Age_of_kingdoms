@@ -14,8 +14,8 @@ def selected_obj_to_ls_of_units(player, selected_obj):
     ls_of_units = []
     if selected_obj[0] == 'unit':
         # Then selected_obj == ['unit', unit.kind, starting_num, ending_num]
-        # The following four lines of code should be unnecessary. I believe it is redundant, assuming that
-        # the fn select_something works properly.
+        # The following four lines of code should be unnecessary. I believe it is redundant, assuming
+        # that the fn select_something works properly.
         if len(selected_obj) != 4 or selected_obj[1] not in unit_kinds:
             return []
         if not all(type(i) is int for i in selected_obj[2:]):
@@ -69,13 +69,34 @@ def selected_obj_consists_of_villagers(selected_obj):
         print('Error: selected_obj is not proper')
         return False
 
+    negative_message = 'Only villagers can collect resources and build buildings. '
+    negative_message += 'Your selected object was not a group of villagers.'
+
     if not selected_obj[0] in ('unit', 'group'):
+        print(negative_message)
         return False
 
-    if selected_obj[0] == 'unit' and not selected_obj[1] == 'villagers':
-        print('Only villagers can collect resources. Your selected object was not a ',
-              'group of villagers.')
-        return False
+    if selected_obj[0] == 'group':
+        if not len(selected_obj) == 2:
+            return False
+        num = selected_obj[1]
+        if not type(num) is int or num < 0:
+            print('The group selected is not proper.')
+            return False
+
+    if selected_obj[0] == 'unit':
+        if not selected_obj[1] == 'villagers':
+            print(negative_message)
+            return False
+        if not len(selected_obj) == 4:
+            print("Developer message: Error: selected_obj[0] == 'unit', but",
+                  "len(selected_obj) is not 4.")
+            return False
+        num1, num2 = selected_obj[2:4]
+        if not type(num1) is int or not type(num2) is int or num1 > num2 or num1 < 1 or num2 < 1:
+            print("The selected object's numbers were not proper.")
+            return False
+
     return True
 
 
