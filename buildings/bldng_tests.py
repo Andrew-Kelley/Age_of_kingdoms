@@ -6,7 +6,7 @@ from buildings.other_bldngs import TownCenter, House
 
 
 # t = TownCenter(1, (80, 80))
-Building.build(TownCenter, 1, Position(80,80), game_map)
+Building.build_on_map(TownCenter, 1, Position(80, 80), game_map)
 
 
 for tpl in ((4,4), (2,4), (99,0), (100, 0), (90,96), (90, 97), (10, 0), (10, -1)):

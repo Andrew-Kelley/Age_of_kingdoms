@@ -39,6 +39,8 @@ class Building:
         # west, of the building, is I would have to include the game_map as a parameter to the
         # class __init__ function.
         self.build_position = position
+        # The following is used when villagers build a building:
+        self.progress_to_construction = 0
 
     def __str__(self):
         kind = self.kind.capitalize()
@@ -100,6 +102,7 @@ class Building:
         return True
 
     def build_on_map(self, player, position, game_map):
+        """This function is called when construction starts (so before construction is complete)."""
         i_init, j_init = position.value
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
@@ -109,4 +112,11 @@ class Building:
                 # player.map[i][j] = self.letter_abbreviation
 
 
-    
+    def build(self, villager_who_is_building, player):
+        if self.progress_to_construction >= self.time_to_build:
+            # Then another villager already finished building this building.
+            return
+        villager = villager_who_is_building
+        self.progress_to_construction += villager.build_amount_per_turn
+        if self.progress_to_construction >= self.time_to_build:
+            player.buildings[self.kind].append(self)

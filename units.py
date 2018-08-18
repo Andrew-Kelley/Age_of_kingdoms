@@ -67,6 +67,11 @@ class Villager(Unit):
     cost = Resources({Food: 50})
     kind = 'villagers'
 
+    def __init__(self, number, position):
+        Unit.__init__(self, number, position)
+        # The following gives how fast a villager can build a building.
+        self.build_amount_per_turn = 10
+
     def resource_iter_within_given_distance_of_me(self, distance, resource, player):
         """Returns an iterator of instances of the given resource within the stated distance of self which
         are also within 15 spots of an appropriate building.
