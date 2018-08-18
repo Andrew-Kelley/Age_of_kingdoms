@@ -86,6 +86,7 @@ def insert_build_building_command(player, command):
         building_number = len(player.buildings[building_class.kind])
         building = building_class(building_number, building_position)
         player.resources -= building.cost
+        building.build_on_map(player, building_position, game_map)
 
     for villager in ls_of_villagers:
         delta = building_position - villager.position
@@ -311,7 +312,12 @@ def implement_commands_if_possible(player):
 
 def implement_build_building_command(player):
     for villager in player.commands['now']['build building']:
-        building = player.commands['now']['build building'][villager][0]
+        building, building_position = player.commands['now']['build building'][villager]
+        delta = building_position - villager.position
+        if delta == Vector(0, 0):
+            pass
+        else:
+            villager.move_by(delta)
         building.build(villager, player)
 
 
