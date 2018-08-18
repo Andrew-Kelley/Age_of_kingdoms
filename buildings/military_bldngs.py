@@ -9,6 +9,7 @@ class Barracks(Building):
     size = (3, 3)
     letter_abbreviation = 'B'
     kind = 'barracks'
+    time_to_build = 50
 
     def units_which_can_be_built(self, player):
         ls = ['pikemen']
@@ -24,6 +25,7 @@ class ArcheryRange(Building):
     size = (5, 3)
     letter_abbreviation = 'A'
     kind = 'archeryrange'
+    time_to_build = 50
 
     def units_which_can_be_built(self, player):
         return ['archers']
@@ -34,6 +36,7 @@ class Stable(Building):
     size = (3, 3)
     letter_abbreviation = 'S'
     kind = 'stable'
+    time_to_build = 50
 
     def units_which_can_be_built(self, player):
         return []
@@ -44,6 +47,7 @@ class SiegeWorks(Building):
     size = (3, 3)
     letter_abbreviation = 'W'
     kind = 'siegeworks'
+    time_to_build = 50
 
     def units_which_can_be_built(self, player):
         return []

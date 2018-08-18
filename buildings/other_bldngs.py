@@ -19,6 +19,7 @@ class TownCenter(Building):
     garrison_capacity = 50
     defensible = True
     kind = 'towncenter'
+    # time_to_build = ?
 
     def units_which_can_be_built(self, player):
         return ['villagers']
@@ -42,6 +43,7 @@ class House(Building):
     size = (2, 2)
     letter_abbreviation = 'H'
     kind = 'house'
+    time_to_build = 30
 
 
 class Blacksmith(Building):
@@ -58,6 +60,7 @@ class Blacksmith(Building):
     size = (3, 3)
     letter_abbreviation = 'X'
     kind = 'blacksmith'
+    # time_to_build = ?
 
 
 class Library(Building):
@@ -65,7 +68,7 @@ class Library(Building):
     size = (3, 3)
     letter_abbreviation = 'L'
     kind = 'library'
-
+    # time_to_build = ?
 
 # Maybe implement this building last
 class Market(Building):
@@ -73,6 +76,7 @@ class Market(Building):
     size = (3, 3)
     letter_abbreviation = 'M'
     kind = 'market'
+    # time_to_build = ?
 
 
 building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp, 'stonequarry':StoneQuarry,
