@@ -1,5 +1,8 @@
 from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
 from input_handling.select_an_object import selected_obj_to_actual_building
+from input_handling.select_an_object import selected_obj_consists_of_villagers
+
+from input_handling.print import str_to_int
 
 unit_kinds_singular = set(unit_kinds_singular)
 unit_kinds = set(unit_kinds)
@@ -29,16 +32,14 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     if selected_obj[0] == 'building':
         return build_unit(player, inpt_as_ls, selected_obj, selected_town_num)
 
-    elif selected_obj[0] == 'unit':
-        if selected_obj[1] == 'villagers':
-            return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
-        else:
-            print('In order to build a building, the selected object needs to be some villager(s)',
-                  "--possibly a 'group' of villagers.")
+    elif selected_obj[0] in ('unit', 'group'):
+        if not selected_obj_consists_of_villagers(selected_obj):
             return []
-    elif selected_obj[0] == 'group':
-        return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
+        else:
+            return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
     else:
+        print('The selected object was neither a building nor a group of villagers.',
+              'Command rejected.')
         return []
 
 
