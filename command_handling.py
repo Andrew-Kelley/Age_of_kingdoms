@@ -246,7 +246,12 @@ def update_now_and_later_commands(player):
 
 
 def update_build_building_command(player):
-    pass
+    for villager in list(player.commands['later']['build building']):
+        building, building_position = player.commands['later']['build building'][villager]
+        delta = building_position - villager.position
+        if delta.magnitude <= 6:
+            del player.commands['later']['build building'][villager]
+            player.commands['now']['build building'][villager] = [building, building_position]
 
 
 # The following will only be used if I eventually end up using
