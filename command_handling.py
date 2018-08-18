@@ -8,7 +8,7 @@ from resources import resource_ls
 
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
-#  'build building':dict( villager:[building_class_to_be_built, position] for ...),
+#  'build building':dict( villager:[building_to_be_built, position] for ...),
 #  'collect resource':( villager:resource_object_to_collect for ...),
 #  'build unit':dict( building:[unit_to_be_built, number_of_units_of_that_type_to_build] for ... ),
 #  'research':dict( building:thing_to_be_researched for ...),
@@ -77,14 +77,34 @@ def insert_build_building_command(player, command):
         for command_type in ('move', 'collect resource'):
             remove_unit_from_command_if_there(player, villager, command_type)
 
+    # The following few lines are to handle the situation that other villagers are already
+    # building an instance of building_class at building_position
+    building = building_already_in_progress(player, building_class, building_position)
+    if building:
+        pass
+    else:
+        building_number = len(player.buildings[building_class.kind])
+        building = building_class(building_number, building_position)
+
     for villager in ls_of_villagers:
         delta = building_position - villager.position
         if delta.magnitude <= 6:
-            player.commands['now']['build building'][villager] = [building_class, building_position]
+            player.commands['now']['build building'][villager] = [building, building_position]
         else:
             new_command = ['move', [villager], delta]
             insert_move_command(player, new_command)
-            player.commands['later']['build building'][villager] = [building_class, building_position]
+            player.commands['later']['build building'][villager] = [building, building_position]
+
+
+def building_already_in_progress(player, building_class, position):
+    """Returns the building instance if the player is already building an instance of
+    building_class at position. Otherwise, this returns False."""
+    for time in ('now', 'later'):
+        for villager in player.commands[time]['build building']:
+            ls = player.commands['now']['build building'][villager]
+            if ls[1] == position and ls[0].letter_abbreviation == building_class.letter_abbreviation:
+                return ls[0]
+    return False
 
 
 def insert_collect_resource_command(player, command):
