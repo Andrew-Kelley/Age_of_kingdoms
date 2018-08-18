@@ -149,7 +149,7 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
         return []
 
     position = Position(i, j)
-    if not building_class.can_build_on_map(position, game_map):
+    if not building_class.can_build_on_map(building_class, position, game_map):
         print('Command rejected. Try a different position.')
         return []
 
