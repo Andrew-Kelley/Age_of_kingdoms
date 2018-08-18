@@ -40,6 +40,7 @@ while True:
 
     for player in players[1:]:
         print("It is now Player number {}'s turn".format(player.number))
+        print(player.resources)
         selected_obj = []
         update_now_and_later_commands(player)
 
