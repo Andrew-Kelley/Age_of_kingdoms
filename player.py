@@ -31,7 +31,7 @@ class Player:
         self.age = 'Stone Age'
 
         # The following is how much of a given resource a single villager can collect in one turn.
-        self.collecting_capacity = {Wood: 8, Food: 10, Stone: 6, Gold: 6, Bronze: 6, Iron: 8}
+        self.collecting_capacity = {Wood: 8, Food: 10, Stone: 6, Gold: 6, Bronze: 6, Iron: 2}
 
         # self.commands contains the commands entered by the player:
         commands_dict = {'move': dict(), 'build unit': dict(), 'build building': dict(),

@@ -47,7 +47,9 @@ class Blacksmith(Building):
     # -bronze armor (benefits Pikeman and is necessary to build Swordsman)
     # -bronze shields (is necessary to build Swordsman)
     # -bronze axes (benefits Villagers which are chopping wood)
-    # -bronze picks (benefits Villagers which are mining gold or bronze)
+    # -bronze picks (benefits Villagers which are mining stone, gold, bronze, or iron)
+    #       specifically, it makes player.collecting_capacity[stone or gold or bronze] = 8
+    #                 and it makes player.collecting_capacity[iron] = 6
     cost = Resources({Wood: 150, Stone: 25})
     size = (3, 3)
     letter_abbreviation = 'X'
