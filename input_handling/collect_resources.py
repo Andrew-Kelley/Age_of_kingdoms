@@ -38,6 +38,11 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
             print('Only stone, gold, bronze, and iron can be mined.')
             return []
 
+    if resource == Iron:
+        if player.age == 'Stone Age':
+            print('Iron can only be mined in the Bronze age and later.')
+            return []
+
     return ['collect resource', resource, ls_of_villagers]
 
 

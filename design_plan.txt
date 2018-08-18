@@ -9,10 +9,9 @@
  - food
  - wood
  - stone
- Can only be collected in the bronze age and later:
  - gold
  - bronze
- Can only be collected in the iron age:
+ Can only be collected in the bronze age and later:
  - iron
 
 #### Sources of food
