@@ -1,9 +1,5 @@
 from units import unit_kinds, unit_kinds_singular, unit_singular_to_plural
-
-
-buildings = {'towncenter', 'house', 'farm', 'lumbercamp', 'stonequarry', 'miningcamp', 'woodwall',
-             'stonewall', 'wallfortification', 'tower', 'castle', 'barracks', 'archeryrange',
-             'stable', 'siegeworks', 'blacksmith', 'library', 'market'}
+from buildings.bldng_class import buildings
 
 
 def selected_obj_to_ls_of_units(player, selected_obj):

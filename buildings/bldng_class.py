@@ -2,13 +2,22 @@
 
 from resources import Resources, Wood, Stone, Bronze
 
+stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'woodwall',
+                         'barracks'}
+
+bronze_age_buildings = {'farm', 'stonewall', 'wallfortification', 'tower', 'archeryrange',
+                        'siegeworks', 'blacksmith', 'market'}
+
+iron_age_buildings = {'towncenter', 'castle', 'stable', 'library'}
+
+buildings = stone_age_buildings.union(bronze_age_buildings).union(iron_age_buildings)
 
 class Building:
     # Have a method to handle when a building is being attacked. Also have a method to handle building
     # destruction.
     # Perhaps have a method to handle
-    # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units garrisoned
-    # in it.
+    # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units
+    # garrisoned in it.
     kind = 'building'
     # The following three attributes should never be accessed.
     size = (2, 2)
@@ -22,11 +31,12 @@ class Building:
         position is the south-west (i.e. bottom left) corner of the building."""
         self.number = number
         self.position = position
-        # The following is only relevant for unit-producing buildings. It sets the default position where units
-        # are produced as the south-west corner of the building. Even though such units are technically "in"
-        # the building, they are not counted as garrisoned. The reason why I do not want to check if it's possible
-        # to build units immediately to the north, south, east, or west, of the building, is I would have to
-        # include the game_map as a parameter to the class __init__ function.
+        # The following is only relevant for unit-producing buildings. It sets the default position
+        # where units are produced as the south-west corner of the building. Even though such units
+        # are technically "in" the building, they are not counted as garrisoned. The reason why I do
+        # not want to check if it's possible to build units immediately to the north, south, east, or
+        # west, of the building, is I would have to include the game_map as a parameter to the
+        # class __init__ function.
         self.build_position = position
 
     def __str__(self):
@@ -44,8 +54,8 @@ class Building:
         return
 
     def change_build_position_to(self, new_position, game_map):
-        """Only relevant for unit-producing buildings. This function specifies a new position for where units
-        built by the building self should begin their existence."""
+        """Only relevant for unit-producing buildings. This function specifies a new position for
+        where units built by the building self should begin their existence."""
         delta = new_position - self.position
         if delta.magnitude > 15:
             print("Sorry, the new position must be within 15 of the building's south-west corner.")
@@ -54,7 +64,8 @@ class Building:
         if not new_position.is_on_the_map(game_map):
             print("You must pick a position that is on the map.")
             return
-        # TODO: Check that there are no enemy walls between the building's position and the proposed build position
+        # TODO: Check that there are no enemy walls between the building's position and the proposed
+        # build position
         self.build_position = new_position
 
     def can_build_on_map(self, position, game_map):
@@ -75,8 +86,8 @@ class Building:
             print('Sorry, building placement too far east.')
             return False
 
-        # Next, check that there are no obstructions. Buildings are allowed to be built only where there are
-        # blank spaces or wood or food sources.
+        # Next, check that there are no obstructions. Buildings are allowed to be built only where
+        # there are blank spaces or wood or food sources.
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
         for i in range(i_init, i_final, -1):
