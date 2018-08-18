@@ -47,7 +47,7 @@ class Player:
         self.buildings = dict((building.kind, [0]) for building in buildings_ls)
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
-        Building.build(TownCenter, self, position, game_map)
+        Building.build_on_map(TownCenter, self, position, game_map)
         self.buildings[TownCenter.kind].append(TownCenter(1, position))
 
         # Each player begins with 3 villagers

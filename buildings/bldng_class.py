@@ -19,10 +19,11 @@ class Building:
     # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units
     # garrisoned in it.
     kind = 'building'
-    # The following three attributes should never be accessed.
+    # The following four attributes should never be accessed.
     size = (2, 2)
     letter_abbreviation = '?'
     cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000})
+    time_to_build = 1000
 
     def __init__(self, number, position):
         """For each player, the first of each building is numbered 1.
@@ -98,7 +99,7 @@ class Building:
 
         return True
 
-    def build(self, player, position, game_map):
+    def build_on_map(self, player, position, game_map):
         i_init, j_init = position.value
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
@@ -106,3 +107,6 @@ class Building:
             for j in range(j_init, j_final):
                 game_map[i][j] = self.letter_abbreviation
                 # player.map[i][j] = self.letter_abbreviation
+
+
+    
