@@ -39,7 +39,7 @@ def move_unit_or_units(player, inpt_as_ls, selected_obj=None, selected_town_num=
         return ['move', ls_of_units, delta]
 
     else:  # len(inpt_as_ls) > 3
-        selected_obj = extract_selected_obj(inpt_as_ls)
+        selected_obj = extract_selected_obj(inpt_as_ls, player)
         if selected_obj == []:
             return []
 

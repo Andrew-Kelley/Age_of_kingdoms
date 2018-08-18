@@ -96,7 +96,7 @@ def selected_obj_consists_of_villagers(selected_obj):
     return True
 
 
-def extract_selected_obj(inpt_as_ls):
+def extract_selected_obj(inpt_as_ls, player):
     """The return format is the same as the fn select_something"""
     if len(inpt_as_ls) < 3:
         return []
@@ -123,7 +123,10 @@ def extract_selected_obj(inpt_as_ls):
         a = num_range[0]
         b = num_range[-1]
         if a < 1 or b < a:
+            print('No units were selected. Try a different number range.')
             return []
+
+
 
         selected_obj = ['unit', kind, a, b]
         return selected_obj
@@ -204,7 +207,7 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     """
     if len(inpt_as_ls) > 2:
         # Then the player has specified the building or unit number(s)
-        return extract_selected_obj(inpt_as_ls)
+        return extract_selected_obj(inpt_as_ls, player)
     elif len(inpt_as_ls) < 2:
         return []
     else:
@@ -212,7 +215,7 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
         # Alternate usage (not used): It would make sense that ['select', 'barracks'] is
         # selecting the only barracks in the town with the given selected_town_num.
         inpt_as_ls.append('1')
-        return extract_selected_obj(inpt_as_ls)
+        return extract_selected_obj(inpt_as_ls, player)
 
 
 if __name__ == '__main__':

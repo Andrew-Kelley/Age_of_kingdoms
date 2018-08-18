@@ -41,7 +41,7 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         if inpt_as_ls[1] == 'map':
             return print_part_of_map(player, inpt_as_ls)
 
-    selected_obj = extract_selected_obj(inpt_as_ls)
+    selected_obj = extract_selected_obj(inpt_as_ls, player)
 
     return print_selected_obj(player, selected_obj)
 
@@ -57,12 +57,6 @@ def print_part_of_map(player, inpt_as_ls):
     # I may eventually change this function so that each player has their own copy of the map,
     # and this would then print their copy. In this case, the variable player would be used.
 
-    def str_to_int(s):
-        try:
-            return int(s)
-        except ValueError:
-            return None
-
     i = str_to_int(inpt_as_ls[-2])
     j = str_to_int(inpt_as_ls[-1])
 
@@ -71,6 +65,13 @@ def print_part_of_map(player, inpt_as_ls):
 
     game_map.print_centered_at(Position(i, j))
     return []
+
+
+def str_to_int(s):
+    try:
+        return int(s)
+    except ValueError:
+        return None
 
 
 if __name__ == '__main__':
