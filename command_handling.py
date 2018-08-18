@@ -1,6 +1,6 @@
 # This module handles the commands which are returned by the function input_next_command
 
-from game_map import Vector, game_map
+from game_map import Position, Vector, game_map
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter
 from units import unit_kinds, unit_kind_to_class, unit_kind_to_singular, Villager
@@ -8,7 +8,7 @@ from resources import resource_ls
 
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
-#  'build building':dict( villager:building_to_be_built for ...),
+#  'build building':dict( villager:[building_class_to_be_built, position] for ...),
 #  'collect resource':( villager:resource_object_to_collect for ...),
 #  'build unit':dict( building:[unit_to_be_built, number_of_units_of_that_type_to_build] for ... ),
 #  'research':dict( building:thing_to_be_researched for ...),
@@ -37,6 +37,9 @@ def insert_command(player, command):
     elif command[0] == 'collect resource':
         insert_collect_resource_command(player, command)
         return
+    elif command[0] == 'build building':
+        insert_build_building_command(player, command)
+        return
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
@@ -49,6 +52,39 @@ def remove_unit_from_command_if_there(player, unit, command_type):
         return
     if unit in player.commands['now'][command_type]:
         del player.commands['now'][command_type][unit]
+
+
+def insert_build_building_command(player, command):
+    """command must be of the following format:
+    ['build building', ls_of_villagers, building_class, position]"""
+    if len(command) != 4:
+        return
+
+    building_class = command[2]
+    if not player.can_build(building_class):
+        print('You do not have enough resources to build that building.')
+        return
+
+    ls_of_villagers = command[1]
+    if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
+        return
+
+    building_position = command[3]
+    if not isinstance(building_position, Position):
+        return
+
+    for villager in ls_of_villagers:
+        for command_type in ('move', 'collect resource'):
+            remove_unit_from_command_if_there(player, villager, command_type)
+
+    for villager in ls_of_villagers:
+        delta = building_position - villager.position
+        if delta.magnitude <= 6:
+            player.commands['now']['build building'][villager] = [building_class, building_position]
+        else:
+            new_command = ['move', [villager], delta]
+            insert_move_command(player, new_command)
+            player.commands['later']['build building'][villager] = [building_class, building_position]
 
 
 def insert_collect_resource_command(player, command):
@@ -75,9 +111,10 @@ def insert_collect_resource_command(player, command):
                   villager, ' cannot collect {} now.'.format(resource.kind))
 
 
-
 # The following function could instead be named insert_a_command_of_type_move
 def insert_move_command(player, command):
+    """In order for command to be handled properly, it must be in the following format:
+    ['move', ls_of_units, delta], where delta is of type Vector"""
     if len(command) != 3:
         return
     ls_of_units = command[1]
@@ -182,9 +219,14 @@ def cannot_build_unit_yet_error_message(player, building, unit_type):
 ###################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
+    update_build_building_command(player)
     update_collect_resource_command(player)
     update_move_commands(player)
     update_build_unit_commands(player)
+
+
+def update_build_building_command(player):
+    pass
 
 
 # The following will only be used if I eventually end up using
