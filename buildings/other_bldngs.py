@@ -1,6 +1,10 @@
-from buildings.bldng_class import Building
+from buildings.bldng_class import Building, buildings
 from units import Villager
 from resources import Resources, Wood, Stone, Gold
+
+from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tower, Castle
+from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
+from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
 
 class TownCenter(Building):
@@ -69,6 +73,14 @@ class Market(Building):
     size = (3, 3)
     letter_abbreviation = 'M'
     kind = 'market'
+
+
+building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp, 'stonequarry':StoneQuarry,
+                           'miningcamp':MiningCamp, 'woodwall':WoodWall, 'barracks':Barracks,
+                           'farm':Farm, 'stonewall':StoneWall, 'wallfortification':WallFortification,
+                           'tower':Tower, 'archeryrange':ArcheryRange, 'siegeworks':SiegeWorks,
+                           'blacksmith':Blacksmith, 'market':Market, 'towncenter':TownCenter,
+                           'castle':Castle, 'stable':Stable, 'library':Library}
 
 
 if __name__ == '__main__':
