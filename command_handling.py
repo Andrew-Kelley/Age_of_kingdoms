@@ -85,6 +85,7 @@ def insert_build_building_command(player, command):
     else:
         building_number = len(player.buildings[building_class.kind])
         building = building_class(building_number, building_position)
+        player.resources -= building.cost
 
     for villager in ls_of_villagers:
         delta = building_position - villager.position
@@ -299,6 +300,7 @@ def update_build_unit_commands(player):
 ###################################################################################################
 ###################################################################################################
 def implement_commands_if_possible(player):
+    implement_build_building_command(player)
     implement_collect_resource_command(player)
     implement_move_commands(player)
     implement_build_unit_commands(player)
@@ -306,6 +308,11 @@ def implement_commands_if_possible(player):
     # of all the functions which need to be run.
     # for function in functions:
     #     function(player)
+
+def implement_build_building_command(player):
+    for villager in player.commands['now']['build building']:
+        building = player.commands['now']['build building'][villager][0]
+        building.build(villager, player)
 
 
 def implement_collect_resource_command(player):
