@@ -126,7 +126,8 @@ def extract_selected_obj(inpt_as_ls, player):
             print('No units were selected. Try a different number range.')
             return []
 
-
+        if not unit_exists(kind, a, player):
+            return []
 
         selected_obj = ['unit', kind, a, b]
         return selected_obj
@@ -138,10 +139,13 @@ def extract_selected_obj(inpt_as_ls, player):
             return []
 
     if num < 1:
+        print('No unit selected since units are numbered beginning with 1.')
         return []
 
     if kind in unit_kinds_singular:
         kind = unit_singular_to_plural[kind]
+        if not unit_exists(kind, num, player):
+            return []
         selected_obj = ['unit', kind, num, num]
     elif kind in {'group', 'army'}:
         selected_obj = [kind, num]
@@ -154,6 +158,20 @@ def extract_selected_obj(inpt_as_ls, player):
         selected_obj = []
 
     return selected_obj
+
+
+def unit_exists(unit_kind, unit_number, player):
+    if unit_kind not in player.units:
+        return False
+
+    if unit_number >= len(player.units[unit_kind]):
+        print('There is no unit with that/those number(s).')
+        return False
+
+    if unit_number < 1:
+        return False
+
+    return True
 
 
 def is_a_selected_obj(ls):
