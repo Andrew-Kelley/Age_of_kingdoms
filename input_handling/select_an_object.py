@@ -1,6 +1,9 @@
 from units import unit_kinds, unit_kinds_singular, unit_singular_to_plural
 from buildings.bldng_class import buildings
 
+# For building names that really are two words, I would like to be able to handle a space between those
+# words:
+building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood', 'archery', 'siege'}
 
 def selected_obj_to_ls_of_units(player, selected_obj):
     """selected_obj must be of the type that the fn select_something returns"""
@@ -106,8 +109,22 @@ def extract_selected_obj(inpt_as_ls, player):
     not_building = kind not in buildings
     not_town = kind != 'town'
     if not_units and not_building and not_town:
-        print("The second word in your command could not be understood.")
-        return []
+        if kind in building_first_words:
+            kind = inpt_as_ls[1] + inpt_as_ls[2]
+            if kind in buildings:
+                new_inpt_as_ls = [inpt_as_ls[0]]
+                new_inpt_as_ls.append(kind)
+                new_inpt_as_ls.extend(inpt_as_ls[3:])
+                inpt_as_ls  = new_inpt_as_ls
+                if len(inpt_as_ls) == 2:
+                    inpt_as_ls.append('1')
+            else:
+                print("The second word in your command could not be understood.")
+                return []
+        else:
+            print("The second word in your command could not be understood.")
+            return []
+
 
     if kind in unit_kinds:
         # inpt_as_ls[2] should be of the form 'num1-num2'

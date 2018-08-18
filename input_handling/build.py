@@ -2,7 +2,7 @@ from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
 from game_map import Position, game_map
 from input_handling.select_an_object import selected_obj_to_actual_building
 from input_handling.select_an_object import selected_obj_consists_of_villagers
-from input_handling.select_an_object import selected_obj_to_ls_of_units
+from input_handling.select_an_object import selected_obj_to_ls_of_units, building_first_words
 from input_handling.print import str_to_int
 from buildings.bldng_class import stone_age_buildings, bronze_age_buildings, buildings
 from buildings.other_bldngs import building_kind_to_class
@@ -10,11 +10,6 @@ from buildings.other_bldngs import building_kind_to_class
 unit_kinds_singular = set(unit_kinds_singular)
 unit_kinds = set(unit_kinds)
 units_plural = unit_kinds
-
-
-# For building names that really are two words, I would like to be able to handle a space between those
-# words:
-building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood', 'archery', 'siege'}
 
 
 def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -99,8 +94,8 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
 
      Returns [] or the following:
      ['build building', ls_of_villagers, building_class, position]"""
-    if len(inpt_as_ls) != 4:
-        print('Your command to build a building was not understood since it did not have 4',
+    if len(inpt_as_ls) < 4:
+        print('Your command to build a building was not understood since it had fewer than 4',
               'parts/words.')
         return []
 
@@ -143,8 +138,8 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
 
     building_class = building_kind_to_class[building_kind]
 
-    i = str_to_int(inpt_as_ls[2])
-    j = str_to_int(inpt_as_ls[3])
+    i = str_to_int(inpt_as_ls[-2])
+    j = str_to_int(inpt_as_ls[-1])
     if i is None or j is None:
         return []
 
