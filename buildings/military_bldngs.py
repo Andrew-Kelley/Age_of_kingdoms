@@ -2,7 +2,7 @@
 
 from buildings.bldng_class import Building
 from resources import Resources, Wood
-
+from units import Pikeman, Swordsman
 
 class Barracks(Building):
     cost = Resources({Wood: 150})
@@ -18,6 +18,22 @@ class Barracks(Building):
             # if <player has researched bronze shields and bronze swords>:
             #     ls.append('swordsmen')
         return ls
+
+    def build_unit(self, player, unit_type):
+        if unit_type not in self.units_which_can_be_built(player):
+            # This should never happen because the function units_which_can_be_built is called
+            # in in the command_handling.py module (in the function insert_build_unit_command)
+            return
+
+        unit_number = len(player.units[unit_type])
+        if unit_type == 'pikemen':
+            new_unit = Pikeman(unit_number, self.build_position)
+            player.resources -= Pikeman.cost
+        else:
+            new_unit = Swordsman(unit_number, self.build_position)
+            player.resources -= Swordsman.cost
+        player.units[unit_type].append(new_unit)
+
 
 
 class ArcheryRange(Building):
