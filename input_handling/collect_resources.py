@@ -39,7 +39,7 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
             return []
 
     if resource == Iron:
-        if player.age == 'Stone Age':
+        if player.age == 'stone age':
             print('Iron can only be mined in the Bronze age and later.')
             return []
 

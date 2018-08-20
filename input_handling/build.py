@@ -116,11 +116,11 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
             print('The building kind you want to build was not understood.')
             return []
 
-    if player.age == 'Stone Age':
+    if player.age == 'stone age':
         if building_kind not in stone_age_buildings:
             print('That building cannot be built in the Stone Age.')
             return []
-    elif player.age == 'Bronze Age':
+    elif player.age == 'bronze age':
         if building_kind not in stone_age_buildings.union(bronze_age_buildings):
             print('That building can only be built in the Iron Age.')
             return []

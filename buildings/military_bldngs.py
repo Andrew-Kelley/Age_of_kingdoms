@@ -13,7 +13,7 @@ class Barracks(Building):
 
     def units_which_can_be_built(self, player):
         ls = ['pikemen']
-        if player.age in ('Bronze Age', 'Iron Age'):
+        if player.age in ('bronze age', 'iron age'):
             pass
             # if <player has researched bronze shields and bronze swords>:
             #     ls.append('swordsmen')

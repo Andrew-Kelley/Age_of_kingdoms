@@ -20,22 +20,19 @@ class TownCenter(Building):
     kind = 'towncenter'
     # time_to_build = ?
 
-    def units_which_can_be_built(self, player):
-        return ['villagers']
-
     def things_which_can_be_researched(self, player):
         research_ls = []
         # Maybe have a 'wheelbarrow', which makes all villagers more efficient at anything they do
         # 'wheelbarrow' could be researched in the bronze age
 
-        # Note: the following is capitalized correctly, despite the inconsistency.
-        # The reason why everything in research_ls must be lower case is that the user's input
-        # is always converted to lower case.
-        if player.age == 'Stone Age':
+        if player.age == 'stone age':
             research_ls.append('bronze age')
-        elif player.age == 'Bronze Age':
+        elif player.age == 'bronze age':
             research_ls.append('iron age')
         return research_ls
+
+    def units_which_can_be_built(self, player):
+        return ['villagers']
 
     def build_unit(self, player, unit_type='villagers'):
         if unit_type != 'villagers':
@@ -47,7 +44,7 @@ class TownCenter(Building):
         player.resources -= Villager.cost
 
     def num_villagers_can_build_in_turn(self, player):
-        key = {'Stone Age': 1, 'Bronze Age': 2, 'Iron Age': 3}
+        key = {'stone age': 1, 'bronze age': 2, 'iron age': 3}
         return key[player.age]
 
 

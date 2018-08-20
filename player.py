@@ -28,14 +28,15 @@ class Player:
         self.number = number
         self.is_human = is_human
         self.resources = Resources({Food: 300, Wood: 300, Stone: 200, Gold: 0, Bronze: 0, Iron: 0})
-        self.age = 'Stone Age'
+        self.age = 'stone age'
 
         # The following is how much of a given resource a single villager can collect in one turn.
         self.collecting_capacity = {Wood: 8, Food: 10, Stone: 6, Gold: 6, Bronze: 6, Iron: 2}
 
         # self.commands contains the commands entered by the player:
         commands_dict = {'move': dict(), 'build unit': dict(), 'build building': dict(),
-                         'collect resource': dict(), 'research': dict()}  # This will need to be lengthened.
+                         'collect resource': dict(), 'research': dict()}
+        # commands_dict will need to be lengthened
         self.commands = {'now': commands_dict, 'later': deepcopy(commands_dict)}
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
@@ -44,6 +45,8 @@ class Player:
         # print immediately (while all players' commands are implemented). Instead, an error
         # message should be saved to be printed during the start of the player's next turn:
         self.messages = ''
+
+        self.things_researched = set()
 
         # For each player, House number 1 (i.e. the first house that player builds) will be in
         # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a
