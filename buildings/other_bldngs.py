@@ -14,7 +14,6 @@ class TownCenter(Building):
     size = (4, 4)
     letter_abbreviation = 'T'
     # hit_points = ?
-    # construction_time = ?
     population_support = 20
     garrison_capacity = 50
     defensible = True
@@ -23,6 +22,20 @@ class TownCenter(Building):
 
     def units_which_can_be_built(self, player):
         return ['villagers']
+
+    def things_which_can_be_researched(self, player):
+        research_ls = []
+        # Maybe have a 'wheelbarrow', which makes all villagers more efficient at anything they do
+        # 'wheelbarrow' could be researched in the bronze age
+
+        # Note: the following is capitalized correctly, despite the inconsistency.
+        # The reason why everything in research_ls must be lower case is that the user's input
+        # is always converted to lower case.
+        if player.age == 'Stone Age':
+            research_ls.append('bronze age')
+        elif player.age == 'Bronze Age':
+            research_ls.append('iron age')
+        return research_ls
 
     def build_unit(self, player, unit_type='villagers'):
         if unit_type != 'villagers':
