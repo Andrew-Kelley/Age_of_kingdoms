@@ -2,7 +2,7 @@
 
 from buildings.bldng_class import Building
 from resources import Resources, Wood
-from units import Pikeman, Swordsman
+from units import Pikeman, Swordsman, Archer
 
 class Barracks(Building):
     cost = Resources({Wood: 150})
@@ -45,6 +45,16 @@ class ArcheryRange(Building):
 
     def units_which_can_be_built(self, player):
         return ['archers']
+
+    def build_unit(self, player, unit_type):
+        if unit_type != 'archers':
+            # This should never happen.
+            return
+
+        unit_number = len(player.units[unit_type])
+        new_archer = Archer(unit_number, self.build_position)
+        player.units[unit_type].append(new_archer)
+        player.resources -= Archer.cost
 
 
 class Stable(Building):
