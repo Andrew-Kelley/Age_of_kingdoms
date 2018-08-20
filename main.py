@@ -41,6 +41,12 @@ while True:
     for player in players[1:]:
         print("It is now Player number {}'s turn".format(player.number))
         print(player.resources)
+
+        # player.messages contains all messages for the player produced while the player's commands
+        # are being implemented.
+        if player.messages:
+            print(player.messages)
+            player.messages = ''
         selected_obj = []
         update_now_and_later_commands(player)
 

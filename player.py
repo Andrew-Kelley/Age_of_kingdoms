@@ -40,6 +40,11 @@ class Player:
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 
+        # If an error is noticed while commands are implemented, an error message should not be
+        # print immediately (while all players' commands are implemented). Instead, an error
+        # message should be saved to be printed during the start of the player's next turn:
+        self.messages = ''
+
         # For each player, House number 1 (i.e. the first house that player builds) will be in
         # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a
         # placeholder. But since I DO have the space, self.buildings[building_kind][0] will be
