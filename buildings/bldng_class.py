@@ -50,6 +50,9 @@ class Building:
         # This function needs to be re-implemented for every building which produces units.
         return []
 
+    def things_which_can_be_researched(self, player):
+        return []
+
     def build_unit(self, player, unit_type):
         """This function (in the Building class) should NEVER be called."""
         print("ERROR! You are trying to build a unit from a building that does not yet have",
