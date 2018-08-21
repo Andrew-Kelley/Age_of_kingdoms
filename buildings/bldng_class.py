@@ -2,8 +2,7 @@
 
 from resources import Resources, Wood, Stone, Bronze
 
-stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'woodwall',
-                         'barracks'}
+stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'woodwall', 'barracks'}
 
 bronze_age_buildings = {'farm', 'stonewall', 'wallfortification', 'tower', 'archeryrange',
                         'siegeworks', 'blacksmith', 'market'}
@@ -12,6 +11,7 @@ iron_age_buildings = {'towncenter', 'castle', 'stable', 'library'}
 
 buildings = stone_age_buildings.union(bronze_age_buildings).union(iron_age_buildings)
 
+
 class Building:
     # Have a method to handle when a building is being attacked. Also have a method to handle building
     # destruction.
@@ -19,11 +19,12 @@ class Building:
     # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units
     # garrisoned in it.
     kind = 'building'
-    # The following four attributes should never be accessed.
+    # The following five attributes should never be accessed.
     size = (2, 2)
     letter_abbreviation = '?'
     cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000})
     time_to_build = 1000
+    currently_researching_something = False
 
     def __init__(self, number, position):
         """For each player, the first of each building is numbered 1.
@@ -52,6 +53,20 @@ class Building:
 
     def strings_ls_of_things_which_can_be_researched(self, player):
         return []
+
+    def research(self, thing_to_be_researched, player):
+        thing = thing_to_be_researched
+        if thing.progress_to_completion == 0:
+            player.resources -= thing_to_be_researched.cost
+
+        self.currently_researching_something = True
+        thing.make_progress()
+
+        if thing.progress_to_completion >= thing.num_turns_to_completion:
+            self.currently_researching_something = False
+            if thing.name in player.things_researched:
+                return
+            thing.research_completed()
 
     def build_unit(self, player, unit_type):
         """This function (in the Building class) should NEVER be called."""
@@ -113,7 +128,6 @@ class Building:
             for j in range(j_init, j_final):
                 game_map[i][j] = self.letter_abbreviation
                 # player.map[i][j] = self.letter_abbreviation
-
 
     def build(self, villager_who_is_building, player):
         if self.progress_to_construction >= self.time_to_build:

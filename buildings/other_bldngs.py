@@ -1,6 +1,7 @@
 from buildings.bldng_class import Building, buildings
 from units import Villager
 from resources import Resources, Food, Wood, Stone, Gold, Bronze
+from research_classes import BronzeAge, IronAge
 
 from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tower, Castle
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
@@ -30,20 +31,6 @@ class TownCenter(Building):
         elif player.age == 'bronze age':
             research_ls.append('iron age')
         return research_ls
-
-    def research(self, thing_to_be_researched, player):
-        if thing_to_be_researched == 'bronze age':
-            if player.age != 'stone age':
-                pass
-            else:
-                player.resources -= Resources({Food: 100, Wood: 500, Stone: 200})
-                player.age = 'bronze age'
-        elif thing_to_be_researched == 'iron age':
-            if player.age != 'bronze age':
-                pass
-            else:
-                player.resources -= Resources({Food: 500, Gold: 300, Bronze: 300})
-                player.age = 'iron age'
 
     def units_which_can_be_built(self, player):
         return ['villagers']
