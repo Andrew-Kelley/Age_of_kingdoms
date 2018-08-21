@@ -20,7 +20,7 @@ class TownCenter(Building):
     kind = 'towncenter'
     # time_to_build = ?
 
-    def things_which_can_be_researched(self, player):
+    def strings_ls_of_things_which_can_be_researched(self, player):
         research_ls = []
         # Maybe have a 'wheelbarrow', which makes all villagers more efficient at anything they do
         # 'wheelbarrow' could be researched in the bronze age

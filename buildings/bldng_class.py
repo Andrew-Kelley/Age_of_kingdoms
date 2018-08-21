@@ -50,7 +50,7 @@ class Building:
         # This function needs to be re-implemented for every building which produces units.
         return []
 
-    def things_which_can_be_researched(self, player):
+    def strings_ls_of_things_which_can_be_researched(self, player):
         return []
 
     def build_unit(self, player, unit_type):
