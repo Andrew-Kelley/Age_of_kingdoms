@@ -40,6 +40,9 @@ def insert_command(player, command):
     elif command[0] == 'build building':
         insert_build_building_command(player, command)
         return
+    elif command[0] == 'research':
+        insert_research_command(player, command)
+        return
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
@@ -236,13 +239,25 @@ def cannot_build_unit_yet_error_message(player, building, unit_type):
         message = ''
     return message
 
+
+def insert_research_command(player, command):
+    if len(command) != 3:
+        return
+
+    building = command[1]
+    thing_to_be_researched = command[2]
+    if building in player.commands['now']['research']:
+        player.commands['later']['research'][building] = thing_to_be_researched
+    else:
+        player.commands['now']['research'][building] = thing_to_be_researched
+
+
 ###################################################################################################
 ###################################################################################################
 ###################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
     update_build_building_command(player)
-    update_collect_resource_command(player)
     update_move_commands(player)
     update_build_unit_commands(player)
 
@@ -259,7 +274,9 @@ def update_build_building_command(player):
 # The following will only be used if I eventually end up using
 # player.commands['later']['collect resource']
 def update_collect_resource_command(player):
+    # If I change this, the function must be added to the function update_now_and_later_commands
     pass
+
 
 
 # The following removes all the old commands in player.commands['now']['move'], and it updates
@@ -296,6 +313,9 @@ def update_build_unit_commands(player):
         else:
             del player.commands['later']['build unit'][building]
 
+def update_research_command(player):
+    # If I change this, the function must be added to the function update_now_and_later_commands
+    pass
 
 ###################################################################################################
 ###################################################################################################
@@ -352,6 +372,7 @@ def implement_build_unit_commands(player):
             else:
                 print('Population cap reached. You cannot build more units.')
                 return
+
 
 if __name__ == '__main__':
     pass
