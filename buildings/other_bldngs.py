@@ -7,6 +7,8 @@ from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tow
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
+from command_handling import insert_move_command, insert_collect_resource_later_command
+from command_handling import insert_collect_resource_now_command
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
@@ -20,6 +22,12 @@ class TownCenter(Building):
     defensible = True
     kind = 'towncenter'
     # time_to_build = ?
+
+    def __init__(self, number, position):
+        Building.__init__(self, number, position)
+        # The following can be altered by the player and is used for the default initial action
+        # of a newly built villager.
+        self.initial_resource_to_collect = None
 
     def strings_ls_of_things_which_can_be_researched(self, player):
         research_ls = []
@@ -40,7 +48,21 @@ class TownCenter(Building):
             print('Error! A TownCenter can only build Villagers.')
             return
         villager_number = len(player.units[Villager.kind])
-        new_villager = Villager(villager_number, self.build_position)
+        delta = self.build_position - self.position
+
+        if delta.magnitude > 6:
+            new_villager = Villager(villager_number, self.position)
+            command = ['move',[new_villager], delta]
+            insert_move_command(player, command)
+        else:
+            new_villager = Villager(villager_number, self.build_position)
+        if self.initial_resource_to_collect:
+            command = ['collect resource', self.initial_resource_to_collect, [new_villager]]
+            if delta.magnitude <= 6:
+                insert_collect_resource_now_command(player, command)
+            else:
+                insert_collect_resource_later_command(player, command)
+
         player.units[Villager.kind].append(new_villager)
         player.resources -= Villager.cost
 
