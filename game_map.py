@@ -42,14 +42,14 @@ class Vector(Position):
     def magnitude(self):
         return abs(self.value[0]) + abs(self.value[1])
 
-    def beginning_plus_the_rest(self):
+    def beginning_plus_the_rest(self, distance_in_one_turn=15):
         """partitions self into two vectors v1, v2 such that self == v1 + v2
         and v1.magnitude <= 15
 
         The purpose of this is to be able to move units more than the allowable amount per turn.
 
         returns a tuple: (Vector, Vector)"""
-        if self.magnitude <= 15:
+        if self.magnitude <= distance_in_one_turn:
             return (self, Vector(0, 0))
 
         def special_min(x, other=7):
@@ -59,16 +59,18 @@ class Vector(Position):
                 value *= -1
             return value
 
+        a = distance_in_one_turn // 2
+        b = distance_in_one_turn - a
         i0, j0 = self.value
-        i = special_min(i0, 7)
-        j = special_min(j0, 8)
+        i = special_min(i0, a)
+        j = special_min(j0, b)
 
         # The following is only ready to be returned if beginning.magnitude == 15 or ...
         # ...if beginning == self
         beginning = Vector(i, j)
         the_rest = self - beginning
 
-        max_left = 15 - beginning.magnitude
+        max_left = distance_in_one_turn - beginning.magnitude
 
         i1, j1 = the_rest.value
         i = special_min(i1, max_left)
