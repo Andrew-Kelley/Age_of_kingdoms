@@ -1,5 +1,7 @@
 # This module handles the commands which are returned by the function input_next_command
 
+from collections import deque
+
 from game_map import Position, Vector, game_map
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter
@@ -9,12 +11,15 @@ from resources import resource_ls
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
 #  'build building':dict( villager:[building_to_be_built, position] for ...),
-#  'collect resource':( villager:resource_object_to_collect for ...),
+#  'collect resource':dict( villager:resource_object_to_collect for ...),
 #  'build unit':dict( building:[unit_to_be_built, number_of_units_of_that_type_to_build] for ... ),
 #  'research':dict( building:thing_to_be_researched for ...),
 #  ...}
 # Eventually, player.commands should also contain keywords such as follows:
 # 'attack', 'defend'
+
+# player.commands['later']['research'] is a dictionary of the following format:
+# dict( building: a queue of things_to_be_researched for building in ...)
 
 # Note 1: I need to have a function which checks if a given unit has already been commanded to
 # do something. I think newer commands will override older ones.
@@ -247,7 +252,10 @@ def insert_research_command(player, command):
     building = command[1]
     thing_to_be_researched = command[2]
     if building in player.commands['now']['research']:
-        player.commands['later']['research'][building] = thing_to_be_researched
+        if building in player.commands['later']['research']:
+            player.commands['later']['research'][building].append(thing_to_be_researched)
+        else:
+            player.commands['later']['research'][building] = deque([thing_to_be_researched])
     else:
         player.commands['now']['research'][building] = thing_to_be_researched
 
@@ -260,6 +268,7 @@ def update_now_and_later_commands(player):
     update_build_building_command(player)
     update_move_commands(player)
     update_build_unit_commands(player)
+    update_research_commands(player)
 
 
 def update_build_building_command(player):
@@ -276,7 +285,6 @@ def update_build_building_command(player):
 def update_collect_resource_command(player):
     # If I change this, the function must be added to the function update_now_and_later_commands
     pass
-
 
 
 # The following removes all the old commands in player.commands['now']['move'], and it updates
@@ -313,9 +321,20 @@ def update_build_unit_commands(player):
         else:
             del player.commands['later']['build unit'][building]
 
-def update_research_command(player):
-    # If I change this, the function must be added to the function update_now_and_later_commands
-    pass
+
+def update_research_commands(player):
+    for building in list(player.commands['now']['research']):
+        thing_to_be_researched = player.commands['now']['research'][building]
+        if thing_to_be_researched.name in player.things_researched:
+            del player.commands['now']['research'][building]
+
+    for building in list(player.commands['later']['research']):
+        queue = player.commands['later']['research'][building]
+        if len(queue) > 0: # As it should be at this point
+            research_this_next = queue.popleft()
+            player.commands['now']['research'][building] = research_this_next
+        if len(queue) == 0:
+            del player.commands['later']['research'][building]
 
 ###################################################################################################
 ###################################################################################################
