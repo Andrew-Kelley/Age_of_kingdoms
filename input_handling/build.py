@@ -165,7 +165,22 @@ def build_wall_fortification(player, inpt_as_ls):
 
 
 def set_default_build_position(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
-    """selected_obj (if not None) must be in the following format:
-    ['building', building.kind, building_num]"""
-    # I need to decide on the format of the output
-    return ['set build position']
+    """selected_obj must be in the following format:
+    ['building', building.kind, building_num]
+
+    Returns []"""
+    if not selected_obj:
+        return []
+    building = selected_obj_to_actual_building(player, selected_obj)
+    if not building:
+        return []
+
+    i = str_to_int(inpt_as_ls[-2])
+    j = str_to_int(inpt_as_ls[-1])
+    if i is None or j is None:
+        return []
+
+    position = Position(i, j)
+    building.change_build_position_to(position, game_map)
+
+    return []
