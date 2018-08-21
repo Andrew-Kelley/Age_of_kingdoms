@@ -154,9 +154,10 @@ def collect_resource_command_is_properly_formatted(command):
     ls_of_villagers = command[2]
     if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
         return False
-    if not all((lambda u:isinstance(u, Villager) for u in ls_of_villagers)):
+    if not all((lambda u: isinstance(u, Villager) for u in ls_of_villagers)):
         return False
     return True
+
 
 # The following function could instead be named insert_a_command_of_type_move
 def insert_move_command(player, command):
@@ -217,12 +218,12 @@ def insert_build_unit_command(player, command):
     num_to_be_built = command[3]
     if not isinstance(building, Building):
         return
-    if not unit_type in unit_kinds:
+    if unit_type not in unit_kinds:
         return
     if num_to_be_built < 1 or not type(num_to_be_built) is int:
         return
 
-    if not unit_type in building.units_which_can_be_built(player):
+    if unit_type not in building.units_which_can_be_built(player):
         print('The selected building cannot build that unit.')
         print(cannot_build_unit_yet_error_message(player, building, unit_type))
         return
@@ -252,7 +253,7 @@ def number_of_units_can_build_in_one_turn(player, building, unit_type):
 
 def cannot_build_unit_yet_error_message(player, building, unit_type):
     if unit_type == 'swordsmen':
-        message =  "A barracks can build a swordsmen only after the Bronze Age is researched "
+        message = "A barracks can build a swordsmen only after the Bronze Age is researched "
         message += "and after the following two things are researched at the Blacksmith:"
         message += "\n (a) bronze shields, and (b) bronze swords"
     elif unit_type == 'trebuchets':
@@ -284,6 +285,7 @@ def insert_research_command(player, command):
 def update_now_and_later_commands(player):
     update_build_building_command(player)
     update_move_commands(player)
+    update_collect_resource_command(player)  # This MUST come after update_move_commands(player)
     update_build_unit_commands(player)
     update_research_commands(player)
 
@@ -297,11 +299,14 @@ def update_build_building_command(player):
             player.commands['now']['build building'][villager] = [building, building_position]
 
 
-# The following will only be used if I eventually end up using
-# player.commands['later']['collect resource']
+# The only reason why villagers may be commanded to collect resources later is if they first
+# have to move. This is intended to be used only for newly built villagers.
 def update_collect_resource_command(player):
-    # If I change this, the function must be added to the function update_now_and_later_commands
-    pass
+    for villager in list(player.commands['later']['collect resource']):
+        if villager not in player.commands['now']['move']:
+            resource = player.commands['later']['collect resource'][villager]
+            del player.commands['later']['collect resource'][villager]
+            player.commands['now']['collect resource'][villager] = resource
 
 
 # The following removes all the old commands in player.commands['now']['move'], and it updates
@@ -347,11 +352,12 @@ def update_research_commands(player):
 
     for building in list(player.commands['later']['research']):
         queue = player.commands['later']['research'][building]
-        if len(queue) > 0: # As it should be at this point
+        if len(queue) > 0:  # As it should be at this point
             research_this_next = queue.popleft()
             player.commands['now']['research'][building] = research_this_next
         if len(queue) == 0:
             del player.commands['later']['research'][building]
+
 
 ###################################################################################################
 ###################################################################################################
@@ -366,6 +372,7 @@ def implement_commands_if_possible(player):
     # of all the functions which need to be run.
     # for function in functions:
     #     function(player)
+
 
 def implement_build_building_command(player):
     for villager in player.commands['now']['build building']:
@@ -397,7 +404,7 @@ def implement_build_unit_commands(player):
         unit_type, num_to_build = player.commands['now']['build unit'][building]
         for i in range(num_to_build):
             if player.population < player.population_cap:
-                if not unit_type in unit_kind_to_class:
+                if unit_type not in unit_kind_to_class:
                     continue
                 unit = unit_kind_to_class[unit_type]
                 if player.can_build(unit):
