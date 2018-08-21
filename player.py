@@ -47,6 +47,7 @@ class Player:
         self.messages = ''
 
         self.things_researched = set()
+        self.things_being_currently_researched = set()
 
         # For each player, House number 1 (i.e. the first house that player builds) will be in
         # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a

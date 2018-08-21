@@ -67,6 +67,12 @@ class Building:
             if thing.name in player.things_researched:
                 return
             thing.research_completed()
+            # The following condition should always hold:
+            if thing.name in player.things_being_currently_researched:
+                player.things_being_currently_researched.remove(thing.name)
+            else:
+                print('Error! Developer message: In the Building method called research'
+                      'thing.name was not in player.things_being_currently_researched.')
 
     def build_unit(self, player, unit_type):
         """This function (in the Building class) should NEVER be called."""

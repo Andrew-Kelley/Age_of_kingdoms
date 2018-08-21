@@ -10,7 +10,8 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
 
     Returns [] or
     ['research', building, thing_to_be_researched], where thing_to_be_researched is a
-    subclass of ResearchObject."""
+    subclass of ResearchObject and building is a Building instance that is not currently
+    researching anything."""
     if not selected_obj:
         print('You must first select a building to research something.')
         return []
@@ -46,6 +47,12 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
               'Developer note: specifically, ', thing_to_be_researched,
               'has not yet been added to the research_string_to_class dictionary.')
         return []
+
+    if thing_to_be_researched in player.things_being_currently_researched:
+        print('You are already researching ', thing_to_be_researched)
+        return []
+
+    player.things_being_currently_researched.add(thing_to_be_researched)
 
     thing_to_be_researched = research_string_to_class[thing_to_be_researched]
 
