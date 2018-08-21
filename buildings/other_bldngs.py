@@ -7,7 +7,7 @@ from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tow
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
-from command_handling import insert_move_command, insert_collect_resource_later_command
+from command_handling import insert_move_later_command, insert_collect_resource_later_command
 from command_handling import insert_collect_resource_now_command
 
 class TownCenter(Building):
@@ -51,9 +51,11 @@ class TownCenter(Building):
         delta = self.build_position - self.position
 
         if delta.magnitude > 6:
-            new_villager = Villager(villager_number, self.position)
-            command = ['move',[new_villager], delta]
-            insert_move_command(player, command)
+            delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=6)
+            build_position = self.position + delta1
+            new_villager = Villager(villager_number, build_position)
+            command = ['move', [new_villager], delta2]
+            insert_move_later_command(player, command)
         else:
             new_villager = Villager(villager_number, self.build_position)
         if self.initial_resource_to_collect:
