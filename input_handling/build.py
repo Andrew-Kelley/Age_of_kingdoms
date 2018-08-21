@@ -1,5 +1,6 @@
 from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
 from game_map import Position, game_map
+from resources import resource_kind_to_class
 from input_handling.select_an_object import selected_obj_to_actual_building
 from input_handling.select_an_object import selected_obj_consists_of_villagers
 from input_handling.select_an_object import selected_obj_to_ls_of_units, building_first_words
@@ -182,5 +183,18 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None, selected_t
 
     position = Position(i, j)
     building.change_build_position_to(position, game_map)
+
+    if building.kind == 'towncenter':
+        while True:
+            resource = input('Which resource would you like newly built villagers to collect?'
+                             '\nIf none, type "none" or just hit enter. ').lower().strip()
+            if resource in ('', 'none'):
+                building.initial_resource_to_collect = None
+                break
+            elif resource in resource_kind_to_class:
+                building.initial_resource_to_collect = resource_kind_to_class[resource]
+                break
+            else:
+                print('Your command was not understood. Please try again.')
 
     return []
