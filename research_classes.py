@@ -1,3 +1,4 @@
+from copy import copy
 from resources import Resources, Food, Wood, Stone, Bronze, Gold, Iron
 
 
@@ -5,7 +6,7 @@ from resources import Resources, Food, Wood, Stone, Bronze, Gold, Iron
 # ResearchObject is created.
 class ResearchObject:
     # The following should always be overridden by each subclass
-    num_turns_to_completion = 30
+    num_turns_to_completion = 30 # might be changed to time_to_completion
     cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000, Gold: 1000, Iron: 1000})
     name = 'Class ResearchObject'
 
@@ -104,6 +105,15 @@ class BronzePicks(ResearchObject):
 
 ####################################
 
+stone_age_research = {BronzeAge.name}
+
+bronze_age_research = copy(stone_age_research)
+for research_obj in (IronAge, BronzeTippedSpears, BronzeSwords, BronzeShields, BronzeAxes, BronzePicks):
+    bronze_age_research.add(research_obj.name)
+
+iron_age_research = copy(bronze_age_research)
+# Add an iron version for every bronze research at the blacksmith.
+
 research_string_to_class = {'bronze age': BronzeAge, 'iron age': IronAge,
                             'bronze tipped spears': BronzeTippedSpears, 'bronze swords': BronzeSwords,
                             'bronze shields': BronzeShields, 'bronze axes': BronzeAxes,
@@ -113,3 +123,4 @@ research_string_to_class = {'bronze age': BronzeAge, 'iron age': IronAge,
 for name in research_string_to_class:
     research_obj = research_string_to_class[name]
     assert name == research_obj.name
+
