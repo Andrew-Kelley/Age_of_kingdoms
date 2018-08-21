@@ -35,10 +35,7 @@ class Building:
         self.position = position
         # The following is only relevant for unit-producing buildings. It sets the default position
         # where units are produced as the south-west corner of the building. Even though such units
-        # are technically "in" the building, they are not counted as garrisoned. The reason why I do
-        # not want to check if it's possible to build units immediately to the north, south, east, or
-        # west, of the building, is I would have to include the game_map as a parameter to the
-        # class __init__ function.
+        # are technically "in" the building, they are not counted as garrisoned.
         self.build_position = position
         # The following is used when villagers build a building:
         self.progress_to_construction = 0
@@ -83,11 +80,10 @@ class Building:
     def change_build_position_to(self, new_position, game_map):
         """Only relevant for unit-producing buildings. This function specifies a new position for
         where units built by the building self should begin their existence."""
-        delta = new_position - self.position
-        if delta.magnitude > 15:
-            print("Sorry, the new position must be within 15 of the building's south-west corner.")
-            return
-            # SHOULD I CHANGE THIS? Should it instead be within 15 of any part of the building?
+        # delta = new_position - self.position
+        # if delta.magnitude > 15:
+        #     # Then newly built units are given a command to move, once they are built
+        #     return
         if not new_position.is_on_the_map(game_map):
             print("You must pick a position that is on the map.")
             return
