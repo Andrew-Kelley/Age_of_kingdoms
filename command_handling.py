@@ -134,7 +134,9 @@ def insert_collect_resource_now_command(player, command):
 
 
 # The following is only intended to be used for newly built villagers (after a player has
-# decided to give a default command to newly built villagers).
+# decided to give a default command to newly built villagers). However, it might also be
+# useful for "smart" villagers i.e. for villagers who collect resources after building a
+# building such as a lumber camp.
 def insert_collect_resource_later_command(player, command):
     if not collect_resource_command_is_properly_formatted(command):
         return
@@ -163,14 +165,10 @@ def collect_resource_command_is_properly_formatted(command):
 def insert_move_command(player, command):
     """In order for command to be handled properly, it must be in the following format:
     ['move', ls_of_units, delta], where delta is of type Vector"""
-    if len(command) != 3:
+    if not move_command_is_properly_formatted(command):
         return
     ls_of_units = command[1]
-    if not type(ls_of_units) is list:
-        return
     delta = command[2]
-    if not isinstance(delta, Vector):
-        return
 
     for unit in ls_of_units:
         for command_type in ('build building', 'collect resource'):
@@ -199,6 +197,29 @@ def insert_move_command(player, command):
     for unit in move_later:
         player.commands['later']['move'][unit] = move_later[unit]
     return
+
+
+def insert_move_later_command(player, command):
+    """This should ONLY be used when a unit is initially built."""
+    if not move_command_is_properly_formatted(command):
+        return
+    ls_of_units = command[1]
+    delta = command[2]
+
+    for unit in ls_of_units:
+        player.commands['later']['move'][unit] = delta
+
+
+def move_command_is_properly_formatted(command):
+    if len(command) != 3:
+        return False
+    ls_of_units = command[1]
+    if not type(ls_of_units) is list:
+        return False
+    delta = command[2]
+    if not isinstance(delta, Vector):
+        return False
+    return True
 
 
 def insert_build_unit_command(player, command):
