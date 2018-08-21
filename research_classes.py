@@ -7,6 +7,7 @@ class ResearchObject:
     # The following should always be overridden by each subclass
     num_turns_to_completion = 30
     cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000, Gold: 1000, Iron: 1000})
+    name = 'Class ResearchObject'
 
     def __init__(self):
         self.progress_to_completion = 0
@@ -25,19 +26,21 @@ class ResearchObject:
 class BronzeAge(ResearchObject):
     num_turns_to_completion = 8
     cost = Resources({Food: 100, Wood: 500, Stone: 200})
+    name = 'bronze age'
 
     def research_completed(self, player):
         player.age = 'bronze age'
-        player.things_researched.add(BronzeAge)
+        player.things_researched.add(self.name)
 
 
 class IronAge(ResearchObject):
     num_turns_to_completion = 8
     cost = Resources({Food: 500, Gold: 300, Bronze: 300})
+    name = 'iron age'
 
     def research_completed(self, player):
         player.age = 'iron age'
-        player.things_researched.add(IronAge)
+        player.things_researched.add(self.name)
 
 # class WheelBarrow(ResearchObject):
 #     num_turns_to_completion = 3
@@ -51,6 +54,7 @@ class IronAge(ResearchObject):
 class BronzeTippedSpears(ResearchObject):
     num_turns_to_completion = 3
     cost = Resources({Bronze: 100, Gold: 50})
+    name = 'bronze tipped spears'
 
     def research_completed(self, player):
         pass
@@ -59,6 +63,7 @@ class BronzeTippedSpears(ResearchObject):
 class BronzeSwords(ResearchObject):
     num_turns_to_completion = 3
     cost = Resources({Bronze: 140, Gold: 55})
+    name = 'bronze swords'
 
     def research_completed(self, player):
         pass
@@ -73,6 +78,7 @@ class BronzeSwords(ResearchObject):
 class BronzeShields(ResearchObject):
     num_turns_to_completion = 3
     cost = Resources({Bronze: 150, Gold: 60})
+    name = 'bronze shields'
 
     def research_completed(self, player):
         pass
@@ -81,6 +87,7 @@ class BronzeShields(ResearchObject):
 class BronzeAxes(ResearchObject):
     num_turns_to_completion = 2
     cost = Resources({Bronze: 130, Gold: 20})
+    name = 'bronze axes'
 
     def research_completed(self, player):
         pass
@@ -89,6 +96,7 @@ class BronzeAxes(ResearchObject):
 class BronzePicks(ResearchObject):
     num_turns_to_completion = 2
     cost = Resources({Bronze: 130, Gold: 20})
+    name = 'bronze picks'
 
     def research_completed(self, player):
         pass
@@ -100,3 +108,8 @@ research_string_to_class = {'bronze age': BronzeAge, 'iron age': IronAge,
                             'bronze tipped spears': BronzeTippedSpears, 'bronze swords': BronzeSwords,
                             'bronze shields': BronzeShields, 'bronze axes': BronzeAxes,
                             'bronze picks': BronzePicks}
+
+
+for name in research_string_to_class:
+    research_obj = research_string_to_class[name]
+    assert name == research_obj.name
