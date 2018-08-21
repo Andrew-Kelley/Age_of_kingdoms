@@ -1,6 +1,6 @@
 from input_handling.select_an_object import selected_obj_to_actual_building
 from buildings.bldng_class import Building
-from research_classes import research_string_to_class
+from research_classes import research_string_to_class, stone_age_research, bronze_age_research
 
 
 def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -21,10 +21,24 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
         print('You must first select a building to research something.')
         return []
 
+    if building.currently_researching_something:
+        print('The selected building is already researching something. It cannot research',
+              'two things at once.')
+        return []
+
     thing_to_be_researched = ' '.join(inpt_as_ls[1:])
     if thing_to_be_researched not in building.strings_ls_of_things_which_can_be_researched(player):
         print('Sorry, a {} cannot research {}.'.format(building.kind, thing_to_be_researched))
         return []
+
+    if player.age == 'stone age':
+        if thing_to_be_researched not in stone_age_research:
+            print('Sorry,', thing_to_be_researched, 'cannot be researched in the stone age.')
+            return []
+    elif player.age == 'bronze age':
+        if thing_to_be_researched not in bronze_age_research:
+            print('Sorry,', thing_to_be_researched, 'cannot be researched in the bronze age.')
+            return []
 
     if thing_to_be_researched not in research_string_to_class:
         print('Error. This game is still unfinished, and researching',
