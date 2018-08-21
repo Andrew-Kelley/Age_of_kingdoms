@@ -4,7 +4,6 @@ from collections import deque
 
 from game_map import Position, Vector, game_map
 from buildings.bldng_class import Building
-from buildings.other_bldngs import TownCenter
 from units import unit_kinds, unit_kind_to_class, unit_kind_to_singular, Villager
 from resources import resource_ls
 
@@ -40,7 +39,7 @@ def insert_command(player, command):
         insert_build_unit_command(player, command)
         return
     elif command[0] == 'collect resource':
-        insert_collect_resource_command(player, command)
+        insert_collect_resource_now_command(player, command)
         return
     elif command[0] == 'build building':
         insert_build_building_command(player, command)
@@ -117,7 +116,7 @@ def building_already_in_progress(player, building_class, position):
     return False
 
 
-def insert_collect_resource_command(player, command):
+def insert_collect_resource_now_command(player, command):
     if len(command) != 3:
         return
     resource = command[1]
@@ -137,8 +136,7 @@ def insert_collect_resource_command(player, command):
         if villager.can_collect_resource_now(resource, player):
             player.commands['now']['collect resource'][villager] = resource
         else:
-            print('Player {}:'.format(player.number),
-                  villager, ' cannot collect {} now.'.format(resource.kind))
+            print(villager, ' cannot collect {} now.'.format(resource.kind))
 
 
 # The following function could instead be named insert_a_command_of_type_move
@@ -221,7 +219,7 @@ def insert_build_unit_command(player, command):
 
 
 def number_of_units_can_build_in_one_turn(player, building, unit_type):
-    if isinstance(building, TownCenter):
+    if building.kind == 'towncenter':
         if unit_type == 'villagers':
             num_can_build = building.num_villagers_can_build_in_turn(player)
         else:
