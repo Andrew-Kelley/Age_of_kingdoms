@@ -344,6 +344,7 @@ def implement_commands_if_possible(player):
     implement_collect_resource_command(player)
     implement_move_commands(player)
     implement_build_unit_commands(player)
+    implement_research_commands(player)
     # Eventually, this will probably be replaced with the following code, where functions is a list
     # of all the functions which need to be run.
     # for function in functions:
@@ -391,6 +392,12 @@ def implement_build_unit_commands(player):
             else:
                 print('Population cap reached. You cannot build more units.')
                 return
+
+
+def implement_research_commands(player):
+    for building in player.commands['now']['research']:
+        thing_to_research = player.commands['now']['research'][building]
+        building.research(thing_to_research, player)
 
 
 if __name__ == '__main__':
