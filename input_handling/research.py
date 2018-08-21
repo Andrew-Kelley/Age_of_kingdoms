@@ -54,7 +54,8 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
 
     player.things_being_currently_researched.add(thing_to_be_researched)
 
-    thing_to_be_researched = research_string_to_class[thing_to_be_researched]
+    research_object_class = research_string_to_class[thing_to_be_researched]
+    thing_to_be_researched = research_object_class()
 
     return ['research', building, thing_to_be_researched]
 

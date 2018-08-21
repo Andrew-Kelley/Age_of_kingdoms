@@ -66,7 +66,7 @@ class Building:
             self.currently_researching_something = False
             if thing.name in player.things_researched:
                 return
-            thing.research_completed()
+            thing.research_completed(player)
             # The following condition should always hold:
             if thing.name in player.things_being_currently_researched:
                 player.things_being_currently_researched.remove(thing.name)
