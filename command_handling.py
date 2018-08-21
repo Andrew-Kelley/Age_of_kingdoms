@@ -117,16 +117,10 @@ def building_already_in_progress(player, building_class, position):
 
 
 def insert_collect_resource_now_command(player, command):
-    if len(command) != 3:
+    if not collect_resource_command_is_properly_formatted(command):
         return
     resource = command[1]
-    if not resource in resource_ls:
-        return
     ls_of_villagers = command[2]
-    if not type(ls_of_villagers) is list or len(ls_of_villagers)  == 0:
-        return
-    if not all((lambda u:isinstance(u, Villager) for u in ls_of_villagers)):
-        return
 
     for unit in ls_of_villagers:
         for command_type in ('move', 'build building'):
@@ -138,6 +132,31 @@ def insert_collect_resource_now_command(player, command):
         else:
             print(villager, ' cannot collect {} now.'.format(resource.kind))
 
+
+# The following is only intended to be used for newly built villagers (after a player has
+# decided to give a default command to newly built villagers).
+def insert_collect_resource_later_command(player, command):
+    if not collect_resource_command_is_properly_formatted(command):
+        return
+    resource = command[1]
+    ls_of_villagers = command[2]
+
+    for villager in ls_of_villagers:
+        player.commands['later']['collect resource'][villager] = resource
+
+
+def collect_resource_command_is_properly_formatted(command):
+    if len(command) != 3:
+        return False
+    resource = command[1]
+    if resource not in resource_ls:
+        return False
+    ls_of_villagers = command[2]
+    if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
+        return False
+    if not all((lambda u:isinstance(u, Villager) for u in ls_of_villagers)):
+        return False
+    return True
 
 # The following function could instead be named insert_a_command_of_type_move
 def insert_move_command(player, command):
