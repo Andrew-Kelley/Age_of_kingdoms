@@ -66,6 +66,7 @@ class TownCenter(Building):
                 insert_collect_resource_later_command(player, command)
 
         player.units[Villager.kind].append(new_villager)
+        player.messages += 'New unit: {}\n'.format(new_villager)
         player.resources -= Villager.cost
 
     def num_villagers_can_build_in_turn(self, player):

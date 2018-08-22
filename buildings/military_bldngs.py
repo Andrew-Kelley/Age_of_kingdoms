@@ -40,6 +40,7 @@ class Barracks(Building):
         set_new_unit_build_position_if_far(self, new_unit, player, distance=6)
 
         player.units[unit_type].append(new_unit)
+        player.messages += 'New unit: {}\n'.format(new_unit)
 
 
 def set_new_unit_build_position_if_far(building, new_unit, player, distance):
@@ -74,6 +75,7 @@ class ArcheryRange(Building):
         set_new_unit_build_position_if_far(self, new_archer, player, distance=6)
         player.units[unit_type].append(new_archer)
         player.resources -= Archer.cost
+        player.messages += 'New unit: {}\n'.format(new_archer)
 
 
 class Stable(Building):
