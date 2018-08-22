@@ -35,7 +35,8 @@ done_with_turn = {'finished', 'done'}
 help_commands = {'help', 'commands'}
 # NOTE: If main_commands is changed, then so should the functions dictionary, defined just before
 # the input_next_command function.
-main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine', 'research'}
+main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine', 'research',
+                 'help build'}
 possible_first_words = main_commands.union(done_with_turn).union(help_commands)
 
 
@@ -56,8 +57,8 @@ def closest_word_to(word, some_words):
 # input_next_command uses to delegate its work. These functions all have the same arguments
 # so that they can be called uniformly via **kwargs.
 
-functions = {'build': build_something, 'select': select_something, 'move': move_unit_or_units,
-             'set': set_default_build_position, 'print': print_something,
+functions = {'build': build_something, 'help build':build_something, 'select': select_something,
+             'move': move_unit_or_units, 'set': set_default_build_position, 'print': print_something,
              'research':research_something}
 
 # Intended use: 'collect <any resource>', 'chop wood', 'mine gold', 'mine bronze', 'mine iron'
@@ -97,8 +98,15 @@ def input_next_command(player, selected_obj=None, selected_town_num=1):
 
         if first_argument_of_command in done_with_turn:
             return ['end of turn']
-        elif first_argument_of_command in help_commands:
+        elif first_argument_of_command in help_commands and len(inpt_as_ls) == 1:
             help(selected_obj)
+            continue
+        elif first_argument_of_command == 'help' and len(inpt_as_ls) > 1 and inpt_as_ls[1] == 'build':
+            del inpt_as_ls[0]
+            inpt_as_ls[0] = 'help build'
+            first_argument_of_command = 'help build'
+        elif first_argument_of_command not in main_commands:
+            print('Your command was not understood. Please enter another command.')
             continue
 
         kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj,

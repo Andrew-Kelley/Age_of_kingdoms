@@ -64,13 +64,10 @@ def remove_unit_from_command_if_there(player, unit, command_type):
 def insert_build_building_command(player, command):
     """command must be of the following format:
     ['build building', ls_of_villagers, building_class, position]"""
-    if len(command) != 4:
+    if len(command) != 5:
         return
 
     building_class = command[2]
-    if not player.can_build(building_class):
-        print('You do not have enough resources to build that building.')
-        return
 
     ls_of_villagers = command[1]
     if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
@@ -86,10 +83,18 @@ def insert_build_building_command(player, command):
 
     # The following few lines are to handle the situation that other villagers are already
     # building an instance of building_class at building_position
-    building = building_already_in_progress(player, building_class, building_position)
-    if building:
-        pass
+    this_is_a_help_build_command = command[4]
+    if this_is_a_help_build_command:
+        building = building_already_in_progress(player, building_class, building_position)
+        if not building:
+            print('Sorry, your command to help build that building was rejected.')
+            print('Remember, to help build a building already under construction,')
+            print('You must use the exact position it was built at.')
+            return
     else:
+        if not player.can_build(building_class):
+            print('You do not have enough resources to build that building.')
+            return
         building_number = len(player.buildings[building_class.kind])
         building = building_class(building_number, building_position)
         player.resources -= building.cost

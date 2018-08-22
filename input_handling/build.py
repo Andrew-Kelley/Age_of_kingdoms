@@ -100,6 +100,11 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
               'parts/words.')
         return []
 
+    if inpt_as_ls[0] == 'help build':
+        this_is_a_help_build_command = True
+    else:
+        this_is_a_help_build_command = False
+
     ls_of_villagers = selected_obj_to_ls_of_units(player, selected_obj)
     if len(ls_of_villagers) < 1:
         print('No villagers were selected that could build the building.')
@@ -127,10 +132,10 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
             return []
 
     if building_kind == 'wallfortification':
-        return build_wall_fortification(player, inpt_as_ls)
+        return build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command)
 
     if building_kind in ('woodwall', 'stonewall'):
-        return build_wall(player, inpt_as_ls)
+        return build_wall(player, inpt_as_ls, this_is_a_help_build_command)
 
     if building_kind not in building_kind_to_class:
         # This should never happen because I already checked that building_kind is in buildings
@@ -143,22 +148,23 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
     j = str_to_int(inpt_as_ls[-1])
     if i is None or j is None:
         return []
-
     position = Position(i, j)
-    if not building_class.can_build_on_map(building_class, position, game_map):
-        print('Command rejected. Try a different position.')
-        return []
 
-    return ['build building', ls_of_villagers, building_class, position]
+    if not this_is_a_help_build_command:
+        if not building_class.can_build_on_map(building_class, position, game_map):
+            print('Command rejected. Try a different position.')
+            return []
+
+    return ['build building', ls_of_villagers, building_class, position, this_is_a_help_build_command]
 
 
-def build_wall(player, inpt_as_ls):
+def build_wall(player, inpt_as_ls, this_is_a_help_build_command):
     """Returns a list"""
     print('Sorry this game is not yet finished. You cannot yet build walls.')
     return []
 
 
-def build_wall_fortification(player, inpt_as_ls):
+def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
     """Returns a list"""
     print('You must first build a wall before building a wallfortification.',
           'But unfortunatelly, this game is not finished, and you cannot build walls either.')
