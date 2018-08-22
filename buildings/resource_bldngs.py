@@ -9,6 +9,17 @@ class Farm(Building):
     kind = 'farm'
     time_to_build = 20
 
+    def __init__(self, number, position):
+        Building.__init__(self, number, position)
+        self.current_farmers = set()
+
+    def add_farmer(self, villager):
+        self.current_farmers.add(villager)
+
+    def remove_farmer_if_there(self, villager):
+        if villager in self.current_farmers:
+            self.current_farmers.remove(villager)
+
 
 class LumberCamp(Building):
     cost = Resources({Wood: 100})
