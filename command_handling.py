@@ -110,7 +110,7 @@ def building_already_in_progress(player, building_class, position):
     building_class at position. Otherwise, this returns False."""
     for time in ('now', 'later'):
         for villager in player.commands[time]['build building']:
-            ls = player.commands['now']['build building'][villager]
+            ls = player.commands[time]['build building'][villager]
             if ls[1] == position and ls[0].letter_abbreviation == building_class.letter_abbreviation:
                 return ls[0]
     return False
