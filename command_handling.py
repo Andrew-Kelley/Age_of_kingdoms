@@ -302,6 +302,7 @@ def insert_research_command(player, command):
             player.commands['later']['research'][building] = deque([thing_to_be_researched])
     else:
         player.commands['now']['research'][building] = thing_to_be_researched
+        print('Beginning the following research: {}\n'.format(thing_to_be_researched.name))
 
 
 ###################################################################################################
@@ -385,6 +386,7 @@ def update_research_commands(player):
         if len(queue) > 0:  # As it should be at this point
             research_this_next = queue.popleft()
             player.commands['now']['research'][building] = research_this_next
+            print('Beginning the following research: {}\n'.format(research_this_next.name))
         if len(queue) == 0:
             del player.commands['later']['research'][building]
 

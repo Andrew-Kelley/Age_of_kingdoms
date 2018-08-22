@@ -1,6 +1,7 @@
 # To see which files contain which buildings, see directory_structure.txt
 
 from resources import Resources, Wood, Stone, Bronze
+from research_classes import BronzeAge, IronAge
 
 stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'woodwall', 'barracks'}
 
@@ -64,6 +65,12 @@ class Building:
             if thing.name in player.things_researched:
                 return
             thing.research_completed(player)
+            if isinstance(thing, BronzeAge) or isinstance(thing, IronAge):
+                # Then the special message is handled in the module research_classes.py
+                pass
+            else:
+                player.messages += 'Research completed: {}\n'.format(thing.name)
+
             # The following condition should always hold:
             if thing.name in player.things_being_currently_researched:
                 player.things_being_currently_researched.remove(thing.name)

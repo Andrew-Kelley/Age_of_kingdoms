@@ -31,6 +31,7 @@ class BronzeAge(ResearchObject):
 
     def research_completed(self, player):
         player.age = 'bronze age'
+        player.messages += 'You have advanced to the Bronze Age!\n'
         player.things_researched.add(self.name)
 
 
@@ -41,11 +42,14 @@ class IronAge(ResearchObject):
 
     def research_completed(self, player):
         player.age = 'iron age'
+        player.messages += 'You have advanced to the Iron Age!\n'
         player.things_researched.add(self.name)
+
 
 # class WheelBarrow(ResearchObject):
 #     num_turns_to_completion = 3
 #     cost = Resources({Wood: 100, Bronze: 200})
+#     name = 'wheel barrow'
 #
 #     def research_completed(self, player):
 #         pass
