@@ -318,6 +318,10 @@ def update_build_building_command(player):
         if delta.magnitude <= 6:
             del player.commands['later']['build building'][villager]
             player.commands['now']['build building'][villager] = [building, building_position]
+    for villager in list(player.commands['now']['build building']):
+        building, building_position = player.commands['now']['build building'][villager]
+        if building.progress_to_construction >= building.time_to_build:
+            del player.commands['now']['build building'][villager]
 
 
 # The only reason why villagers may be commanded to collect resources later is if they first
