@@ -139,3 +139,4 @@ class Building:
         self.progress_to_construction += villager.build_amount_per_turn
         if self.progress_to_construction >= self.time_to_build:
             player.buildings[self.kind].append(self)
+            player.messages += 'New building: {}\n'.format(self)
