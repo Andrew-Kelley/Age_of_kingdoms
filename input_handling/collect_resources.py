@@ -1,6 +1,9 @@
 from input_handling.select_an_object import selected_obj_consists_of_villagers
 from input_handling.select_an_object import selected_obj_to_ls_of_units
+from input_handling.print import str_to_int
 from resources import resource_kind_to_class, Wood, Stone, Gold, Bronze, Iron
+from buildings.resource_bldngs import Farm
+from game_map import Position
 
 
 def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -46,9 +49,48 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     return ['collect resource', resource, ls_of_villagers]
 
 
+def farm(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+    """In order to not return [], selected_obj must be of villager type and inpt_as_ls
+    must be in the following format:
+    ['farm', ..., 'num1', 'num2'], where there is an available farm at Position(num1, num2).
+
+    If not returning [], returns
+    ['farm', farm_instance, ls_of_villagers], where ls_of_villagers is non-empty"""
+    if len(inpt_as_ls) < 3:
+        print('Your command was invalid.')
+        return []
+
+    if not selected_obj_consists_of_villagers(selected_obj):
+        print('Command rejected. Only villagers can farm.')
+        return []
+
+    ls_of_villagers = selected_obj_to_ls_of_units(player, selected_obj)
+    if len(ls_of_villagers) == 0:
+        print('Command to farm was rejected since no villagers were selected.')
+        return []
+
+    i = str_to_int(inpt_as_ls[-2])
+    j = str_to_int(inpt_as_ls[-1])
+
+    if i is None or j is None:
+        print('The position of the farm was not understood. Command rejected.')
+        return []
+
+    position = Position(i, j)
+    if position in player.building_position_pairs:
+        farm = player.building_position_pairs[position]
+        if not isinstance(farm, Farm):
+            print('There is no farm at position', position)
+            return []
+    else:
+        print('There is no building (or farm) at position', position)
+        return []
+
+    return ['farm', farm, ls_of_villagers]
+
+
 if __name__ == '__main__':
     from player import Player
-    from game_map import Position
 
     p1 = Player(1, Position(80, 80), is_human=True)
     inpt_as_ls = ['collect', 'wood']
