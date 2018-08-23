@@ -49,6 +49,9 @@ def insert_command(player, command):
     elif command[0] == 'research':
         insert_research_command(player, command)
         return
+    elif command[0] == 'farm':
+        insert_farm_command(player, command)
+        return
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
@@ -63,6 +66,9 @@ def remove_unit_from_command_if_there(player, unit, command_type):
         del player.commands['now'][command_type][unit]
     if command_type == 'farm':
         if isinstance(unit, Villager):
+            farm = unit.farm_currently_farming
+            if isinstance(farm, Farm):
+                farm.remove_farmer_if_there(unit)
             unit.farm_currently_farming = None
 
 
@@ -325,7 +331,7 @@ def insert_farm_command(player, command):
     if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
         return
     if not all((lambda u: isinstance(u, Villager) for u in ls_of_villagers)):
-        return False
+        return
 
     for villager in ls_of_villagers:
         delta = farm.position - villager.position
@@ -535,7 +541,6 @@ def implement_research_commands(player):
 
 def implement_farm_commands(player):
     for villager in player.commands['now']['farm']:
-        print(villager, 'is farming')
         the_farm = player.commands['now']['farm'][villager]
         villager.farm(the_farm, player)
 
