@@ -1,6 +1,6 @@
 from resources import Resources, Wood, Food, Stone, Gold, Bronze, Iron
 from game_map import game_map, everything_within_given_distance_on, within_given_distance
-from buildings.resource_bldngs import LumberCamp, StoneQuarry, MiningCamp
+from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from random import choice
 from copy import copy
 
@@ -71,6 +71,8 @@ class Villager(Unit):
         Unit.__init__(self, number, position)
         # The following gives how fast a villager can build a building.
         self.build_amount_per_turn = 10
+        self.food_from_farming_per_turn = 10
+        self.farm_currently_farming = None
 
     def resource_iter_within_given_distance_of_me(self, distance, resource, player):
         """Returns an iterator of instances of the given resource within the stated distance of self which
@@ -137,6 +139,26 @@ class Villager(Unit):
                 self.move_by(delta)
                 self.collect_resource_here(resource, player)
                 return
+
+    def farm(self, the_farm, player):
+        if not isinstance(the_farm, Farm):
+            # This check should be completely unnecessary.
+            player.messages += 'Error! {} '.format(self)
+            player.messages += 'is trying to farm something that is not a farm.\n'
+            return
+        if the_farm != self.farm_currently_farming:
+            player.messages += 'Error! {} '.format(self)
+            player.messages += 'is trying to farm is different\n'
+            player.messages += 'from the farm he is listed as currently farming.'
+            return
+        if self not in the_farm.current_farmers:
+            # This should never happen.
+            player.messages += 'Error! {} '.format(self)
+            player.messages += 'was commanded to farm from a farm the he was\n'
+            player.messages += 'not listed as a farmer.'
+            return
+        player.resources[Food] += self.food_from_farming_per_turn
+
 
 
 # Unless pikemen are vastly weaker than Swordsman, I think that the cost difference between Pikeman
