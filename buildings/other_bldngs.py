@@ -23,8 +23,8 @@ class TownCenter(Building):
     kind = 'towncenter'
     # time_to_build = ?
 
-    def __init__(self, number, position):
-        Building.__init__(self, number, position)
+    def __init__(self, number, position, player):
+        Building.__init__(self, number, position, player)
         # The following can be altered by the player and is used for the default initial action
         # of a newly built villager.
         self.initial_resource_to_collect = None
@@ -125,8 +125,10 @@ building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp, 'stonequarry'
 
 if __name__ == '__main__':
     from game_map import Position
+    from player import Player
 
-    t = TownCenter(1, Position(50, 50))
+    p1 = Player(1, Position(80, 80), is_human=True)
+    t = TownCenter(1, Position(50, 50), p1)
     print(t.cost)
     print(t.number)
     print(t.position)

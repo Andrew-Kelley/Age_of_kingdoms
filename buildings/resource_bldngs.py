@@ -9,8 +9,8 @@ class Farm(Building):
     kind = 'farm'
     time_to_build = 20
 
-    def __init__(self, number, position):
-        Building.__init__(self, number, position)
+    def __init__(self, number, position, player):
+        Building.__init__(self, number, position, player)
         self.current_farmers = set()
 
     def add_farmer(self, villager):

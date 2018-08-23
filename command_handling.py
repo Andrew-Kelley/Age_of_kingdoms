@@ -96,7 +96,7 @@ def insert_build_building_command(player, command):
             print('You do not have enough resources to build that building.')
             return
         building_number = len(player.buildings[building_class.kind])
-        building = building_class(building_number, building_position)
+        building = building_class(building_number, building_position, player)
         player.resources -= building.cost
         building.build_on_map(player, building_position, game_map)
 

@@ -27,7 +27,7 @@ class Building:
     time_to_build = 1000
     currently_researching_something = False
 
-    def __init__(self, number, position):
+    def __init__(self, number, position, player):
         """For each player, the first of each building is numbered 1.
         Further buildings built (of the same type) are consecutively numbered.
 
@@ -40,6 +40,10 @@ class Building:
         self.build_position = position
         # The following is used when villagers build a building:
         self.progress_to_construction = 0
+        self.insert_into_building_position_pairs(player)
+
+    def insert_into_building_position_pairs(self, player):
+        player.building_position_pairs[self.position] = self
 
     def __str__(self):
         kind = self.kind.capitalize()
@@ -139,6 +143,7 @@ class Building:
                 # player.map[i][j] = self.letter_abbreviation
 
     def build(self, villager_who_is_building, player):
+        """This function is called multiple times in order to actually construct the building."""
         if self.progress_to_construction >= self.time_to_build:
             # Then another villager already finished building this building.
             return
@@ -147,3 +152,4 @@ class Building:
         if self.progress_to_construction >= self.time_to_build:
             player.buildings[self.kind].append(self)
             player.messages += 'New building: {}\n'.format(self)
+

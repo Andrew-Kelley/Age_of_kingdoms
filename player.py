@@ -24,7 +24,6 @@ class Player:
         """Players are numbered beginning with 1.
 
         position is where to place a player's beginning TownCenter."""
-        global game_map
         self.number = number
         self.is_human = is_human
         self.resources = Resources({Food: 300, Wood: 300, Stone: 200, Gold: 0, Bronze: 0, Iron: 0})
@@ -41,23 +40,26 @@ class Player:
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 
-        # If an error is noticed while commands are implemented, an error message should not be
-        # print immediately (while all players' commands are implemented). Instead, an error
-        # message should be saved to be printed during the start of the player's next turn:
+        # self.messages is for printing messages that are produced while the player's commands
+        # are implemented.
         self.messages = ''
 
         self.things_researched = set()
         self.things_being_currently_researched = set()
 
-        # For each player, House number 1 (i.e. the first house that player builds) will be in
+        # For each player, House number 1 (i.e. the first house that player builds) will be at
         # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a
         # placeholder. But since I DO have the space, self.buildings[building_kind][0] will be
         # the number of buildings of that kind that have been destroyed.
         self.buildings = dict((building.kind, [0]) for building in buildings_ls)
+
+        # For each each of the player's buildings, the following will contain a key: value pair
+        # as follows:    position: building_instance
+        self.building_position_pairs = dict()
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
         Building.build_on_map(TownCenter, self, position, game_map)
-        self.buildings[TownCenter.kind].append(TownCenter(1, position))
+        self.buildings[TownCenter.kind].append(TownCenter(1, position, self))
 
         # Each player begins with 3 villagers
         for i, delta in enumerate([(-2, -2), (2, -2), (2, 2)], start=1):
@@ -115,13 +117,13 @@ def initial_position_of_player(player_number, game_map):
 
 
 if __name__ == '__main__':
-    from input_handling import input_next_command
+    from input_handling.handle_input import input_next_command
 
     p1 = Player(1, Position(80, 80), is_human=True)
     for villager in p1.units['villagers'][1:]:
         print(villager.number, villager.position)
 
-    inpt = input_next_command(p1)
+    # inpt = input_next_command(p1)
 
     print(p1.buildings)
     print(p1.units)

@@ -10,6 +10,9 @@ class Position:
     def __eq__(self, other):
         return self.value == other.value
 
+    def __hash__(self):
+        return hash(self.value)
+
     def __add__(self, other):
         """Intended use: self is a Position and other is a Vector."""
         i = self.value[0] + other.value[0]
