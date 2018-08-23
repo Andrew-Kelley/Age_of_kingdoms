@@ -34,7 +34,7 @@ class Player:
 
         # self.commands contains the commands entered by the player:
         commands_dict = {'move': dict(), 'build unit': dict(), 'build building': dict(),
-                         'collect resource': dict(), 'research': dict()}
+                         'collect resource': dict(), 'farm': dict(), 'research': dict()}
         # commands_dict will need to be lengthened
         self.commands = {'now': commands_dict, 'later': deepcopy(commands_dict)}
         # 'now' means at the end of the turn, when all players' commands are run.

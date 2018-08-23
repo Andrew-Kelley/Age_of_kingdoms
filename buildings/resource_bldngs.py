@@ -20,6 +20,10 @@ class Farm(Building):
         if villager in self.current_farmers:
             self.current_farmers.remove(villager)
 
+    @property
+    def number_of_farmers(self):
+        return len(self.current_farmers)
+
 
 class LumberCamp(Building):
     cost = Resources({Wood: 100})

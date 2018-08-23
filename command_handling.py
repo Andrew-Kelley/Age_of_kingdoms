@@ -6,11 +6,13 @@ from game_map import Position, Vector, game_map
 from buildings.bldng_class import Building
 from units import unit_kinds, unit_kind_to_class, unit_kind_to_singular, Villager
 from resources import resource_ls
+from buildings.resource_bldngs import Farm
 
 # player.commands['now'] is in the following format:
 # {'move':dict( unit:position_delta for units to be moved ), # position_delta is a Vector
 #  'build building':dict( villager:[building_to_be_built, position] for ...),
 #  'collect resource':dict( villager:resource_object_to_collect for ...),
+#  'farm':dict( villager: farm_instance for ...),
 #  'build unit':dict( building:[unit_to_be_built, number_of_units_of_that_type_to_build] for ... ),
 #  'research':dict( building:thing_to_be_researched for ...),
 #  ...}
@@ -55,10 +57,13 @@ def remove_unit_from_command_if_there(player, unit, command_type):
 
     command_type should be one of the following:
     'move', 'build building', 'collect resource'"""
-    if command_type not in ('move', 'build building', 'collect resource'):
+    if command_type not in ('move', 'build building', 'collect resource', 'farm'):
         return
-    if unit in player.commands['now'][command_type]:
+    if unit in list(player.commands['now'][command_type]):
         del player.commands['now'][command_type][unit]
+    if command_type == 'farm':
+        if isinstance(unit, Villager):
+            unit.farm_currently_farming = None
 
 
 def insert_build_building_command(player, command):
@@ -78,7 +83,7 @@ def insert_build_building_command(player, command):
         return
 
     for villager in ls_of_villagers:
-        for command_type in ('move', 'collect resource'):
+        for command_type in ('move', 'collect resource', 'farm'):
             remove_unit_from_command_if_there(player, villager, command_type)
 
     # The following few lines are to handle the situation that other villagers are already
@@ -100,7 +105,10 @@ def insert_build_building_command(player, command):
         player.resources -= building.cost
         building.build_on_map(player, building_position, game_map)
 
-    for villager in ls_of_villagers:
+    for i, villager in enumerate(ls_of_villagers):
+        if isinstance(building, Farm):
+            if i < 2:
+                player.commands['later']['farm'][villager] = building
         delta = building_position - villager.position
         if delta.magnitude <= 6:
             player.commands['now']['build building'][villager] = [building, building_position]
@@ -128,7 +136,7 @@ def insert_collect_resource_now_command(player, command):
     ls_of_villagers = command[2]
 
     for unit in ls_of_villagers:
-        for command_type in ('move', 'build building'):
+        for command_type in ('move', 'build building', 'farm'):
             remove_unit_from_command_if_there(player, unit, command_type)
 
     for villager in ls_of_villagers:
@@ -176,7 +184,7 @@ def insert_move_command(player, command):
     delta = command[2]
 
     for unit in ls_of_units:
-        for command_type in ('build building', 'collect resource'):
+        for command_type in ('build building', 'collect resource', 'farm'):
             remove_unit_from_command_if_there(player, unit, command_type)
 
     if delta.magnitude > 15:
@@ -305,18 +313,27 @@ def insert_research_command(player, command):
         print('Beginning the following research: {}\n'.format(thing_to_be_researched.name))
 
 
+def insert_farm_command(player, command):
+    pass  # TODO: Finish this. (Also, add it to the function insert_command
+
+
 ###################################################################################################
 ###################################################################################################
 ###################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
-    update_build_building_command(player)
-    update_move_commands(player)
-    update_collect_resource_command(player)  # This MUST come after update_move_commands(player)
+    update_build_building_command(player)  # This must come before update_collect_resource_command(player)
+    update_move_commands(player)  # This MUST come before update_collect_resource_command(player)
+    update_collect_resource_command(player)
     update_build_unit_commands(player)
     update_research_commands(player)
+    update_farm_commands(player) # This should come after update_build_building and update_move_commands
 
 
+# The reason why this function must come before update_collect_resource_command in the function
+# update_now_and_later_commands is that once a player finishes building a farm, the villager
+# must be deleted from player.commands['now']['build building'] before the villager can start
+# collecting food from that farm.
 def update_build_building_command(player):
     for villager in list(player.commands['later']['build building']):
         building, building_position = player.commands['later']['build building'][villager]
@@ -330,11 +347,14 @@ def update_build_building_command(player):
             del player.commands['now']['build building'][villager]
 
 
-# The only reason why villagers may be commanded to collect resources later is if they first
-# have to move. This is intended to be used only for newly built villagers.
+# Villagers are commanded to collect resources later is if they first have to move or if they
+# build a building from resource_bldngs.py. The former case (of having to move first) is intended
+# to be used only for newly built villagers.
 def update_collect_resource_command(player):
     for villager in list(player.commands['later']['collect resource']):
-        if villager not in player.commands['now']['move']:
+        not_moving = villager not in player.commands['now']['move']
+        not_building = villager not in player.commands['now']['build building']
+        if not_moving and not_building:
             resource = player.commands['later']['collect resource'][villager]
             del player.commands['later']['collect resource'][villager]
             player.commands['now']['collect resource'][villager] = resource
@@ -391,6 +411,35 @@ def update_research_commands(player):
             del player.commands['later']['research'][building]
 
 
+# The reason why this function should be called after the functions update_build_building and
+# update_move_commands (in the update_now_and_later_commands function) is that when a villager is
+# finished building or moving, it ought to be able to start farming.
+def update_farm_commands(player):
+    for villager in list(player.commands['later']['farm']):
+        farm = player.commands['later']['farm'][villager]
+        not_moving = villager not in player.commands['now']['move']
+        not_building = villager not in player.commands['now']['build building']
+        if not_moving and not_building:
+            del player.commands['later']['farm'][villager]
+            delta =  farm.position - villager.position
+            if delta.magnitude < 2:
+                if farm.number_of_farmers < 2:
+                    player.commands['now']['farm'][villager] = farm
+                    farm.add_farmer(villager)
+                    villager.farm_currently_farming = farm
+                else:
+                    # This really should never happen. If it does, I probably have a coding error.
+                    print(villager, ' cannot farm', farm, 'because that farm already has',
+                          'two farmers. Regardless, the villager is removed from ',
+                          "player.commands['later']['farm']")
+            else:
+                # This also should never happen (assuming no coding errors elsewhere).
+                print(villager, 'cannot farm', farm, 'because the villager is not within',
+                      'one spot of the farm. Regardless, the villager is removed from ',
+                          "player.commands['later']['farm']")
+
+
+
 ###################################################################################################
 ###################################################################################################
 ###################################################################################################
@@ -400,6 +449,7 @@ def implement_commands_if_possible(player):
     implement_move_commands(player)
     implement_build_unit_commands(player)
     implement_research_commands(player)
+    implement_farm_commands(player)
     # Eventually, this will probably be replaced with the following code, where functions is a list
     # of all the functions which need to be run.
     # for function in functions:
@@ -454,6 +504,13 @@ def implement_research_commands(player):
     for building in player.commands['now']['research']:
         thing_to_research = player.commands['now']['research'][building]
         building.research(thing_to_research, player)
+
+
+def implement_farm_commands(player):
+    for villager in player.commands['now']['farm']:
+        print(villager, 'is farming')
+        the_farm = player.commands['now']['farm'][villager]
+        villager.farm(the_farm, player)
 
 
 if __name__ == '__main__':
