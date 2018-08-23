@@ -314,7 +314,34 @@ def insert_research_command(player, command):
 
 
 def insert_farm_command(player, command):
-    pass  # TODO: Finish this. (Also, add it to the function insert_command
+    if len(command) != 3:
+        return
+
+    farm = command[1]
+    if not isinstance(farm, Farm):
+        return
+
+    ls_of_villagers = command[2]
+    if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
+        return
+    if not all((lambda u: isinstance(u, Villager) for u in ls_of_villagers)):
+        return False
+
+    for villager in ls_of_villagers:
+        delta = farm.position - villager.position
+        if delta.magnitude <= 6:
+            if delta.magnitude >= 2:
+                villager.move_by(delta)
+            if farm.number_of_farmers < 2:
+                player.commands['now']['farm'][villager] = farm
+                farm.add_farmer(villager)
+                villager.farm_currently_farming = farm
+            else:
+                print('The farm already has 2 villagers farming it.')
+        else:
+            new_command = ['move', [villager], delta]
+            insert_move_command(player, new_command)
+            player.commands['later']['farm'][villager] = farm
 
 
 ###################################################################################################
