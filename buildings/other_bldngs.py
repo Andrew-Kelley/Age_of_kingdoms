@@ -47,17 +47,17 @@ class TownCenter(Building):
         if unit_type != 'villagers':
             print('Error! A TownCenter can only build Villagers.')
             return
-        villager_number = len(player.units[Villager.kind])
+        # villager_number = len(player.units[Villager.kind])
         delta = self.build_position - self.position
 
         if delta.magnitude > 6:
             delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=6)
             build_position = self.position + delta1
-            new_villager = Villager(villager_number, build_position)
+            new_villager = Villager(build_position, player)
             command = ['move', [new_villager], delta2]
             insert_move_later_command(player, command)
         else:
-            new_villager = Villager(villager_number, self.build_position)
+            new_villager = Villager(self.build_position, player)
         if self.initial_resource_to_collect:
             command = ['collect resource', self.initial_resource_to_collect, [new_villager]]
             if delta.magnitude <= 6:
@@ -65,7 +65,7 @@ class TownCenter(Building):
             else:
                 insert_collect_resource_later_command(player, command)
 
-        player.units[Villager.kind].append(new_villager)
+        # player.units[Villager.kind].append(new_villager)
         player.messages += 'New unit: {}\n'.format(new_villager)
         player.resources -= Villager.cost
 

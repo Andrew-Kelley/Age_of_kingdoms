@@ -64,7 +64,7 @@ class Player:
         # Each player begins with 3 villagers
         for i, delta in enumerate([(-2, -2), (2, -2), (2, 2)], start=1):
             new_position = position + Position(*delta)
-            self.units[Villager.kind].append(Villager(i, new_position))
+            Villager(new_position, self)
 
     @property
     def population_cap(self):

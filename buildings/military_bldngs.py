@@ -29,17 +29,16 @@ class Barracks(Building):
         unit_number = len(player.units[unit_type])
         if unit_type == 'pikemen':
             # The unit's initial position may be changed later in this function
-            new_unit = Pikeman(unit_number, self.build_position)
+            new_unit = Pikeman(self.build_position, player)
             player.resources -= Pikeman.cost
         else:
             # The unit's initial position may be changed later in this function
-            new_unit = Swordsman(unit_number, self.build_position)
+            new_unit = Swordsman(self.build_position, player)
             player.resources -= Swordsman.cost
 
         # The following changes (possibly) the build position of new_unit
         set_new_unit_build_position_if_far(self, new_unit, player, distance=6)
 
-        player.units[unit_type].append(new_unit)
         player.messages += 'New unit: {}\n'.format(new_unit)
 
 
@@ -70,10 +69,8 @@ class ArcheryRange(Building):
             # This should never happen.
             return
 
-        unit_number = len(player.units[unit_type])
-        new_archer = Archer(unit_number, self.build_position)
+        new_archer = Archer(self.build_position, player)
         set_new_unit_build_position_if_far(self, new_archer, player, distance=6)
-        player.units[unit_type].append(new_archer)
         player.resources -= Archer.cost
         player.messages += 'New unit: {}\n'.format(new_archer)
 
