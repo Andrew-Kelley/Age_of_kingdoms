@@ -56,6 +56,7 @@ class IronAge(ResearchObject):
 
 
 ############################################## Researched at a Blacksmith:
+# Benefits pikemen:
 class BronzeTippedSpears(ResearchObject):
     num_turns_to_completion = 3
     cost = Resources({Bronze: 100, Gold: 50})
@@ -64,7 +65,7 @@ class BronzeTippedSpears(ResearchObject):
     def research_completed(self, player):
         pass
 
-
+# Required to build swordsmen or knights:
 class BronzeSwords(ResearchObject):
     num_turns_to_completion = 3
     cost = Resources({Bronze: 140, Gold: 55})
@@ -74,12 +75,16 @@ class BronzeSwords(ResearchObject):
         pass
 
 
-# Maybe the following is too broad. I should perhaps have different research armor items for
-# archers than for the rest.
-# class BronzeArmor(ResearchObject):
-#     pass
+# Helps pikemen and swordsmen. Necessary for knights. (Does not benefit archers.)
+class BronzeArmorPlates(ResearchObject):
+    num_turns_to_completion = 3
+    cost = Resources({Bronze: 150, Gold: 60})
+    name = 'bronze armor plates'
 
+    def research_completed(self, player):
+        pass
 
+# Necessary for swordsmen and knights:
 class BronzeShields(ResearchObject):
     num_turns_to_completion = 3
     cost = Resources({Bronze: 150, Gold: 60})
@@ -89,6 +94,7 @@ class BronzeShields(ResearchObject):
         pass
 
 
+# Benefits villagers chopping wood:
 class BronzeAxes(ResearchObject):
     num_turns_to_completion = 2
     cost = Resources({Bronze: 130, Gold: 20})
@@ -98,6 +104,7 @@ class BronzeAxes(ResearchObject):
         pass
 
 
+# The following benefits villagers collecting stone, gold, bronze, or iron
 class BronzePicks(ResearchObject):
     num_turns_to_completion = 2
     cost = Resources({Bronze: 130, Gold: 20})
@@ -107,21 +114,33 @@ class BronzePicks(ResearchObject):
         pass
 
 
+# Benefits farmers:
+class BronzeTippedPlows(ResearchObject):
+    num_turns_to_completion = 2
+    cost = Resources({Bronze: 130, Gold: 20})
+    name = 'bronze tipped plow'
+
+    def research_completed(self, player):
+        pass
+
+
+blacksmith_bronze_age_research = {BronzeTippedSpears, BronzeSwords, BronzeArmorPlates,
+                                  BronzeShields, BronzeAxes, BronzePicks, BronzeTippedPlows}
+
 ####################################
 
 stone_age_research = {BronzeAge.name}
 
-bronze_age_research = copy(stone_age_research)
-for research_obj in (IronAge, BronzeTippedSpears, BronzeSwords, BronzeShields, BronzeAxes, BronzePicks):
-    bronze_age_research.add(research_obj.name)
+bronze_age_research = copy(stone_age_research).union({IronAge})
+bronze_age_research = bronze_age_research.union(blacksmith_bronze_age_research)
 
 iron_age_research = copy(bronze_age_research)
 # Add an iron version for every bronze research at the blacksmith.
 
 research_string_to_class = {'bronze age': BronzeAge, 'iron age': IronAge,
                             'bronze tipped spears': BronzeTippedSpears, 'bronze swords': BronzeSwords,
-                            'bronze shields': BronzeShields, 'bronze axes': BronzeAxes,
-                            'bronze picks': BronzePicks}
+                            'bronze armor plates':BronzeArmorPlates, 'bronze shields': BronzeShields,
+                             'bronze axes': BronzeAxes, 'bronze picks': BronzePicks}
 
 
 for name in research_string_to_class:
