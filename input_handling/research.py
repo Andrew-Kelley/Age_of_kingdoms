@@ -22,10 +22,14 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
         print('You must first select a building to research something.')
         return []
 
-    if building.currently_researching_something:
-        print('The selected building is already researching something. It cannot research',
-              'two things at once.')
-        return []
+    if building in player.commands['now']['research']:
+        print('The selected building is already researching something.', end = '\n\n')
+        yes_or_no = input('Would you like the building to research this afterwards?').lower().strip()
+        if yes_or_no.startswith('y'):
+            pass
+        else:
+            print('Ok, the building will not research it.')
+            return []
 
     thing_to_be_researched = ' '.join(inpt_as_ls[1:])
     if thing_to_be_researched not in building.strings_ls_of_things_which_can_be_researched(player):
@@ -44,7 +48,7 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
     if thing_to_be_researched not in research_string_to_class:
         print('Error. This game is still unfinished, and researching',
               thing_to_be_researched, 'has not yet been enabled.',
-              'Developer note: specifically, ', thing_to_be_researched,
+              'Developer note: specifically,', thing_to_be_researched,
               'has not yet been added to the research_string_to_class dictionary.')
         return []
 

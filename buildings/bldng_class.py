@@ -61,11 +61,9 @@ class Building:
         if thing.progress_to_completion == 0:
             player.resources -= thing_to_be_researched.cost
 
-        self.currently_researching_something = True
         thing.make_progress()
 
         if thing.progress_to_completion >= thing.num_turns_to_completion:
-            self.currently_researching_something = False
             if thing.name in player.things_researched:
                 return
             thing.research_completed(player)
