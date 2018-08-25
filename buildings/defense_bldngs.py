@@ -1,4 +1,5 @@
 from buildings.bldng_class import Building
+from resources import Resources, Wood, Stone
 
 class WoodWall(Building):
     size = (1, 1)
@@ -36,13 +37,15 @@ class WallFortificationNorthSouth(WallFortification):
     size = (3, 1)
 
 class Tower(Building):
+    cost = Resources({Wood: 30, Stone: 130})
     size = (2, 2)
     letter_abbreviation = 'T'
     kind = 'tower'
-    # time_to_build = ?
+    time_to_build = 50
 
 class Castle(Building):
+    cost = Resources({Wood: 150, Stone: 700})
     size = (5, 5)
     letter_abbreviation = 'C'
     kind = 'castle'
-    # time_to_build = ?
+    time_to_build = 250

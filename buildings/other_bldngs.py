@@ -1,6 +1,6 @@
 from buildings.bldng_class import Building, buildings
 from units import Villager
-from resources import Resources, Food, Wood, Stone, Gold, Bronze
+from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
 from research_classes import BronzeAge, IronAge, blacksmith_bronze_age_research
 from research_classes import bronze_to_iron_research_str
 
@@ -22,7 +22,7 @@ class TownCenter(Building):
     garrison_capacity = 50
     defensible = True
     kind = 'towncenter'
-    # time_to_build = ?
+    time_to_build = 160
 
     def __init__(self, number, position, player):
         Building.__init__(self, number, position, player)
@@ -113,7 +113,15 @@ class Library(Building):
     size = (3, 3)
     letter_abbreviation = 'L'
     kind = 'library'
-    # time_to_build = ?
+    time_to_build = 80
+
+
+class Wonder(Building):
+    cost = Resources({Wood: 1500, Stone: 1200, Gold: 1000, Iron: 1000})
+    size = (6, 6)
+    letter_abbreviation = 'W'
+    kind = 'wonder'
+    time_to_build = 700
 
 # Maybe implement this building last
 class Market(Building):
@@ -121,7 +129,7 @@ class Market(Building):
     size = (3, 3)
     letter_abbreviation = 'M'
     kind = 'market'
-    # time_to_build = ?
+    time_to_build = 50
 
 
 building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp, 'stonequarry':StoneQuarry,
@@ -129,7 +137,7 @@ building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp, 'stonequarry'
                            'farm':Farm, 'stonewall':StoneWall, 'wallfortification':WallFortification,
                            'tower':Tower, 'archeryrange':ArcheryRange, 'siegeworks':SiegeWorks,
                            'blacksmith':Blacksmith, 'market':Market, 'towncenter':TownCenter,
-                           'castle':Castle, 'stable':Stable, 'library':Library}
+                           'castle':Castle, 'stable':Stable, 'library':Library, 'wonder':Wonder}
 
 
 if __name__ == '__main__':
