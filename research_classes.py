@@ -1,6 +1,6 @@
 from copy import copy
 from resources import Resources, Food, Wood, Stone, Bronze, Gold, Iron
-
+from units import Villager
 
 # Whenever a player begins researching something at some building, an instance of a subclass of
 # ResearchObject is created.
@@ -101,6 +101,7 @@ class BronzeAxes(ResearchObject):
     name = 'bronze axes'
 
     def research_completed(self, player):
+        player.collecting_capacity[Wood] += 2
         pass
 
 
@@ -111,6 +112,11 @@ class BronzePicks(ResearchObject):
     name = 'bronze picks'
 
     def research_completed(self, player):
+        for resource in (Stone, Gold, Bronze):
+            player.collecting_capacity[resource] += 2
+        # Before the following line is run, we have that
+        # player.collecting_capacity[Iron] == 2
+        player.collecting_capacity[Iron] += 4
         pass
 
 
@@ -121,7 +127,8 @@ class BronzeTippedPlows(ResearchObject):
     name = 'bronze tipped plow'
 
     def research_completed(self, player):
-        pass
+        for villager in player.units[Villager.kind][1:]:
+            villager.food_from_farming_per_turn = 12
 
 
 blacksmith_bronze_age_research = {BronzeTippedSpears, BronzeSwords, BronzeArmorPlates,

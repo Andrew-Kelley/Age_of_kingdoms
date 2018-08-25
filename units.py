@@ -79,8 +79,13 @@ class Villager(Unit):
         Unit.__init__(self, position, player)
         # The following gives how fast a villager can build a building.
         self.build_amount_per_turn = 10
-        self.food_from_farming_per_turn = 10
         self.farm_currently_farming = None
+
+        if 'bronze tipped plow' in player.things_researched:
+            self.food_from_farming_per_turn = 12
+        else:
+            self.food_from_farming_per_turn = 10
+
 
     def resource_iter_within_given_distance_of_me(self, distance, resource, player):
         """Returns an iterator of instances of the given resource within the stated distance of self which
