@@ -1,6 +1,6 @@
 from copy import copy
 from resources import Resources, Food, Wood, Stone, Bronze, Gold, Iron
-from units import Villager
+
 
 # Whenever a player begins researching something at some building, an instance of a subclass of
 # ResearchObject is created.
@@ -84,6 +84,17 @@ class BronzeArmorPlates(ResearchObject):
     def research_completed(self, player):
         pass
 
+
+# Benefits archers:
+class BronzeChainMailArmor(ResearchObject):
+    num_turns_to_completion = 4
+    cost = Resources({Bronze: 150, Gold: 60})
+    name = 'bronze chainmail armor'
+
+    def research_completed(self, player):
+        pass
+
+
 # Necessary for swordsmen and knights:
 class BronzeShields(ResearchObject):
     num_turns_to_completion = 3
@@ -105,7 +116,7 @@ class BronzeAxes(ResearchObject):
         pass
 
 
-# The following benefits villagers collecting stone, gold, bronze, or iron
+# Benefits villagers collecting stone, gold, bronze, or iron
 class BronzePicks(ResearchObject):
     num_turns_to_completion = 2
     cost = Resources({Bronze: 130, Gold: 20})
@@ -127,27 +138,116 @@ class BronzeTippedPlows(ResearchObject):
     name = 'bronze tipped plow'
 
     def research_completed(self, player):
-        for villager in player.units[Villager.kind][1:]:
+        for villager in player.units['villagers'][1:]:
             villager.food_from_farming_per_turn = 12
 
 
 blacksmith_bronze_age_research = {BronzeTippedSpears, BronzeSwords, BronzeArmorPlates,
-                                  BronzeShields, BronzeAxes, BronzePicks, BronzeTippedPlows}
+                                  BronzeShields, BronzeAxes, BronzePicks, BronzeTippedPlows,
+                                  BronzeChainMailArmor}
 
+
+# NOTE: The corresponding bronze research must be completed in order to research
+# the iron equivalent.
+
+# Benefits pikemen:
+class IronTippedSpears(ResearchObject):
+    num_turns_to_completion = 3
+    cost = Resources({Iron: 100, Gold: 50})
+    name = 'iron tipped spears'
+
+    def research_completed(self, player):
+        pass
+
+
+class IronSwords(ResearchObject):
+    num_turns_to_completion = 3
+    cost = Resources({Iron: 140, Gold: 55})
+    name = 'iron swords'
+
+    def research_completed(self, player):
+        pass
+
+
+# Helps pikemen and swordsmen. (Does not benefit archers.)
+class IronArmorPlates(ResearchObject):
+    num_turns_to_completion = 3
+    cost = Resources({Iron: 150, Gold: 60})
+    name = 'iron armor plates'
+
+    def research_completed(self, player):
+        pass
+
+
+# Benefits archers:
+class IronChainMailArmor(ResearchObject):
+    num_turns_to_completion = 4
+    cost = Resources({Iron: 150, Gold: 60})
+    name = 'iron chainmail armor'
+
+    def research_completed(self, player):
+        pass
+
+
+# Benefits swordsmen and knights:
+class IronShields(ResearchObject):
+    num_turns_to_completion = 3
+    cost = Resources({Iron: 150, Gold: 60})
+    name = 'iron shields'
+
+    def research_completed(self, player):
+        pass
+
+
+# Benefits villagers chopping wood:
+class IronAxes(ResearchObject):
+    num_turns_to_completion = 2
+    cost = Resources({Iron: 130, Gold: 20})
+    name = 'iron axes'
+
+    def research_completed(self, player):
+        player.collecting_capacity[Wood] += 2
+        pass
+
+
+# Benefits villagers collecting stone, gold, bronze, or iron
+class IronPicks(ResearchObject):
+    num_turns_to_completion = 2
+    cost = Resources({Iron: 130, Gold: 20})
+    name = 'iron picks'
+
+    def research_completed(self, player):
+        for resource in (Stone, Gold, Bronze):
+            player.collecting_capacity[resource] += 2
+        # Before the following line is run, we have that
+        # player.collecting_capacity[Iron] == 2
+        player.collecting_capacity[Iron] += 2
+        pass
+
+
+# I don't think I should have a ResearchObject for IronTippedPlows. Villagers already
+# collect food from farms fast enough with BronzeTippedPlows.
+
+blacksmith_iron_age_research = {IronTippedSpears, IronSwords, IronArmorPlates, IronChainMailArmor,
+                                IronShields, IronAxes, IronPicks}
+
+bronze_to_iron_research_str = {'bronze tipped spears': 'iron tipped spears',
+                               'bronze swords': 'iron swords',
+                               'bronze armor plates': 'iron armor plates',
+                               'bronze chainmail armor': 'iron chainmail armor',
+                               'bronze shields': 'iron shields',  'bronze axes': 'iron axes',
+                               'bronze picks': 'iron picks'}
 ####################################
 
-stone_age_research = {BronzeAge.name}
+stone_age_research = {BronzeAge}
 
 bronze_age_research = copy(stone_age_research).union({IronAge})
 bronze_age_research = bronze_age_research.union(blacksmith_bronze_age_research)
 
-iron_age_research = copy(bronze_age_research)
+iron_age_research = copy(bronze_age_research).union(blacksmith_iron_age_research)
 # Add an iron version for every bronze research at the blacksmith.
 
-research_string_to_class = {'bronze age': BronzeAge, 'iron age': IronAge,
-                            'bronze tipped spears': BronzeTippedSpears, 'bronze swords': BronzeSwords,
-                            'bronze armor plates':BronzeArmorPlates, 'bronze shields': BronzeShields,
-                             'bronze axes': BronzeAxes, 'bronze picks': BronzePicks}
+research_string_to_class = dict((r.name, r) for r in iron_age_research)
 
 
 for name in research_string_to_class:
