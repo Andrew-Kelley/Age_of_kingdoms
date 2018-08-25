@@ -460,9 +460,10 @@ def update_research_commands(player):
     for building in list(player.commands['later']['research']):
         queue = player.commands['later']['research'][building]
         if len(queue) > 0:  # As it should be at this point
-            research_this_next = queue.popleft()
-            player.commands['now']['research'][building] = research_this_next
-            print('Beginning the following research: {}\n'.format(research_this_next.name))
+            if building not in player.commands['now']['research']:
+                research_this_next = queue.popleft()
+                player.commands['now']['research'][building] = research_this_next
+                print('Beginning the following research: {}\n'.format(research_this_next.name))
         if len(queue) == 0:
             del player.commands['later']['research'][building]
 
