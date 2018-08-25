@@ -24,7 +24,7 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
 
     if building in player.commands['now']['research']:
         print('The selected building is already researching something.', end = '\n\n')
-        yes_or_no = input('Would you like the building to research this afterwards?').lower().strip()
+        yes_or_no = input('Would you like the building to research this afterwards? ').lower().strip()
         if yes_or_no.startswith('y'):
             pass
         else:
@@ -54,6 +54,11 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
 
     if thing_to_be_researched in player.things_being_currently_researched:
         print('You are already researching ', thing_to_be_researched)
+        print('Command rejected.')
+        return []
+    elif thing_to_be_researched in player.things_researched:
+        print('You already researched', thing_to_be_researched)
+        print('Command rejected.')
         return []
 
     player.things_being_currently_researched.add(thing_to_be_researched)
