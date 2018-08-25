@@ -118,6 +118,7 @@ def insert_build_building_command(player, command):
         delta = building_position - villager.position
         if delta.magnitude <= 6:
             player.commands['now']['build building'][villager] = [building, building_position]
+            villager.current_action = 'building {}'.format(building)
         else:
             new_command = ['move', [villager], delta]
             insert_move_command(player, new_command)
@@ -148,6 +149,7 @@ def insert_collect_resource_now_command(player, command):
     for villager in ls_of_villagers:
         if villager.can_collect_resource_now(resource, player):
             player.commands['now']['collect resource'][villager] = resource
+            villager.current_action = 'collecting {}'.format(resource.kind)
         else:
             print(villager, ' cannot collect {} now.'.format(resource.kind))
 
@@ -211,6 +213,7 @@ def insert_move_command(player, command):
     # The following only replaces old move commands with new ones if they are about the same unit.
     for unit in move_now:
         player.commands['now']['move'][unit] = move_now[unit]
+        unit.current_action = 'moving to {}'.format(unit.position + delta)
         if unit in player.commands['later']['move']:
             del player.commands['later']['move'][unit]
     for unit in move_later:
@@ -227,6 +230,7 @@ def insert_move_later_command(player, command):
 
     for unit in ls_of_units:
         player.commands['later']['move'][unit] = delta
+        unit.current_action = 'moving to {}'.format(unit.position + delta)
 
 
 def move_command_is_properly_formatted(command):
@@ -342,6 +346,7 @@ def insert_farm_command(player, command):
                 player.commands['now']['farm'][villager] = farm
                 farm.add_farmer(villager)
                 villager.farm_currently_farming = farm
+                villager.current_action = 'farming {}'.format(farm)  #TODO: DOes this print properly?
             else:
                 print('The farm already has 2 villagers farming it.')
         else:
@@ -374,10 +379,16 @@ def update_build_building_command(player):
         if delta.magnitude <= 6:
             del player.commands['later']['build building'][villager]
             player.commands['now']['build building'][villager] = [building, building_position]
+            villager.current_action = 'building {}'.format(building)
     for villager in list(player.commands['now']['build building']):
         building, building_position = player.commands['now']['build building'][villager]
         if building.progress_to_construction >= building.time_to_build:
             del player.commands['now']['build building'][villager]
+            # The following statement could probably be run without checking the condition.
+            # This is as long as update_build_building_command comes first in the function
+            # update_now_and_later_commands
+            if villager.current_action.startswith('building'):
+                villager.current_action = 'doing nothing'
 
 
 # Villagers are commanded to collect resources later is if they first have to move or if they
@@ -391,6 +402,9 @@ def update_collect_resource_command(player):
             resource = player.commands['later']['collect resource'][villager]
             del player.commands['later']['collect resource'][villager]
             player.commands['now']['collect resource'][villager] = resource
+            # In order for the following action to be correct, I think the present function
+            # should come after update_move_commands in the function update_now_and_later_commands
+            villager.current_action = 'collecting {}'.format(resource.kind)
 
 
 # The following removes all the old commands in player.commands['now']['move'], and it updates
@@ -398,15 +412,24 @@ def update_collect_resource_command(player):
 def update_move_commands(player):
     for unit in list(player.commands['now']['move']):
         del player.commands['now']['move'][unit]
+        # If a villager had to move to start building a building, then the function
+        # update_build_building_command may have changed unit.current_action. And this change
+        # should not be overwritten.
+        if unit.current_action.startswith('moving'):
+            unit.current_action = 'doing nothing'
 
     for unit in list(player.commands['later']['move']):
         delta = player.commands['later']['move'][unit]
         if delta.magnitude > 15:
             beginning, the_rest = delta.beginning_plus_the_rest()
             player.commands['now']['move'][unit] = beginning
+            # The following line is necessary because the present function changed current_action
+            # to 'doing nothing'
+            unit.current_action = 'moving to {}'.format(unit.position + delta)
             player.commands['later']['move'][unit] = the_rest
         else:
             player.commands['now']['move'][unit] = delta
+            unit.current_action = 'moving to {}'.format(unit.position + delta)
             del player.commands['later']['move'][unit]
 
 
@@ -460,6 +483,7 @@ def update_farm_commands(player):
                     player.commands['now']['farm'][villager] = farm
                     farm.add_farmer(villager)
                     villager.farm_currently_farming = farm
+                    villager.current_action = 'farming {}'.format(farm)
                 else:
                     # This really should never happen. If it does, I probably have a coding error.
                     print(villager, ' cannot farm', farm, 'because that farm already has',

@@ -28,11 +28,16 @@ class Unit:
         self.number = number
         self.position = position
         self.is_alive = True
+        self.current_action = 'doing nothing'
         player.units[self.kind].append(self)
 
     def __str__(self):
         kind_singular = unit_kind_to_singular[self.kind].capitalize()
-        return '{} {} at position {}'.format(kind_singular, self.number, self.position)
+        # The following three lines exist only to make the return statement shorter.
+        num = self.number
+        position = self.position
+        current_action = self.current_action
+        return '{} {} at position {} {}'.format(kind_singular, num, position, current_action)
 
     def can_move(self, delta, game_map):
         """Returns bool. Right now, every unit can move the same distance, but that may change.
