@@ -239,8 +239,8 @@ bronze_to_iron_research_str = {'bronze tipped spears': 'iron tipped spears',
                                'bronze picks': 'iron picks'}
 ####################################
 
+# The following are first sets of classes, to be used to create research_string_to_class
 stone_age_research = {BronzeAge}
-
 bronze_age_research = copy(stone_age_research).union({IronAge})
 bronze_age_research = bronze_age_research.union(blacksmith_bronze_age_research)
 
@@ -248,6 +248,11 @@ iron_age_research = copy(bronze_age_research).union(blacksmith_iron_age_research
 # Add an iron version for every bronze research at the blacksmith.
 
 research_string_to_class = dict((r.name, r) for r in iron_age_research)
+
+# The module input_handling/research.py needs sets of strings though
+stone_age_research = set(r.name for r in stone_age_research)
+bronze_age_research = set(r.name for r in bronze_age_research)
+iron_age_research = set(r.name for r in iron_age_research)
 
 
 for name in research_string_to_class:
