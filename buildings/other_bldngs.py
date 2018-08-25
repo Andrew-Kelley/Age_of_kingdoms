@@ -1,7 +1,8 @@
 from buildings.bldng_class import Building, buildings
 from units import Villager
 from resources import Resources, Food, Wood, Stone, Gold, Bronze
-from research_classes import BronzeAge, IronAge
+from research_classes import BronzeAge, IronAge, blacksmith_bronze_age_research
+from research_classes import bronze_to_iron_research_str
 
 from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tower, Castle
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
@@ -84,19 +85,27 @@ class House(Building):
 
 class Blacksmith(Building):
     # Can only be built once the Bronze Age is reached.
-    # The following can be researched here:
-    # -bronze tipped spears (benefits Pikeman) - shouldn't be too expensive
-    # -bronze armor (benefits Pikeman and is necessary to build Swordsman)
-    # -bronze shields (is necessary to build Swordsman)
-    # -bronze axes (benefits Villagers which are chopping wood)
-    # -bronze picks (benefits Villagers which are mining stone, gold, bronze, or iron)
-    #       specifically, it makes player.collecting_capacity[stone or gold or bronze] = 8
-    #                 and it makes player.collecting_capacity[iron] = 6
     cost = Resources({Wood: 150, Stone: 25})
     size = (3, 3)
     letter_abbreviation = 'X'
     kind = 'blacksmith'
-    # time_to_build = ?
+    time_to_build = 50
+
+    def strings_ls_of_things_which_can_be_researched(self, player):
+        research_ls = []
+        for research_obj in blacksmith_bronze_age_research:
+            if research_obj.name not in player.things_researched:
+                research_ls.append(research_obj.name)
+
+        if player.age == 'iron age':
+            for research_obj in blacksmith_bronze_age_research:
+                if research_obj.name in bronze_to_iron_research_str:
+                    if research_obj.name in player.things_researched:
+                        research_obj_str = bronze_to_iron_research_str[research_obj.name]
+                        if research_obj_str not in player.things_researched:
+                            research_ls.append(research_obj_str)
+
+        return research_ls
 
 
 class Library(Building):
