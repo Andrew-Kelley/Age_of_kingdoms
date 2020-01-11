@@ -8,7 +8,7 @@ stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'wood
 bronze_age_buildings = {'farm', 'stonewall', 'wallfortification', 'tower', 'archeryrange',
                         'siegeworks', 'blacksmith', 'market'}
 
-iron_age_buildings = {'towncenter', 'castle', 'stable', 'library'}
+iron_age_buildings = {'towncenter', 'castle', 'stable', 'library', 'wonder'}
 
 buildings = stone_age_buildings.union(bronze_age_buildings).union(iron_age_buildings)
 
@@ -59,12 +59,13 @@ class Building:
     def research(self, thing_to_be_researched, player):
         thing = thing_to_be_researched
         if thing.progress_to_completion == 0:
-            player.resources -= thing_to_be_researched.cost
+            player.resources -= thing.cost
 
         thing.make_progress()
 
         if thing.progress_to_completion >= thing.num_turns_to_completion:
             if thing.name in player.things_researched:
+                # This should never happen.
                 return
             thing.research_completed(player)
             if isinstance(thing, BronzeAge) or isinstance(thing, IronAge):

@@ -232,7 +232,7 @@ for i_start, j_start in ((80, 80), (80, 20), (20, 80), (20, 20)):
 
 for i_start, j_start in ((85, 70), (85, 10), (5, 70), (15, 25)):
     for i in range(i_start, i_start + 2):
-        for j in range(j_start, j_start + 1):
+        for j in range(j_start, j_start + 2):
             game_map[i][j] = Bronze(Position(i, j))
 
 for i in range(90, 92):

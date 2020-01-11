@@ -63,7 +63,7 @@ class BronzeTippedSpears(ResearchObject):
     name = 'bronze tipped spears'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 # Required to build swordsmen or knights:
 class BronzeSwords(ResearchObject):
@@ -72,7 +72,7 @@ class BronzeSwords(ResearchObject):
     name = 'bronze swords'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Helps pikemen and swordsmen. Necessary for knights. (Does not benefit archers.)
@@ -82,7 +82,7 @@ class BronzeArmorPlates(ResearchObject):
     name = 'bronze armor plates'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits archers:
@@ -92,7 +92,7 @@ class BronzeChainMailArmor(ResearchObject):
     name = 'bronze chainmail armor'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Necessary for swordsmen and knights:
@@ -102,7 +102,7 @@ class BronzeShields(ResearchObject):
     name = 'bronze shields'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits villagers chopping wood:
@@ -113,7 +113,7 @@ class BronzeAxes(ResearchObject):
 
     def research_completed(self, player):
         player.collecting_capacity[Wood] += 2
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits villagers collecting stone, gold, bronze, or iron
@@ -128,18 +128,19 @@ class BronzePicks(ResearchObject):
         # Before the following line is run, we have that
         # player.collecting_capacity[Iron] == 2
         player.collecting_capacity[Iron] += 4
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits farmers:
 class BronzeTippedPlows(ResearchObject):
     num_turns_to_completion = 2
     cost = Resources({Bronze: 130, Gold: 20})
-    name = 'bronze tipped plow'
+    name = 'bronze tipped plows'
 
     def research_completed(self, player):
         for villager in player.units['villagers'][1:]:
             villager.food_from_farming_per_turn = 12
+        player.things_researched.add(self.name)
 
 
 blacksmith_bronze_age_research = {BronzeTippedSpears, BronzeSwords, BronzeArmorPlates,
@@ -157,7 +158,7 @@ class IronTippedSpears(ResearchObject):
     name = 'iron tipped spears'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 class IronSwords(ResearchObject):
@@ -166,7 +167,7 @@ class IronSwords(ResearchObject):
     name = 'iron swords'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Helps pikemen and swordsmen. (Does not benefit archers.)
@@ -176,7 +177,7 @@ class IronArmorPlates(ResearchObject):
     name = 'iron armor plates'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits archers:
@@ -186,7 +187,7 @@ class IronChainMailArmor(ResearchObject):
     name = 'iron chainmail armor'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits swordsmen and knights:
@@ -196,7 +197,7 @@ class IronShields(ResearchObject):
     name = 'iron shields'
 
     def research_completed(self, player):
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits villagers chopping wood:
@@ -207,7 +208,7 @@ class IronAxes(ResearchObject):
 
     def research_completed(self, player):
         player.collecting_capacity[Wood] += 2
-        pass
+        player.things_researched.add(self.name)
 
 
 # Benefits villagers collecting stone, gold, bronze, or iron
@@ -222,7 +223,7 @@ class IronPicks(ResearchObject):
         # Before the following line is run, we have that
         # player.collecting_capacity[Iron] == 2
         player.collecting_capacity[Iron] += 2
-        pass
+        player.things_researched.add(self.name)
 
 
 # I don't think I should have a ResearchObject for IronTippedPlows. Villagers already

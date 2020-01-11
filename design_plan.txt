@@ -247,6 +247,7 @@ Buildings (with the space they take up:)
   - X: blacksmith: 3 x 3 (To not conflict with barracks)
   - L: Library (Conflicts with lumber camp: U if I change to university): 3 x 3
   - K: market (not to conflict with mining camp) 3 x 3
+  - W: wonder (conflicts with siege works) 6 x 6
 
 Spots with nothing in them will be represented by a blank: ' '
 Should each player have their own viewable map? If so, then spots not yet
@@ -286,29 +287,44 @@ Next stage: (or the same stage as the previous one?) Finished! - on August 18.
  - build a stone quarry
  - build a mining camp
 
-Next stage:
+Next stage: Finished! - on August 20, 2018.
  - build a barracks
  - build a pikeman from a barracks
 
-Next stage:
+Next stage: Finished! - on August 20, 2018.
  - research the bronze age
- - enable villagers to mine gold and bronze
+ - enable villagers to mine gold and bronze (Finished in an earlier stage.)
+
+Next stage: Finished! - on August 21, 2018.
+ - be able to change a building's build_position
+ - be able to specify a first command for villagers built
+   (For example, allow villagers to move to any specified position (in which
+   case they would be given a 'move' command, if the specified location is not
+   within 6 spots of the building's position) and further, allow a command to
+   have them start collecting a certain resource.)
+
+Nest stage: Finished! - on August 23, 2018.
  - build a farm
  - enable villagers to gather food from farms
 
 Next stage:
  - build a blacksmith, and enable the following things to be researched there:
-   * plow (Should this be necessary to build a farm? Eh, no.)
+   * bronze tipped plow (Benefits villagers farming.)
    * bronze axes (benefits villagers chopping wood)
-   * bronze picks (benefits villagers mining gold or bronze)
+   * bronze picks (benefits villagers collecting stone, gold, bronze, or iron)
 
  Next stage:
  - enable the following to be researched at the blacksmith:
-   * bronze swords (necessary for swordsmen)
-   * bronze shields (necessary for swordsmen)
-   * bronze armor
+   * bronze swords (necessary for swordsmen and knights)
+   * bronze shields (necessary for swordsmen and knights)
+   * bronze armor plates (helps swordsmen and pikemen necessary for knights)
  - after the appropriate research, train swordsmen
 
+At some point:
+Be able to print everything that can be built/researched from any given
+building.
+
+Be able to print the current population.
 
 Delayed for now:
  - have more of the map discovered as villagers move around
