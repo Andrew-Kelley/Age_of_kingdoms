@@ -2,6 +2,7 @@ from game_map import game_map
 from input_handling.select_an_object import selected_obj_to_actual_building
 from input_handling.select_an_object import selected_obj_to_ls_of_units, extract_selected_obj
 from game_map import Position
+from input_handling.help import help_on
 
 
 def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
@@ -29,7 +30,7 @@ def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     elif len(inpt_as_ls) == 2:
         if inpt_as_ls[1] == 'commands':
             # Then inpt_as_ls == ['print', 'commands']
-            help(selected_obj)
+            help_on(selected_obj) # WRONG! This is not what I mean.
             return []
         elif inpt_as_ls[1] == 'resources':
             print(player.resources)

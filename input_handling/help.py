@@ -61,7 +61,7 @@ help_functions = {'finished':print_finished_command, 'done':print_finished_comma
                   'print':print_print_command, 'build':print_build_command,
                   'set':print_set_command}
 
-def help(selected_obj):
+def help_on(selected_obj):
     # TODO: Fill this in better as I update what possible commands a user can input
     # Instead of the following, I should describe a use case for each possible first word
     print()

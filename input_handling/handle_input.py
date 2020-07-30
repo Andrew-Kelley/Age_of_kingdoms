@@ -1,7 +1,7 @@
 # The main function this module defines is input_next_command
 
 
-from input_handling.help import help
+from input_handling.help import help_on
 from input_handling.build import build_something, set_default_build_position
 from input_handling.select_an_object import select_something
 from input_handling.move_units import move_unit_or_units
@@ -99,7 +99,7 @@ def input_next_command(player, selected_obj=None, selected_town_num=1):
         if first_argument_of_command in done_with_turn:
             return ['end of turn']
         elif first_argument_of_command in help_commands and len(inpt_as_ls) == 1:
-            help(selected_obj)
+            help_on(selected_obj)
             continue
         elif first_argument_of_command == 'help' and len(inpt_as_ls) > 1 and inpt_as_ls[1] == 'build':
             del inpt_as_ls[0]
