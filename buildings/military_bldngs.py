@@ -22,8 +22,9 @@ class Barracks(Building):
 
     def build_unit(self, player, unit_type):
         if unit_type not in self.units_which_can_be_built(player):
-            # This should never happen because the function units_which_can_be_built is called
-            # in in the command_handling.py module (in the function insert_build_unit_command)
+            # This should never happen because the function units_which_can_be_built
+            # is called in in the command_handling.py module (in the function
+            # insert_build_unit_command)
             return
 
         unit_number = len(player.units[unit_type])

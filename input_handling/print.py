@@ -83,11 +83,11 @@ if __name__ == '__main__':
     # Testing the function print_part_of_map
     inpt_as_ls = ['print', 'map', '80', '80']
     print_part_of_map(p1, inpt_as_ls)
-    print("--------------------------------------------------------------------------------------")
+    print("----------------------------------------------------------------------------------")
     inpt_as_ls = ['print', 'map', 'n10', 'e15']
     print_part_of_map(p1, inpt_as_ls)
     inpt_as_ls = ['print', 'map', 'blah', 'yeah']
     print_part_of_map(p1, inpt_as_ls)
-    print("--------------------------------------------------------------------------------------")
+    print("----------------------------------------------------------------------------------")
     inpt_as_ls = ['print', 'map', 'centered', 'on', '40', '60']
     print_part_of_map(p1, inpt_as_ls)

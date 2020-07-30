@@ -10,17 +10,20 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     """In order to not return [], selected_obj must be of villager type.
 
     If not returning [], returns
-    ['collect resource', <resource>, ls_of_villagers], where ls_of_villagers is non-empty"""
+    ['collect resource', <resource>, ls_of_villagers], where
+    ls_of_villagers is non-empty"""
     if not selected_obj_consists_of_villagers(selected_obj):
         return []
 
     ls_of_villagers = selected_obj_to_ls_of_units(player, selected_obj)
     if len(ls_of_villagers) == 0:
-        print('Command to collect resources rejected since the selected object was empty.')
+        print('Command to collect resources rejected since the selected '
+              'object was empty.')
         return []
 
     if len(inpt_as_ls) != 2:
-        print('Your command was not understood. Any command to collect resources must consist',
+        print('Your command was not understood. Any command to collect '
+              'resources must consist',
               'of two words.')
         return []
 
@@ -50,9 +53,10 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
 
 
 def farm(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
-    """In order to not return [], selected_obj must be of villager type and inpt_as_ls
-    must be in the following format:
-    ['farm', ..., 'num1', 'num2'], where there is an available farm at Position(num1, num2).
+    """In order to not return [], selected_obj must be of villager type and
+    inpt_as_ls must be in the following format:
+    ['farm', ..., 'num1', 'num2'], where there is an available farm at
+    Position(num1, num2).
 
     If not returning [], returns
     ['farm', farm_instance, ls_of_villagers], where ls_of_villagers is non-empty"""

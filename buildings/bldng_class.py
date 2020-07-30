@@ -3,10 +3,11 @@
 from resources import Resources, Wood, Stone, Bronze
 from research_classes import BronzeAge, IronAge
 
-stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'woodwall', 'barracks'}
+stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp',
+                       'woodwall', 'barracks'}
 
-bronze_age_buildings = {'farm', 'stonewall', 'wallfortification', 'tower', 'archeryrange',
-                        'siegeworks', 'blacksmith', 'market'}
+bronze_age_buildings = {'farm', 'stonewall', 'wallfortification', 'tower',
+                        'archeryrange', 'siegeworks', 'blacksmith', 'market'}
 
 iron_age_buildings = {'towncenter', 'castle', 'stable', 'library', 'wonder'}
 
@@ -14,11 +15,11 @@ buildings = stone_age_buildings.union(bronze_age_buildings).union(iron_age_build
 
 
 class Building:
-    # Have a method to handle when a building is being attacked. Also have a method to handle building
-    # destruction.
+    # Have a method to handle when a building is being attacked. Also
+    # have a method to handle building destruction.
     # Perhaps have a method to handle
-    # the buildings which are defensible (i.e. which shoot arrows at attackers if there are units
-    # garrisoned in it.
+    # the buildings which are defensible (i.e. which shoot arrows at attackers
+    # if there are units garrisoned in it.
     kind = 'building'
     # The following five attributes should never be accessed.
     size = (2, 2)
@@ -34,9 +35,10 @@ class Building:
         position is the south-west (i.e. bottom left) corner of the building."""
         self.number = number
         self.position = position
-        # The following is only relevant for unit-producing buildings. It sets the default position
-        # where units are produced as the south-west corner of the building. Even though such units
-        # are technically "in" the building, they are not counted as garrisoned.
+        # The following is only relevant for unit-producing buildings. It sets
+        # the default position where units are produced as the south-west corner
+        # of the building. Even though such units are technically "in" the
+        # building, they are not counted as garrisoned.
         self.build_position = position
         # The following is used when villagers build a building:
         self.progress_to_construction = 0
@@ -50,7 +52,8 @@ class Building:
         return '{} {}'.format(kind, self.number)
 
     def units_which_can_be_built(self, player):
-        # This function needs to be re-implemented for every building which produces units.
+        # This function needs to be re-implemented for every building which
+        # produces units.
         return []
 
     def strings_ls_of_things_which_can_be_researched(self, player):
@@ -83,12 +86,13 @@ class Building:
 
     def build_unit(self, player, unit_type):
         """This function (in the Building class) should NEVER be called."""
-        print("ERROR! You are trying to build a unit from a building that does not yet have",
-              "a build_unit method defined.")
+        print("ERROR! You are trying to build a unit from a building that does not "
+              "yet have a build_unit method defined.")
         return
 
     def change_build_position_to(self, new_position, game_map):
-        """Only relevant for unit-producing buildings. This function specifies a new position for
+        """Only relevant for unit-producing buildings.
+        This function specifies a new position for
         where units built by the building self should begin their existence."""
         # delta = new_position - self.position
         # if delta.magnitude > 15:
@@ -97,8 +101,8 @@ class Building:
         if not new_position.is_on_the_map(game_map):
             print("You must pick a position that is on the map.")
             return
-        # TODO: Check that there are no enemy walls between the building's position and the proposed
-        # build position
+        # TODO: Check that there are no enemy walls between the building's
+        # position and the proposed build position
         self.build_position = new_position
 
     def can_build_on_map(self, position, game_map):
@@ -119,20 +123,22 @@ class Building:
             print('Sorry, building placement too far east.')
             return False
 
-        # Next, check that there are no obstructions. Buildings are allowed to be built only where
-        # there are blank spaces or wood or food sources.
+        # Next, check that there are no obstructions. Buildings are allowed to be built
+        # only where there are blank spaces or wood or food sources.
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
         for i in range(i_init, i_final, -1):
             for j in range(j_init, j_final):
                 if game_map[i][j] not in (' ', 'w', 'f'):
-                    print('Sorry, there is {} occupying part of that space.'.format(game_map[i][j]))
+                    print('Sorry, there is {} occupying part of '
+                          'that space.'.format(game_map[i][j]))
                     return False
 
         return True
 
     def build_on_map(self, player, position, game_map):
-        """This function is called when construction starts (so before construction is complete)."""
+        """This function is called when construction starts
+        (so before construction is complete)."""
         i_init, j_init = position.value
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
@@ -142,7 +148,7 @@ class Building:
                 # player.map[i][j] = self.letter_abbreviation
 
     def build(self, villager_who_is_building, player):
-        """This function is called multiple times in order to actually construct the building."""
+        """This function is called multiple times to construct the building."""
         if self.progress_to_construction >= self.time_to_build:
             # Then another villager already finished building this building.
             return

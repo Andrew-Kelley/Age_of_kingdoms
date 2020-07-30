@@ -33,10 +33,10 @@ def input_number_of_players(human=True):
 
 done_with_turn = {'finished', 'done'}
 help_commands = {'help', 'commands'}
-# NOTE: If main_commands is changed, then so should the functions dictionary, defined just before
-# the input_next_command function.
-main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine', 'research',
-                 'help build', 'farm'}
+# NOTE: If main_commands is changed, then so should the functions dictionary, defined
+# just before the input_next_command function.
+main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine',
+                 'research', 'help build', 'farm'}
 possible_first_words = main_commands.union(done_with_turn).union(help_commands)
 
 
@@ -58,8 +58,8 @@ def closest_word_to(word, some_words):
 # so that they can be called uniformly via **kwargs.
 
 functions = {'build': build_something, 'help build':build_something, 'select': select_something,
-             'move': move_unit_or_units, 'set': set_default_build_position, 'print': print_something,
-             'research':research_something, 'farm':farm}
+             'move': move_unit_or_units, 'set': set_default_build_position,
+             'print': print_something, 'research':research_something, 'farm':farm}
 
 # Intended use: 'collect <any resource>', 'chop wood', 'mine gold', 'mine bronze', 'mine iron'
 for word in ('collect', 'chop', 'mine'):
@@ -80,7 +80,8 @@ def input_next_command(player, selected_obj=None, selected_town_num=1):
         if inpt_as_ls[0] not in possible_first_words:
             print('The first word of your command did not make perfect sense.')
             guess = closest_word_to(inpt_as_ls[0], possible_first_words)
-            yes_or_no = input("Is the first word of your command supposed to be '{}'? [y/n?]".format(guess))
+            yes_or_no = input("Is the first word of your command supposed "
+                              "to be '{}'? [y/n?]".format(guess))
             if len(yes_or_no) > 0 and yes_or_no[0].lower() == 'y':
                 inpt_as_ls[0] = guess
             else:
@@ -101,7 +102,8 @@ def input_next_command(player, selected_obj=None, selected_town_num=1):
         elif first_argument_of_command in help_commands and len(inpt_as_ls) == 1:
             help_on(selected_obj)
             continue
-        elif first_argument_of_command == 'help' and len(inpt_as_ls) > 1 and inpt_as_ls[1] == 'build':
+        elif first_argument_of_command == 'help' and len(inpt_as_ls) > 1 and \
+                inpt_as_ls[1] == 'build':
             del inpt_as_ls[0]
             inpt_as_ls[0] = 'help build'
             first_argument_of_command = 'help build'

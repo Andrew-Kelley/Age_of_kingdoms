@@ -1,9 +1,10 @@
 from units import unit_kinds, unit_kinds_singular, unit_singular_to_plural
 from buildings.bldng_class import buildings
 
-# For building names that really are two words, I would like to be able to handle a space between those
-# words:
-building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood', 'archery', 'siege'}
+# For building names that really are two words, I would like to be able to
+# handle a space between those words:
+building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood',
+                        'archery', 'siege'}
 
 def selected_obj_to_ls_of_units(player, selected_obj):
     """selected_obj must be of the type that the fn select_something returns"""
@@ -13,8 +14,8 @@ def selected_obj_to_ls_of_units(player, selected_obj):
     ls_of_units = []
     if selected_obj[0] == 'unit':
         # Then selected_obj == ['unit', unit.kind, starting_num, ending_num]
-        # The following four lines of code should be unnecessary. I believe it is redundant, assuming
-        # that the fn select_something works properly.
+        # The following four lines of code should be unnecessary. I believe it
+        # is redundant, assuming that the fn select_something works properly.
         if len(selected_obj) != 4 or selected_obj[1] not in unit_kinds:
             return []
         if not all(type(i) is int for i in selected_obj[2:]):
@@ -28,7 +29,8 @@ def selected_obj_to_ls_of_units(player, selected_obj):
                 ls_of_units.append(unit)
         return ls_of_units
 
-    # TODO: implement the rest of this function (when the selected object is an army or a group)
+    # TODO: implement the rest of this function (when the selected object is
+    # an army or a group)
     # I first need to implement the Group and Army classes.
     if selected_obj[0] == 'group':
         return []
@@ -92,7 +94,8 @@ def selected_obj_consists_of_villagers(selected_obj):
                   "len(selected_obj) is not 4.")
             return False
         num1, num2 = selected_obj[2:4]
-        if not type(num1) is int or not type(num2) is int or num1 > num2 or num1 < 1 or num2 < 1:
+        if not type(num1) is int or not type(num2) is int or \
+                num1 > num2 or num1 < 1 or num2 < 1:
             print("The selected object's numbers were not proper.")
             return False
 
@@ -105,7 +108,8 @@ def extract_selected_obj(inpt_as_ls, player):
         return []
 
     kind = inpt_as_ls[1]
-    not_units = kind not in unit_kinds_singular and kind not in unit_kinds and kind not in {'group', 'army'}
+    not_units = kind not in unit_kinds_singular and \
+                kind not in unit_kinds and kind not in {'group', 'army'}
     not_building = kind not in buildings
     not_town = kind != 'town'
     if not_units and not_building and not_town:
@@ -171,7 +175,8 @@ def extract_selected_obj(inpt_as_ls, player):
     elif kind == 'town':
         selected_obj = ['town', num]
     else:
-        # Due to the second conditional statement in this function, this code should never be reached.
+        # Due to the second conditional statement in this function, this code
+        # should never be reached.
         selected_obj = []
 
     return selected_obj
@@ -192,7 +197,8 @@ def unit_exists(unit_kind, unit_number, player):
 
 
 def is_a_selected_obj(ls):
-    """Returns True if ls is a non-empty list of the format of what select_something returns"""
+    """Returns True if ls is a non-empty list of the format of
+    what select_something returns"""
     if type(ls) != list:
         return False
     if len(ls) < 2 or len(ls) > 4:
@@ -246,9 +252,10 @@ def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     elif len(inpt_as_ls) < 2:
         return []
     else:
-        # Current Usage: In this case, there is an implied '1' as the building or unit number.
-        # Alternate usage (not used): It would make sense that ['select', 'barracks'] is
-        # selecting the only barracks in the town with the given selected_town_num.
+        # Current Usage: In this case, there is an implied '1' as the building
+        # or unit number. Alternate usage (not used): It would make sense that
+        # ['select', 'barracks'] is selecting the only barracks in the town
+        # with the given selected_town_num.
         inpt_as_ls.append('1')
         return extract_selected_obj(inpt_as_ls, player)
 

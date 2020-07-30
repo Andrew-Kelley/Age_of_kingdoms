@@ -1,4 +1,5 @@
-# Age of Kingdoms - A text-based, turn-based strategy game inspired by Age of Empires.
+# Age of Kingdoms - A text-based, turn-based strategy game inspired by
+# Age of Empires.
 # Started July 21, 2018.
 
 from input_handling.handle_input import input_next_command
@@ -13,12 +14,15 @@ from player import Player, initial_position_of_player
 print("Starting a game of Age of Kingdoms...")
 # n1 = input_number_of_players(human=True)
 # n2 = input_number_of_players(human=False)
-# Note: for testing purposes, I'll start off with only 1 human player (and no computer players).
+# Note: for testing purposes, I'll start off with only 1 human player
+# (and no computer players).
 n1 = 1
 n2 = 0
-print("""Starting a game with {} human player(s) and {} computer player(s).""".format(n1, n2))
+print("Starting a game with {} human player(s) and {} "
+      "computer player(s).".format(n1, n2))
 
-# The actual players are listed starting at index 1. Thus players[i] == player number i.
+# The actual players are listed starting at index 1.
+# Thus players[i] == player number i.
 players = [None]
 for i in range(1, n1+1):
     initial_position = initial_position_of_player(i, game_map)
@@ -35,15 +39,16 @@ turn_number = 0
 while True:
     turn_number += 1
     if turn_number > 5000:
-        print('The limit of {} turns has been reached. Game over.'.format(turn_number - 1))
+        print('The limit of {} turns has been reached. '
+              'Game over.'.format(turn_number - 1))
         break
 
     for player in players[1:]:
         print("It is now Player number {}'s turn".format(player.number))
         print(player.resources)
 
-        # player.messages contains all messages for the player produced while the player's commands
-        # are being implemented.
+        # player.messages contains all messages for the player produced
+        # while the player's commands are being implemented.
         if player.messages:
             print(player.messages)
             player.messages = ''
@@ -61,7 +66,8 @@ while True:
                 break
             insert_command(player, command)
 
-    # Every other turn, the order in which the players' commands are implemented is switched.
+    # Every other turn, the order in which the players' commands are
+    # implemented is switched.
     if turn_number % 2 == 1:
         player_iterator = players[1:]
     else:

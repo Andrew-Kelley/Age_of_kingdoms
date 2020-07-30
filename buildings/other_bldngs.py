@@ -26,14 +26,14 @@ class TownCenter(Building):
 
     def __init__(self, number, position, player):
         Building.__init__(self, number, position, player)
-        # The following can be altered by the player and is used for the default initial action
-        # of a newly built villager.
+        # The following can be altered by the player and is used for the
+        # default initial action of a newly built villager.
         self.initial_resource_to_collect = None
 
     def strings_ls_of_things_which_can_be_researched(self, player):
         research_ls = []
-        # Maybe have a 'wheelbarrow', which makes all villagers more efficient at anything they do
-        # 'wheelbarrow' could be researched in the bronze age
+        # Maybe have a 'wheelbarrow', which makes all villagers more efficient
+        # at anything they do 'wheelbarrow' could be researched in the bronze age
 
         if player.age == 'stone age':
             research_ls.append('bronze age')
@@ -60,7 +60,8 @@ class TownCenter(Building):
         else:
             new_villager = Villager(self.build_position, player)
         if self.initial_resource_to_collect:
-            command = ['collect resource', self.initial_resource_to_collect, [new_villager]]
+            command = ['collect resource',
+                       self.initial_resource_to_collect, [new_villager]]
             if delta.magnitude <= 6:
                 insert_collect_resource_now_command(player, command)
             else:
@@ -132,12 +133,18 @@ class Market(Building):
     time_to_build = 50
 
 
-building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp, 'stonequarry':StoneQuarry,
-                           'miningcamp':MiningCamp, 'woodwall':WoodWall, 'barracks':Barracks,
-                           'farm':Farm, 'stonewall':StoneWall, 'wallfortification':WallFortification,
-                           'tower':Tower, 'archeryrange':ArcheryRange, 'siegeworks':SiegeWorks,
-                           'blacksmith':Blacksmith, 'market':Market, 'towncenter':TownCenter,
-                           'castle':Castle, 'stable':Stable, 'library':Library, 'wonder':Wonder}
+building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp,
+                           'stonequarry':StoneQuarry,
+                           'miningcamp':MiningCamp, 'woodwall':WoodWall,
+                           'barracks':Barracks,
+                           'farm':Farm, 'stonewall':StoneWall,
+                           'wallfortification':WallFortification,
+                           'tower':Tower, 'archeryrange':ArcheryRange,
+                           'siegeworks':SiegeWorks,
+                           'blacksmith':Blacksmith, 'market':Market,
+                           'towncenter':TownCenter,
+                           'castle':Castle, 'stable':Stable, 'library':Library,
+                           'wonder':Wonder}
 
 
 if __name__ == '__main__':

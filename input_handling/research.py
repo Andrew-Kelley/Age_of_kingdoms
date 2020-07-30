@@ -24,7 +24,8 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
 
     if building in player.commands['now']['research']:
         print('The selected building is already researching something.', end = '\n\n')
-        yes_or_no = input('Would you like the building to research this afterwards? ').lower().strip()
+        yes_or_no = input('Would you like the building to research '
+                          'this afterwards? ').lower().strip()
         if yes_or_no.startswith('y'):
             pass
         else:
@@ -32,7 +33,8 @@ def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=
             return []
 
     thing_to_be_researched = ' '.join(inpt_as_ls[1:])
-    if thing_to_be_researched not in building.strings_ls_of_things_which_can_be_researched(player):
+    what_can_be_researched = building.strings_ls_of_things_which_can_be_researched(player)
+    if thing_to_be_researched not in what_can_be_researched:
         print('Sorry, a {} cannot research {}.'.format(building.kind, thing_to_be_researched))
         return []
 

@@ -2,12 +2,13 @@ from copy import copy
 from resources import Resources, Food, Wood, Stone, Bronze, Gold, Iron
 
 
-# Whenever a player begins researching something at some building, an instance of a subclass of
-# ResearchObject is created.
+# Whenever a player begins researching something at some building, an
+# instance of a subclass of ResearchObject is created.
 class ResearchObject:
     # The following should always be overridden by each subclass
     num_turns_to_completion = 30 # might be changed to time_to_completion
-    cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000, Gold: 1000, Iron: 1000})
+    cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000,
+                      Gold: 1000, Iron: 1000})
     name = 'Class ResearchObject'
 
     def __init__(self):
@@ -143,8 +144,10 @@ class BronzeTippedPlows(ResearchObject):
         player.things_researched.add(self.name)
 
 
-blacksmith_bronze_age_research = {BronzeTippedSpears, BronzeSwords, BronzeArmorPlates,
-                                  BronzeShields, BronzeAxes, BronzePicks, BronzeTippedPlows,
+blacksmith_bronze_age_research = {BronzeTippedSpears, BronzeSwords,
+                                  BronzeArmorPlates,
+                                  BronzeShields, BronzeAxes,
+                                  BronzePicks, BronzeTippedPlows,
                                   BronzeChainMailArmor}
 
 
@@ -226,21 +229,25 @@ class IronPicks(ResearchObject):
         player.things_researched.add(self.name)
 
 
-# I don't think I should have a ResearchObject for IronTippedPlows. Villagers already
-# collect food from farms fast enough with BronzeTippedPlows.
+# I don't think I should have a ResearchObject for IronTippedPlows.
+# Villagers already collect food from farms fast enough with
+# BronzeTippedPlows.
 
-blacksmith_iron_age_research = {IronTippedSpears, IronSwords, IronArmorPlates, IronChainMailArmor,
+blacksmith_iron_age_research = {IronTippedSpears, IronSwords,
+                                IronArmorPlates, IronChainMailArmor,
                                 IronShields, IronAxes, IronPicks}
 
 bronze_to_iron_research_str = {'bronze tipped spears': 'iron tipped spears',
                                'bronze swords': 'iron swords',
                                'bronze armor plates': 'iron armor plates',
                                'bronze chainmail armor': 'iron chainmail armor',
-                               'bronze shields': 'iron shields',  'bronze axes': 'iron axes',
+                               'bronze shields': 'iron shields',
+                               'bronze axes': 'iron axes',
                                'bronze picks': 'iron picks'}
 ####################################
 
-# The following are first sets of classes, to be used to create research_string_to_class
+# The following are first sets of classes, to be used to create
+# research_string_to_class
 stone_age_research = {BronzeAge}
 bronze_age_research = copy(stone_age_research).union({IronAge})
 bronze_age_research = bronze_age_research.union(blacksmith_bronze_age_research)

@@ -206,14 +206,15 @@ def insert_move_command(player, command):
         move_now = dict((unit, delta) for unit in ls_of_units)
         move_later = dict()
 
-    # NOTE: THE FOLLOWING TWO LINES DO NOT WORK! The reason is that the player might make multiple
-    # move commands during a turn (each of which might move different units). What the following
-    # two lines would do would be to erase all previous move commands and replace them with the
-    # most current one.
+    # NOTE: THE FOLLOWING TWO LINES DO NOT WORK! The reason is that the player might
+    # make multiple move commands during a turn (each of which might move different
+    # units). What the following two lines would do would be to erase all previous
+    # move commands and replace them with the most current one.
     # player.commands['now']['move'] = move_now
     # player.commands['later']['move'] = move_later
 
-    # The following only replaces old move commands with new ones if they are about the same unit.
+    # The following only replaces old move commands with new ones if they are about the
+    # same unit.
     for unit in move_now:
         player.commands['now']['move'][unit] = move_now[unit]
         unit.current_action = 'moving to {}'.format(unit.position + delta)
@@ -256,8 +257,8 @@ def insert_build_unit_command(player, command):
     ['build unit', <building>, <unit type>, num_to_be_built]"""
     if len(command) != 4:
         # This should never be the case.
-        print('Python Error! The function insert_build_unit_command was given an argument command',
-              'that is not of length 4.')
+        print('Python Error! The function insert_build_unit_command was given an '
+              'argument command that is not of length 4.')
         return
 
     building = command[1]
@@ -292,8 +293,8 @@ def number_of_units_can_build_in_one_turn(player, building, unit_type):
         else:
             num_can_build = 0
     else:
-        # I may later want to change this and allow some units besides villagers to be built more
-        # than 1 per turn per building.
+        # I may later want to change this and allow some units besides villagers to be
+        # built more than 1 per turn per building.
         num_can_build = 1
     return num_can_build
 
@@ -359,9 +360,9 @@ def insert_farm_command(player, command):
             player.commands['later']['farm'][villager] = farm
 
 
-###################################################################################################
-###################################################################################################
-###################################################################################################
+################################################################################################
+################################################################################################
+################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
     # update_build_building_command must come before update_collect_resource_command(player)
@@ -398,8 +399,8 @@ def update_build_building_command(player):
 
 
 # Villagers are commanded to collect resources later is if they first have to move or if they
-# build a building from resource_bldngs.py. The former case (of having to move first) is intended
-# to be used only for newly built villagers.
+# build a building from resource_bldngs.py. The former case (of having to move first) is
+# intended to be used only for newly built villagers.
 def update_collect_resource_command(player):
     for villager in list(player.commands['later']['collect resource']):
         not_moving = villager not in player.commands['now']['move']
@@ -409,7 +410,8 @@ def update_collect_resource_command(player):
             del player.commands['later']['collect resource'][villager]
             player.commands['now']['collect resource'][villager] = resource
             # In order for the following action to be correct, I think the present function
-            # should come after update_move_commands in the function update_now_and_later_commands
+            # should come after update_move_commands in the
+            # function update_now_and_later_commands
             villager.current_action = 'collecting {}'.format(resource.kind)
 
 
@@ -429,8 +431,8 @@ def update_move_commands(player):
         if delta.magnitude > 15:
             beginning, the_rest = delta.beginning_plus_the_rest()
             player.commands['now']['move'][unit] = beginning
-            # The following line is necessary because the present function changed current_action
-            # to 'doing nothing'
+            # The following line is necessary because the present function changed
+            # current_action to 'doing nothing'
             unit.current_action = 'moving to {}'.format(unit.position + delta)
             player.commands['later']['move'][unit] = the_rest
         else:
@@ -475,8 +477,8 @@ def update_research_commands(player):
 
 
 # The reason why this function should be called after the functions update_build_building and
-# update_move_commands (in the update_now_and_later_commands function) is that when a villager is
-# finished building or moving, it ought to be able to start farming.
+# update_move_commands (in the update_now_and_later_commands function) is that when a villager
+# is finished building or moving, it ought to be able to start farming.
 def update_farm_commands(player):
     for villager in list(player.commands['later']['farm']):
         farm = player.commands['later']['farm'][villager]
@@ -492,7 +494,7 @@ def update_farm_commands(player):
                     villager.farm_currently_farming = farm
                     villager.current_action = 'farming {}'.format(farm)
                 else:
-                    # This really should never happen. If it does, I probably have a coding error.
+                    # This really should never happen. If it does, I have a coding error.
                     print(villager, ' cannot farm', farm, 'because that farm already has',
                           'two farmers. Regardless, the villager is removed from ',
                           "player.commands['later']['farm']")
@@ -503,9 +505,9 @@ def update_farm_commands(player):
                       "player.commands['later']['farm']")
 
 
-###################################################################################################
-###################################################################################################
-###################################################################################################
+################################################################################################
+################################################################################################
+################################################################################################
 def implement_commands_if_possible(player):
     implement_build_building_command(player)
     implement_collect_resource_command(player)
@@ -513,8 +515,8 @@ def implement_commands_if_possible(player):
     implement_build_unit_commands(player)
     implement_research_commands(player)
     implement_farm_commands(player)
-    # Eventually, this will probably be replaced with the following code, where functions is a list
-    # of all the functions which need to be run.
+    # Eventually, this will probably be replaced with the following code, where functions
+    # is a list of all the functions which need to be run.
     # for function in functions:
     #     function(player)
 

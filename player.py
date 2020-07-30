@@ -13,10 +13,11 @@ from game_map import game_map, Position
 
 from copy import deepcopy
 
-units_ls = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam, Catapult,
-            Trebuchet, Merchant]
-buildings_ls = [TownCenter, House, Blacksmith, Library, Market, Barracks, ArcheryRange,
-                Stable, SiegeWorks, Tower, Castle, Farm, LumberCamp, StoneQuarry, MiningCamp]
+units_ls = [Villager, Pikeman, Swordsman, Archer, Knight,
+            BatteringRam, Catapult, Trebuchet, Merchant]
+buildings_ls = [TownCenter, House, Blacksmith, Library, Market,
+                Barracks, ArcheryRange, Stable, SiegeWorks, Tower,
+                Castle, Farm, LumberCamp, StoneQuarry, MiningCamp]
 
 
 class Player:
@@ -26,35 +27,43 @@ class Player:
         position is where to place a player's beginning TownCenter."""
         self.number = number
         self.is_human = is_human
-        self.resources = Resources({Food: 300, Wood: 300, Stone: 200, Gold: 0, Bronze: 0, Iron: 0})
+        self.resources = Resources({Food: 300, Wood: 300, Stone: 200,
+                                    Gold: 0, Bronze: 0, Iron: 0})
         self.age = 'stone age'
 
-        # The following is how much of a given resource a single villager can collect in one turn.
-        self.collecting_capacity = {Wood: 8, Food: 10, Stone: 6, Gold: 6, Bronze: 6, Iron: 2}
+        # The following is how much of a given resource a single villager
+        # can collect in one turn.
+        self.collecting_capacity = {Wood: 8, Food: 10, Stone: 6,
+                                    Gold: 6, Bronze: 6, Iron: 2}
 
         # self.commands contains the commands entered by the player:
-        commands_dict = {'move': dict(), 'build unit': dict(), 'build building': dict(),
-                         'collect resource': dict(), 'farm': dict(), 'research': dict()}
+        commands_dict = {'move': dict(), 'build unit': dict(),
+                         'build building': dict(),
+                         'collect resource': dict(),
+                         'farm': dict(), 'research': dict()}
         # commands_dict will need to be lengthened
         self.commands = {'now': commands_dict, 'later': deepcopy(commands_dict)}
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 
-        # self.messages is for printing messages that are produced while the player's commands
-        # are implemented.
+        # self.messages is for printing messages that are produced
+        # while the player's commands are implemented.
         self.messages = ''
 
         self.things_researched = set()
         self.things_being_currently_researched = set()
 
-        # For each player, House number 1 (i.e. the first house that player builds) will be at
-        # self.buildings['houses'][1]. Since no building is numbered 0, each list needs a
-        # placeholder. But since I DO have the space, self.buildings[building_kind][0] will be
-        # the number of buildings of that kind that have been destroyed.
+        # For each player, House number 1 (i.e. the first house that
+        # player builds) will be at self.buildings['houses'][1]. Since
+        # no building is numbered 0, each list needs a placeholder.
+        # But since I DO have the space, self.buildings[building_kind][0]
+        # will be the number of buildings of that kind that have been
+        # destroyed.
         self.buildings = dict((building.kind, [0]) for building in buildings_ls)
 
-        # For each each of the player's buildings, the following will contain a key: value pair
-        # as follows:    position: building_instance
+        # For each each of the player's buildings, the following will
+        # contain a key: value pair as follows:
+        #  position: building_instance
         self.building_position_pairs = dict()
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
@@ -69,10 +78,10 @@ class Player:
     @property
     def population_cap(self):
         total_cap = 300
-        # Recall that self.buildings[TownCenter.kind][0] is the number of TownCenters that have
-        # been destroyed.
-        num_towncenters_destroyed = self.buildings[TownCenter.kind][0]
-        num_town_centers = len(self.buildings[TownCenter.kind]) - num_towncenters_destroyed - 1
+        # Recall that self.buildings[TownCenter.kind][0] is the number
+        # of TownCenters that have been destroyed.
+        num_tc_destroyed = self.buildings[TownCenter.kind][0]
+        num_town_centers = len(self.buildings[TownCenter.kind]) - num_tc_destroyed - 1
         num_houses_destroyed = self.buildings[House.kind][0]
         num_houses = len(self.buildings[House.kind]) - num_houses_destroyed - 1
         return min(20 * num_town_centers + 10 * num_houses, total_cap)
@@ -81,15 +90,16 @@ class Player:
     def population(self):
         pop = 0
         for unit in units_ls:
-            # Recall that self.units[unit.kind][0] is the number of that unit kind that
-            # have been killed.
+            # Recall that self.units[unit.kind][0] is the number of that unit
+            # kind that have been killed.
             num_units_killed = self.units[unit.kind][0]
             pop += len(self.units[unit.kind]) - num_units_killed - 1
         return pop
 
     def can_build(self, thing, number=1):
-        """If thing is a Unit, number is how many of that Unit that is desired to be built PLUS
-        the number of other units already OK'd to be built during the next turn."""
+        """If thing is a Unit, number is how many of that Unit that is desired
+        to be built PLUS the number of other units already OK'd to be built during
+        the next turn."""
         if issubclass(thing, Unit) or isinstance(thing, Unit):
             if self.population > self.population_cap - number:
                 return False

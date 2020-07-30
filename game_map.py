@@ -49,7 +49,8 @@ class Vector(Position):
         """partitions self into two vectors v1, v2 such that self == v1 + v2
         and v1.magnitude <= 15
 
-        The purpose of this is to be able to move units more than the allowable amount per turn.
+        The purpose of this is to be able to move units more than the
+        allowable amount per turn.
 
         returns a tuple: (Vector, Vector)"""
         if self.magnitude <= distance_in_one_turn:
@@ -68,8 +69,8 @@ class Vector(Position):
         i = special_min(i0, a)
         j = special_min(j0, b)
 
-        # The following is only ready to be returned if beginning.magnitude == 15 or ...
-        # ...if beginning == self
+        # The following is only ready to be returned if
+        # beginning.magnitude == 15 or if beginning == self
         beginning = Vector(i, j)
         the_rest = self - beginning
 
@@ -85,9 +86,9 @@ class Vector(Position):
         return (beginning, the_rest)
 
 
-# One reason I see now for why I want this class for representing the map is that given a position
-# object, I can use it directly to find what is at that position, rather than re-implementing
-# the code in __call__ every time.
+# One reason I see now for why I want this class for representing the map
+# is that given a position object, I can use it directly to find what is at
+# that position, rather than re-implementing the code in __call__ every time.
 class GameMap(list):
     def __call__(self, position):
         i, j = position.value
@@ -99,12 +100,13 @@ class GameMap(list):
 
     def print_centered_at(self, position, width=100, height=24):
 
-        # The following is used to print the same number of digits when printing row or column
-        # numbers:
+        # The following is used to print the same number of digits when
+        # printing row or column numbers:
         num_digits = 2 if len(self) <= 100 else 3
         def int_to_str(i):
-            """Returns the i as a string with num_digits digits if i is a multiple of 5. Otherwise
-            this returns num_digits spaces"""
+            """Returns the i as a string with num_digits digits if i % 5 == 0.
+
+            Otherwise this returns num_digits spaces"""
             if i % 5 == 0:
                 return str(i).zfill(num_digits)
             else:
@@ -127,8 +129,8 @@ class GameMap(list):
 
         def print_column_numbers():
             for digit in range(num_digits):
-                # The following line is to print an offset for the margin, which (in the main part)
-                # is used to print the row numbers.
+                # The following line is to print an offset for the margin, which
+                # (in the main part) is used to print the row numbers.
                 print(' ' * num_digits, end='')
                 for j in range(j_start, j_stop):
                     end = '' if j < j_stop - 1 else '\n'
@@ -147,7 +149,9 @@ class GameMap(list):
 
 
 def everything_within_given_distance_on(the_map, distance, position):
-    """Iterates through everything on the_map that is within the given distance of position.
+    """Iterates through everything on the_map that is within the given distance
+    of position.
+
     This portion of the_map is in the shape of a diamond.
 
     position must be of type Position
@@ -161,8 +165,8 @@ def everything_within_given_distance_on(the_map, distance, position):
 
     i0, j0 = position.value
 
-    # The following iterates through the diamond shaped portion of the_map from left to right,
-    # bottom to top.
+    # The following iterates through the diamond shaped portion of the_map
+    # from left to right, bottom to top.
     for j_delta in range(-1 * distance, distance + 1):
         sign = 1 if j_delta <= 0 else -1
         height = distance + j_delta * sign
@@ -258,9 +262,9 @@ if __name__ == '__main__':
         print(position, game_map(position))
 
     # print(game_map)
-    # print('----------------------------------------------------------------------------')
+    # print('-------------------------------------------------------------------')
     # game_map.print_centered_at(Position(50, 60))
-    # print('----------------------------------------------------------------------------')
+    # print('-------------------------------------------------------------------')
     # game_map.print_centered_at(Position(90, 50))
     # print_map(game_map)
     # The following code was run for various values of distance and Position(i, j):

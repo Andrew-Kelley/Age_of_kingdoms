@@ -4,8 +4,8 @@ from game_map import Vector
 def direction_inpt_to_vector(direction_str):
     """direction_str must be a string. Returns a Vector or None.
     In order to not return None, direction_str must be a string of the form
-    'D<num>' where D is in 'nsew' (north, south, east, west) and <num> is an integer
-    possible inputs: 'n5' 'e17' 's12' """
+    'D<num>' where D is in 'nsew' (north, south, east, west) and <num> is
+    an integer possible inputs: 'n5' 'e17' 's12' """
     if not type(direction_str) is str:
         return None
     if len(direction_str) < 2:
@@ -33,8 +33,9 @@ def direction_inpt_to_vector(direction_str):
 def get_direction_vector(inpt_as_ls):
     """returns None or Vector.
 
-    One thing that is a little odd about this function is that if inpt_as_ls[-2] is a direction in the
-    wrong format, this function just ignores it and treats it as if it didn't exist."""
+    One thing that is a little odd about this function is that if inpt_as_ls[-2]
+    is a direction in the wrong format, this function just ignores it and treats
+    it as if it didn't exist."""
     if len(inpt_as_ls) < 2:
         return None
 

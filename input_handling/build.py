@@ -23,8 +23,10 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
     if not selected_obj or not type(selected_obj) is list:
         print('Command rejected:')
         print('You must first select an object before building something.')
-        print('For building a building, you must first select which villagers to build it.')
-        print('To build units, you must first select which building to build them from.')
+        print('For building a building, you must first select which villagers '
+              'to build it.')
+        print('To build units, you must first select which building to build '
+              'them from.')
         return []
     if len(selected_obj) < 2:
         return []
@@ -67,7 +69,8 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
 
     unit_type = inpt_as_ls[-1]
     if unit_type not in unit_kinds and unit_type not in unit_kinds_singular:
-        print('The last part of your command (which type of unit to be built) was not understood.')
+        print('The last part of your command (which type of unit to be built) '
+              'was not understood.')
         return []
     if unit_type in unit_kinds_singular:
         unit_type = unit_singular_to_plural[unit_type]
@@ -76,10 +79,12 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
         try:
             num_to_be_built = int(inpt_as_ls[1])
             if num_to_be_built < 1:
-                print('Your command must specify a positive number of units to be built.')
+                print('Your command must specify a positive number of units '
+                      'to be built.')
                 return []
         except ValueError:
-            print('The second part of your command (how many units to be built) was not understood.')
+            print('The second part of your command (how many units to be built) '
+                  'was not understood.')
             return []
     else:
         num_to_be_built = 1
@@ -90,14 +95,14 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
 # The following is intended to only be used by the function build_something
 def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
     """In order to not return [],  inpt_as_ls must be of the following format:
-     ['build', <building name>, 'num1', 'num2']. Also, the player must first have advanced
-     to the appropriate age for the building they wish to build.
+     ['build', <building name>, 'num1', 'num2']. Also, the player must first
+     have advanced to the appropriate age for the building they wish to build.
 
      Returns [] or the following:
      ['build building', ls_of_villagers, building_class, position]"""
     if len(inpt_as_ls) < 4:
-        print('Your command to build a building was not understood since it had fewer than 4',
-              'parts/words.')
+        print('Your command to build a building was not understood since it had '
+              'fewer than 4 parts/words.')
         return []
 
     if inpt_as_ls[0] == 'help build':
@@ -138,7 +143,8 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
         return build_wall(player, inpt_as_ls, this_is_a_help_build_command)
 
     if building_kind not in building_kind_to_class:
-        # This should never happen because I already checked that building_kind is in buildings
+        # This should never happen because I already checked that
+        # building_kind is in buildings
         print('The building you want to build was not understood.')
         return []
 
@@ -155,7 +161,8 @@ def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
             print('Command rejected. Try a different position.')
             return []
 
-    return ['build building', ls_of_villagers, building_class, position, this_is_a_help_build_command]
+    return ['build building', ls_of_villagers, building_class,
+            position, this_is_a_help_build_command]
 
 
 def build_wall(player, inpt_as_ls, this_is_a_help_build_command):
@@ -167,7 +174,8 @@ def build_wall(player, inpt_as_ls, this_is_a_help_build_command):
 def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
     """Returns a list"""
     print('You must first build a wall before building a wallfortification.',
-          'But unfortunatelly, this game is not finished, and you cannot build walls either.')
+          'But unfortunatelly, this game is not finished, and you cannot '
+          'build walls either.')
     return []
 
 
@@ -192,7 +200,8 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None, selected_t
 
     if building.kind == 'towncenter':
         while True:
-            resource = input('Which resource would you like newly built villagers to collect?'
+            resource = input('Which resource would you like newly built '
+                             'villagers to collect?'
                              '\nIf none, type "none" or just hit enter. ').lower().strip()
             if resource in ('', 'none'):
                 building.initial_resource_to_collect = None

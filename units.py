@@ -4,19 +4,27 @@ from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from random import choice
 from copy import copy
 
-unit_kind_to_singular = {'villagers': 'villager', 'pikemen': 'pikeman', 'swordsmen': 'swordsman',
-                         'archers': 'archer', 'knights': 'knight', 'batteringrams': 'batteringram',
-                         'catapults': 'catapult', 'trebuchets': 'trebuchet', 'units': 'unit',
+unit_kind_to_singular = {'villagers': 'villager',
+                         'pikemen': 'pikeman',
+                         'swordsmen': 'swordsman',
+                         'archers': 'archer',
+                         'knights': 'knight',
+                         'batteringrams': 'batteringram',
+                         'catapults': 'catapult',
+                         'trebuchets': 'trebuchet',
+                         'units': 'unit',
                          'merchants': 'merchant'}
 
-unit_kinds_singular = ['villager', 'pikeman', 'swordsman', 'archer', 'knight', 'batteringram',
+unit_kinds_singular = ['villager', 'pikeman', 'swordsman',
+                       'archer', 'knight', 'batteringram',
                        'catapult', 'trebuchet', 'merchant']
 
 
 class Unit:
     """e.g. villager, swordsman, knight, catapult"""
     kind = 'units'
-    # The following should never be accessed. It will always be overridden by the subclasses.
+    # The following should never be accessed. It will always be
+    # overridden by the subclasses.
     cost = Resources({Food: 1000, Wood: 1000, Gold: 1000})
 
     def __init__(self, position, player):
@@ -37,11 +45,13 @@ class Unit:
         num = self.number
         position = self.position
         current_action = self.current_action
-        return '{} {} at position {} {}'.format(kind_singular, num, position, current_action)
+        return '{} {} at position ' \
+               '{} {}'.format(kind_singular, num, position, current_action)
 
     def can_move(self, delta, game_map):
-        """Returns bool. Right now, every unit can move the same distance, but that may change.
+        """Returns bool.
 
+        Right now, every unit can move the same distance, but that may change.
         delta must be of type Vector"""
         if delta.magnitude > 15:
             # Then delta is too big
@@ -64,8 +74,8 @@ class Army:
     pass
 
 
-# Should Group inherit from Army? Or should Group be more general than its docstring states and
-# then have Army inherit from Group?
+# Should Group inherit from Army? Or should Group be more general than its
+# docstring states and then have Army inherit from Group?
 class Group:
     """A collection of villagers."""
     pass
@@ -88,7 +98,8 @@ class Villager(Unit):
 
 
     def resource_iter_within_given_distance_of_me(self, distance, resource, player):
-        """Returns an iterator of instances of the given resource within the stated distance of self which
+        """Returns an iterator of instances of the given resource within
+        the stated distance of self which
         are also within 15 spots of an appropriate building.
 
         resource must be in [Wood, Food, Stone, Bronze, Iron]."""
@@ -111,11 +122,14 @@ class Villager(Unit):
                         break
 
     def can_collect_resource_now(self, resource, player):
-        """The word 'now' means this turn. The villager self must be within 6 spots of a resource instance
+        """The word 'now' means this turn.
+
+        The villager self must be within 6 spots of a resource instance
         that is also within 15 spots of an appropriate building.
 
         If the given resource is within 6 spots of the villager,
-        then the villager is allowed to instantly move to a nearby resource instance and collect
+        then the villager is allowed to instantly move to a nearby
+        resource instance and collect
         that resource this turn."""
         for obj in self.resource_iter_within_given_distance_of_me(6, resource, player):
             return True
@@ -125,12 +139,14 @@ class Villager(Unit):
         resource_instance = game_map(self.position)
         if not isinstance(resource_instance, resource):
             # This should never happen.
-            print('ERROR! The function collect_resource_here was called when with the argument ',
-                  "resource {},".format(resource),
-                  "but the object at the villager's position was {}".format(resource_instance))
+            print('ERROR! The function collect_resource_here was called '
+                  'when with the argument resource {},'.format(resource),
+                  "but the object at the villager's "
+                  "position was {}".format(resource_instance))
             return
 
-        amount_to_collect = min(player.collecting_capacity[resource], resource_instance.amount_left)
+        amount_to_collect = min(player.collecting_capacity[resource],
+                                resource_instance.amount_left)
         resource_instance.amount_left -= amount_to_collect
         player.resources[resource] += amount_to_collect
         if resource_instance.amount_left <= 0:
@@ -145,7 +161,8 @@ class Villager(Unit):
             return
 
         for distance in (1, 2, 4, 6):
-            ls = list(self.resource_iter_within_given_distance_of_me(distance, resource, player))
+            ls = list(self.resource_iter_within_given_distance_of_me(distance,
+                                                                     resource, player))
             if len(ls) > 0:
                 resource_instance = choice(ls)
                 delta = resource_instance.position - self.position
@@ -173,8 +190,9 @@ class Villager(Unit):
         player.resources[Food] += self.food_from_farming_per_turn
 
 
-# Unless pikemen are vastly weaker than Swordsman, I think that the cost difference between Pikeman
-# and Swordsman will result in many more Pikeman being built at the beginning of the game.
+# Unless pikemen are vastly weaker than Swordsman, I think that the cost
+# difference between Pikeman and Swordsman will result in many more
+# Pikeman being built at the beginning of the game.
 # I think that this is OK.
 # I intend Pikeman to only be somewhat weaker than Swordsman
 class Pikeman(Unit):
@@ -184,9 +202,11 @@ class Pikeman(Unit):
 
 
 class Swordsman(Unit):
-    # After reaching the Bronze Age, before being able to train Swordsman, two things must first be
-    # researched at the Blacksmith: (a) bronze shields, and (b) bronze swords.
-    # The first of these also benefits Pikeman (by upgrading their armor to bronze).
+    # After reaching the Bronze Age, before being able to train Swordsman,
+    # two things must first be researched at the Blacksmith:
+    # (a) bronze shields, and (b) bronze swords.
+    # The first of these also benefits Pikeman (by upgrading their
+    # armor to bronze).
     cost = Resources({Food: 40, Gold: 25, Bronze: 30})
     kind = 'swordsmen'
 
@@ -216,8 +236,8 @@ class Merchant(Unit):
     kind = 'merchants'
 
 
-unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights', 'batteringrams',
-              'catapults', 'trebuchets', 'merchants']
+unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights',
+              'batteringrams', 'catapults', 'trebuchets', 'merchants']
 
 # In case I change units or unit_kinds and forget to change the other:
 assert len(unit_kinds_singular) == len(unit_kinds)
