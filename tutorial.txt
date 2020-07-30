@@ -10,7 +10,66 @@ When you are done with your turn, type "finished"
 or "done"
 
 These are the possible first words in a command:
-{'build', 'select', 'move', 'print', 'set', 'collect',
-'chop', 'mine', 'research', 'help build', 'farm'}
-as well as the following help commands:
-{'help', 'commands'}
+'build', 'select', 'move', 'print', 'set', 'collect',
+'chop', 'mine', 'research', 'farm',
+'help', 'commands'
+
+Another command is 'help build'.
+
+
+The position of a unit is printed to the user by a tuple (i, j), representing
+that it is at row i and column j. So i is how far up or down it is, with a
+smaller value of i meaning it is further up on the map, and j
+represents how far left or right it is, with a smaller value of j
+meaning it is further to the left.
+
+To move a unit or units,
+first select it/them. For example, enter a command like this:
+"select villager 1"
+or
+"select villagers 1-3"
+
+Next, type something like this:
+"move w5"  (meaning this: move west 5, i.e. left 5)
+or
+"move e2 n6" (meaning: move east 2 and north 6, i.e. move left 2 and up 6)
+
+If a unit is at position (i, j), then (if it is selected) the command
+"move n3 e2" changes its position to (i-3, j+2).
+
+In one turn, units can move through a distance of 15. So for example, they
+can move north 10 and east 5 (via the command "move n10 e5") or they could
+move south 2 and east 13, etc. Later on, when siege weapons are implemented,
+those units will probably be able to move less per turn. Also, mounted troops
+(i.e. knights) will be able to move more per turn.
+
+To see what a unit or units is/are currently doing, first select it/them,
+and then type the following command:
+"print"
+
+To print the part of the map centered at (i, j), type this:
+"print map i j"
+
+To print what resources you currently have, type this:
+"print resources"
+
+Resources and buildings are shown on the map but (as of now) units are
+not printed on the map. Currently, any number of units may be in the
+same position. Also, a unit can be in any position, regardless of
+whether or not there are resources there or a building there.
+
+
+The position of a building is the position of its lower left
+(i.e. south west) corner.
+
+To build a building at position (i, j) type this (after selecting a
+villager or villagers):
+"build <name of building> i j"
+For example:
+"build lumbercamp 70 75"
+
+If a villager is not close enough to the where the building is to be
+built, then the above command will first cause the villager to move
+to the correction position, and then the villager will build the
+building.
+
