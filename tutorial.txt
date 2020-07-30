@@ -1,0 +1,16 @@
+Description of commands:
+
+This document is a brief description of the commands
+that a user can use in this game.
+
+Throughout this document, quotes are used, but when
+entering the commands, don't type the quote marks.
+
+When you are done with your turn, type "finished"
+or "done"
+
+These are the possible first words in a command:
+{'build', 'select', 'move', 'print', 'set', 'collect',
+'chop', 'mine', 'research', 'help build', 'farm'}
+as well as the following help commands:
+{'help', 'commands'}
