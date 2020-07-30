@@ -13,7 +13,8 @@ from buildings.resource_bldngs import Farm
 #  'build building':dict( villager:[building_to_be_built, position] for ...),
 #  'collect resource':dict( villager:resource_object_to_collect for ...),
 #  'farm':dict( villager: farm_instance for ...),
-#  'build unit':dict( building:[unit_to_be_built, number_of_units_of_that_type_to_build] for ... ),
+#  'build unit':dict( building:[unit_to_be_built, number_of_units_of_that_type_to_build]
+#                                                                                for ... ),
 #  'research':dict( building:thing_to_be_researched for ...),
 #  ...}
 # Eventually, player.commands should also contain keywords such as follows:
@@ -55,8 +56,9 @@ def insert_command(player, command):
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
-    """If unit is in player.commands['now'][command_type], then this function removes the unit from
-    that command. If unit is not in player.commands['now'][command_type], this function does nothing.
+    """If unit is in player.commands['now'][command_type], then this function removes
+    the unit from that command. If unit is not in player.commands['now'][command_type],
+    this function does nothing.
 
     command_type should be one of the following:
     'move', 'build building', 'collect resource'"""
@@ -131,7 +133,8 @@ def building_already_in_progress(player, building_class, position):
     for time in ('now', 'later'):
         for villager in player.commands[time]['build building']:
             ls = player.commands[time]['build building'][villager]
-            if ls[1] == position and ls[0].letter_abbreviation == building_class.letter_abbreviation:
+            if ls[1] == position and \
+                    ls[0].letter_abbreviation == building_class.letter_abbreviation:
                 return ls[0]
     return False
 
@@ -177,7 +180,7 @@ def collect_resource_command_is_properly_formatted(command):
     ls_of_villagers = command[2]
     if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
         return False
-    if not all((lambda u: isinstance(u, Villager) for u in ls_of_villagers)):
+    if not all(isinstance(u, Villager) for u in ls_of_villagers):
         return False
     return True
 
@@ -204,9 +207,9 @@ def insert_move_command(player, command):
         move_later = dict()
 
     # NOTE: THE FOLLOWING TWO LINES DO NOT WORK! The reason is that the player might make multiple
-    # move commands during a turn (each of which might move different units). What the following two
-    # lines would do would be to erase all previous move commands and replace them with the most
-    # current one.
+    # move commands during a turn (each of which might move different units). What the following
+    # two lines would do would be to erase all previous move commands and replace them with the
+    # most current one.
     # player.commands['now']['move'] = move_now
     # player.commands['later']['move'] = move_later
 
@@ -334,7 +337,7 @@ def insert_farm_command(player, command):
     ls_of_villagers = command[2]
     if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
         return
-    if not all((lambda u: isinstance(u, Villager) for u in ls_of_villagers)):
+    if not all(isinstance(u, Villager) for u in ls_of_villagers):
         return
 
     for villager in ls_of_villagers:
@@ -346,7 +349,8 @@ def insert_farm_command(player, command):
                 player.commands['now']['farm'][villager] = farm
                 farm.add_farmer(villager)
                 villager.farm_currently_farming = farm
-                villager.current_action = 'farming {}'.format(farm)  #TODO: DOes this print properly?
+                # TODO: Does the following print properly?
+                villager.current_action = 'farming {}'.format(farm)
             else:
                 print('The farm already has 2 villagers farming it.')
         else:
@@ -360,12 +364,14 @@ def insert_farm_command(player, command):
 ###################################################################################################
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
-    update_build_building_command(player)  # This must come before update_collect_resource_command(player)
+    # update_build_building_command must come before update_collect_resource_command(player)
+    update_build_building_command(player)
     update_move_commands(player)  # This MUST come before update_collect_resource_command(player)
     update_collect_resource_command(player)
     update_build_unit_commands(player)
     update_research_commands(player)
-    update_farm_commands(player) # This should come after update_build_building and update_move_commands
+    # The following should come after update_build_building and update_move_commands
+    update_farm_commands(player)
 
 
 # The reason why this function must come before update_collect_resource_command in the function
@@ -478,7 +484,7 @@ def update_farm_commands(player):
         not_building = villager not in player.commands['now']['build building']
         if not_moving and not_building:
             del player.commands['later']['farm'][villager]
-            delta =  farm.position - villager.position
+            delta = farm.position - villager.position
             if delta.magnitude < 2:
                 if farm.number_of_farmers < 2:
                     player.commands['now']['farm'][villager] = farm
@@ -494,8 +500,7 @@ def update_farm_commands(player):
                 # This also should never happen (assuming no coding errors elsewhere).
                 print(villager, 'cannot farm', farm, 'because the villager is not within',
                       'one spot of the farm. Regardless, the villager is removed from ',
-                          "player.commands['later']['farm']")
-
+                      "player.commands['later']['farm']")
 
 
 ###################################################################################################
