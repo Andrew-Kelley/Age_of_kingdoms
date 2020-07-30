@@ -6,6 +6,9 @@ that a user can use in this game.
 Throughout this document, quotes are used, but when
 entering the commands, don't type the quote marks.
 
+The commands are case insensitive. You can use capital or lower case
+as much as you want.
+
 When you are done with your turn, type "finished"
 or "done"
 
@@ -73,3 +76,85 @@ built, then the above command will first cause the villager to move
 to the correction position, and then the villager will build the
 building.
 
+Here are the building that can be built (and when):
+
+------In the stone age (and on)-------
+'house', 'lumbercamp', 'stonequarry', 'miningcamp',
+'barracks'
+not yet implemented: 'woodwall'
+
+------In the bronze age (and on)-------
+'farm', 'tower', 'archeryrange', 'siegeworks', 'blacksmith', 'market'
+not yet implemented: 'stonewall', 'wallfortification'
+TODO: Can towers or markets actually be built now?
+Regardless, even if they can, then can they do anything?
+
+------In the iron age-------
+'towncenter', 'castle', 'stable', 'library', 'wonder'
+TODO: Can each of these be built now?
+
+
+To advance to the bronze age, select the towncenter and type this:
+"research bronze age"
+(There is currently no requirement to being able to research it
+other than simply having the resources.)
+
+To advance to the iron age, is it only necessary to have the needed
+resources (and also have advanced to the bronze age)?
+
+
+A farm can be built by selecting one or two villagers and then building
+the farm as if it were any other building. Villagers who build the
+farm automatically start farming it when it is built.
+
+*Differences form the game Age of Empires:
+Up to two villagers can farm each farm, and a farm never runs out
+of food. In other words, you never have to rebuild it.
+
+When a villager farms, food is automatically added to the player's
+food resource. (Note that a farm can be built and used anywhere;
+there is no need to be within a certain distance of a towncenter.)
+
+At a blacksmith, do you have to research the bronze version of
+something before researching the iron version? (That's how I ought
+to implement it.)
+
+
+
+
+
+
+The villager self must be within 6 spots of a resource instance
+that is also within 15 spots of an appropriate building.
+
+If the given resource is within 6 spots of the villager,
+then the villager is allowed to instantly move to a nearby
+resource instance and collect
+that resource this turn.
+
+
+
+Note:
+There is an unfinished help system already built into the game.
+You can type this command:
+"print commands"
+
+
+Note:
+Suppose you have a current population of 18 and a population cap
+of 20.
+If you command a towncenter to build, say 4 villagers, then
+only 2 will be built (as it should be), and then it says you've
+reached the population cap (as it should be). But if you
+then build a house, the towncenter will not continue to build
+the other 2 extra villagers.
+
+Note:
+In the stone age, a towncenter can build 1 villager per turn, but
+in the bronze age, it can build 2 per turn, and in the iron age,
+it can build 3 per turn.
+
+Note:
+Each towncenter increases the population limit by 20, and
+each house increases it by 10. This goes up until the total
+population limit, which as of now, is set to be 300.
