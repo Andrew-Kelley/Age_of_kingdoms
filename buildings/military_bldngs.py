@@ -39,13 +39,14 @@ class Barracks(Building):
             new_unit = Swordsman(self.build_position, player)
             player.resources -= Swordsman.cost
 
-        # The following changes (possibly) the build position of new_unit
-        set_new_unit_build_position_if_far(self, new_unit, player, distance=6)
+        # If self.build_position is too far away, then the unit will not start
+        # its existence that far away.
+        set_position_of_unit_and_command_to_move_if_far(self, new_unit, player, distance=6)
 
         player.messages += 'New unit: {}\n'.format(new_unit)
 
 
-def set_new_unit_build_position_if_far(building, new_unit, player, distance):
+def set_position_of_unit_and_command_to_move_if_far(building, new_unit, player, distance):
     """If the new_unit also requires to be initialized with a move command, then
     this function handles that too."""
     delta = building.build_position - building.position
@@ -73,7 +74,7 @@ class ArcheryRange(Building):
             return
 
         new_archer = Archer(self.build_position, player)
-        set_new_unit_build_position_if_far(self, new_archer, player, distance=6)
+        set_position_of_unit_and_command_to_move_if_far(self, new_archer, player, distance=6)
         player.resources -= Archer.cost
         player.messages += 'New unit: {}\n'.format(new_archer)
 
