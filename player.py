@@ -1,5 +1,6 @@
 from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
+from buildings.other_bldngs import Wonder
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.defense_bldngs import Tower, Castle
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
@@ -17,7 +18,8 @@ units_ls = [Villager, Pikeman, Swordsman, Archer, Knight,
             BatteringRam, Catapult, Trebuchet, Merchant]
 buildings_ls = [TownCenter, House, Blacksmith, Library, Market,
                 Barracks, ArcheryRange, Stable, SiegeWorks, Tower,
-                Castle, Farm, LumberCamp, StoneQuarry, MiningCamp]
+                Castle, Farm, LumberCamp, StoneQuarry, MiningCamp,
+                Wonder]
 
 
 class Player:
