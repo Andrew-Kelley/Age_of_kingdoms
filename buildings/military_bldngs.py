@@ -3,6 +3,7 @@
 from buildings.bldng_class import Building
 from resources import Resources, Wood
 from units import Pikeman, Swordsman, Archer
+from research_classes import BronzeShields, BronzeSwords
 from command_handling import insert_move_later_command
 
 class Barracks(Building):
@@ -13,12 +14,14 @@ class Barracks(Building):
     time_to_build = 50
 
     def units_which_can_be_built(self, player):
-        ls = ['pikemen']
+        """Returns a list of unit kind strings."""
+        what_can_be_built = [Pikeman.kind]
         if player.age in ('bronze age', 'iron age'):
-            pass
-            # if <player has researched bronze shields and bronze swords>:
-            #     ls.append('swordsmen')
-        return ls
+            shields = BronzeShields
+            swords = BronzeSwords
+            if all(s.name in player.things_researched for s in (shields, swords)):
+                what_can_be_built.append(Swordsman.kind)
+        return what_can_be_built
 
     def build_unit(self, player, unit_type):
         if unit_type not in self.units_which_can_be_built(player):
@@ -27,8 +30,7 @@ class Barracks(Building):
             # insert_build_unit_command)
             return
 
-        unit_number = len(player.units[unit_type])
-        if unit_type == 'pikemen':
+        if unit_type == Pikeman.kind:
             # The unit's initial position may be changed later in this function
             new_unit = Pikeman(self.build_position, player)
             player.resources -= Pikeman.cost
