@@ -61,9 +61,9 @@ For defense:
 Cost: 300 wood, 200 stone
 Hit points:
 Can build: villagers (50 food)
-  * 2 per turn during Stone Age
-  * 4 per turn during Bronze Age
-  * 6 per turn during Iron Age
+  * 1 per turn during Stone Age
+  * 2 per turn during Bronze Age
+  * 3 per turn during Iron Age
 Can research: the next age
 Can garrison: 50 units
 Defensible: True (i.e. units garrisoned shoot arrows at attackers)
@@ -283,9 +283,9 @@ Next stage: Finished! - on August 18, 2018.
   (Be able to build a building at a specified location.)
 
 Next stage: (or the same stage as the previous one?) Finished! - on August 18.
- - build a lumber camp
- - build a stone quarry
- - build a mining camp
+ - build a lumbercamp
+ - build a stonequarry
+ - build a miningcamp
 
 Next stage: Finished! - on August 20, 2018.
  - build a barracks
@@ -307,18 +307,19 @@ Nest stage: Finished! - on August 23, 2018.
  - build a farm
  - enable villagers to gather food from farms
 
-Next stage:
+Next stage: Finished! (not sure when)
  - build a blacksmith, and enable the following things to be researched there:
-   * bronze tipped plow (Benefits villagers farming.)
+   * bronze tipped plows (Benefits villagers farming.)
    * bronze axes (benefits villagers chopping wood)
    * bronze picks (benefits villagers collecting stone, gold, bronze, or iron)
 
- Next stage:
+ Next stage: Finished! - (probably on August 6, 2020).
  - enable the following to be researched at the blacksmith:
    * bronze swords (necessary for swordsmen and knights)
    * bronze shields (necessary for swordsmen and knights)
    * bronze armor plates (helps swordsmen and pikemen necessary for knights)
  - after the appropriate research, train swordsmen
+
 
 At some point:
 Be able to print everything that can be built/researched from any given
@@ -326,5 +327,38 @@ building.
 
 Be able to print the current population.
 
-Delayed for now:
- - have more of the map discovered as villagers move around
+
+            ------------------------------------------------------
+            --------------- Major things left to do --------------
+            ------------------------------------------------------
+
+- Decide if an unlimited number of military units can occupy the same space or not.
+  If not, then I have to completely reimplement how they move.
+
+- Implement the ability for military units to attack:
+  * They ought to be able to attack (and destroy) units.
+  * They also ought to be able to attack (and destroy) buildings.
+  * Have the research done by the blacksmith actually affect how well
+    they can attack or handle other units attacking them.
+
+- Implement a random map generator.
+
+- It might be worthwhile to completely change how commands are represented in
+  the various files. (So this includes handle_input.py and command_handling_.py
+  but probably includes other files too.) Right now, a command handled by
+  the function insert_command in command_handling.py is simply a list. But
+  actually creating an object that represents a command would probably be
+  better.
+
+- Be able to save a game and then restart where I left off. (Similar
+  functionality might be really useful for testing purposes.)
+
+- Have even a rudimentary AI that can do very basic things:
+  * Build units
+  * Build buildings
+  * Collect resources
+  * Attack other players (once I implement attacking)
+
+
+- Perhaps enable people to play this game over some network.
+
