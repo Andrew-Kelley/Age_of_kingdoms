@@ -362,3 +362,20 @@ Be able to print the current population.
 
 - Perhaps enable people to play this game over some network.
 
+- Can I make it so that colors are printed? Perhaps all enemies'
+  units and buildings are one color, and all allies' units and buildings are a
+  different color? Also, units really ought to be printed on the map.
+  Another option would be to have each player have their own color.
+
+  How should I deal with villagers being in the same position as resources?
+  Can in that case, a background color be printed? Can resources normally
+  have some background color? Or maybe villagers can be underlined if
+  they're in the same position as a resource.
+
+  For an idea on color, see the file some_color.py here:
+  /Users/andrew/Documents/prgms/age_of_kingdoms/some_color.py
+
+  What I could do is add the appropriate escape sequences to a unit's or
+  building's abbreviation, when they are first created (i.e. in their
+  __init__ function).
+
