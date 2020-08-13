@@ -5,7 +5,7 @@ from game_map import Position
 from input_handling.help import help_on
 
 
-def print_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def print_something(player, inpt_as_ls, selected_obj=None):
     """returns []"""
     if selected_obj is None:
         selected_obj = []

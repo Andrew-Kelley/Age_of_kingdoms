@@ -68,7 +68,7 @@ for word in ('collect', 'chop', 'mine'):
 assert set(functions) == main_commands
 
 
-def input_next_command(player, selected_obj=None, selected_town_num=1):
+def input_next_command(player, selected_obj=None):
     if selected_obj is None:
         selected_obj = []
     while True:
@@ -111,8 +111,7 @@ def input_next_command(player, selected_obj=None, selected_town_num=1):
             print('Your command was not understood. Please enter another command.')
             continue
 
-        kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj,
-                  'selected_town_num': selected_town_num}
+        kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj}
 
         return functions[first_argument_of_command](**kwargs)
 

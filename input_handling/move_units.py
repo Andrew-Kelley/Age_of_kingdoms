@@ -1,7 +1,7 @@
 from input_handling.direction_vector import get_direction_vector
 from input_handling.select_an_object import selected_obj_to_ls_of_units, extract_selected_obj
 
-def move_unit_or_units(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
     """If selected_obj is not None, then it must be in the format of what the
     function select_something returns
 

@@ -230,7 +230,7 @@ def is_a_selected_obj(ls):
         return type(ls[2]) is int and 1 <= ls[2]
 
 
-def select_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def select_something(player, inpt_as_ls, selected_obj=None):
     """The point of this function is to return an output selected_obj
     returns [] or a list in one of the following formats:
 

@@ -3,7 +3,7 @@ from buildings.bldng_class import Building
 from research_classes import research_string_to_class, stone_age_research, bronze_age_research
 
 
-def research_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def research_something(player, inpt_as_ls, selected_obj=None):
     """To not return [], inpt_as_ls must be of the following format:
     ['research','word1', <optional> 'word2'], and
     'word1 word2' must be something that can be researched from the selected building.

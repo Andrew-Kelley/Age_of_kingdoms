@@ -6,7 +6,7 @@ from buildings.resource_bldngs import Farm
 from game_map import Position
 
 
-def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def collect_resource(player, inpt_as_ls, selected_obj=None):
     """In order to not return [], selected_obj must be of villager type.
 
     If not returning [], returns
@@ -52,7 +52,7 @@ def collect_resource(player, inpt_as_ls, selected_obj=None, selected_town_num=1)
     return ['collect resource', resource, ls_of_villagers]
 
 
-def farm(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def farm(player, inpt_as_ls, selected_obj=None):
     """In order to not return [], selected_obj must be of villager type and
     inpt_as_ls must be in the following format:
     ['farm', ..., 'num1', 'num2'], where there is an available farm at

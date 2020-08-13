@@ -13,11 +13,10 @@ unit_kinds = set(unit_kinds)
 units_plural = unit_kinds
 
 
-def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def build_something(player, inpt_as_ls, selected_obj=None):
     """In order to not return [], selected_obj must either be
     (a) a villager, or villagers, or group of villagers OR
     (b) a building (which builds units)"""
-    # selected_town_num will be used when building walls.
     if len(inpt_as_ls) < 2:
         return []
     if not selected_obj or not type(selected_obj) is list:
@@ -32,13 +31,13 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
         return []
 
     if selected_obj[0] == 'building':
-        return build_unit(player, inpt_as_ls, selected_obj, selected_town_num)
+        return build_unit(player, inpt_as_ls, selected_obj)
 
     elif selected_obj[0] in ('unit', 'group'):
         if not selected_obj_consists_of_villagers(selected_obj):
             return []
         else:
-            return build_building(player, inpt_as_ls, selected_obj, selected_town_num)
+            return build_building(player, inpt_as_ls, selected_obj)
     else:
         print('The selected object was neither a building nor a group of villagers.',
               'Command rejected.')
@@ -46,7 +45,7 @@ def build_something(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
 
 
 # The following is intended to only be used by the function build_something
-def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
+def build_unit(player, inpt_as_ls, selected_obj):
     """Returns a list.
 
     In order to not return [],
@@ -93,7 +92,7 @@ def build_unit(player, inpt_as_ls, selected_obj, selected_town_num=1):
 
 
 # The following is intended to only be used by the function build_something
-def build_building(player, inpt_as_ls, selected_obj, selected_town_num=1):
+def build_building(player, inpt_as_ls, selected_obj):
     """In order to not return [],  inpt_as_ls must be of the following format:
      ['build', <building name>, 'num1', 'num2']. Also, the player must first
      have advanced to the appropriate age for the building they wish to build.
@@ -179,7 +178,7 @@ def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
     return []
 
 
-def set_default_build_position(player, inpt_as_ls, selected_obj=None, selected_town_num=1):
+def set_default_build_position(player, inpt_as_ls, selected_obj=None):
     """selected_obj must be in the following format:
     ['building', building.kind, building_num]
 
