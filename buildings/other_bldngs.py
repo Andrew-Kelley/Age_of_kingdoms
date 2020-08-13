@@ -72,8 +72,15 @@ class TownCenter(Building):
         player.resources -= Villager.cost
 
     def num_villagers_can_build_in_turn(self, player):
-        key = {'stone age': 1, 'bronze age': 2, 'iron age': 3}
-        return key[player.age]
+        # At one point, I thought a towncenter shoulde be able to
+        # build a different number of villagers in the different ages,
+        # but now I'm thinking to keep it at 1 always. Maybe I'll
+        # change my mind later on.
+
+        # The following two lines is what it used to be:
+        # key = {'stone age': 1, 'bronze age': 2, 'iron age': 3}
+        # return key[player.age]
+        return 1
 
 
 class House(Building):
