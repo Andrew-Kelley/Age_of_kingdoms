@@ -6,6 +6,7 @@ from buildings.bldng_class import buildings
 building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood',
                         'archery', 'siege'}
 
+
 def selected_obj_to_ls_of_units(player, selected_obj):
     """selected_obj must be of the type that the fn select_something returns"""
     if selected_obj is None or len(selected_obj) < 2:
@@ -119,7 +120,7 @@ def extract_selected_obj(inpt_as_ls, player):
                 new_inpt_as_ls = [inpt_as_ls[0]]
                 new_inpt_as_ls.append(kind)
                 new_inpt_as_ls.extend(inpt_as_ls[3:])
-                inpt_as_ls  = new_inpt_as_ls
+                inpt_as_ls = new_inpt_as_ls
                 if len(inpt_as_ls) == 2:
                     inpt_as_ls.append('1')
             else:
@@ -128,7 +129,6 @@ def extract_selected_obj(inpt_as_ls, player):
         else:
             print("The second word in your command could not be understood.")
             return []
-
 
     if kind in unit_kinds:
         # inpt_as_ls[2] should be of the form 'num1-num2'
@@ -266,5 +266,5 @@ if __name__ == '__main__':
 
     p1 = Player(1, Position(80, 80), is_human=True)
     print(selected_obj_to_actual_building(p1, ['building', 'towncenter', 1]))
-    assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) == None
-    assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) == None
+    assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) is None
+    assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) is None
