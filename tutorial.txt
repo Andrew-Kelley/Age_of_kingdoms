@@ -1,5 +1,3 @@
-Description of commands:
-
 This document is a brief tutorial of this game.
 
 Throughout this document, quotes are used, but when
@@ -175,6 +173,17 @@ gold: miningcamp
 bronze: miningcamp
 iron: miningcamp
 
+
+After a farm has been built at position (i, j), if fewer
+than 2 villagers are farming it, then you can command a
+villager to farm it with the following command (after
+selecting the villager):
+"farm i j"
+So, for example, if the farm is at position (82, 71), then
+type this:
+"farm 82 71"
+
+
 -------------------------------------
 ---------TO BUILD A BUILDING---------
 
@@ -188,6 +197,10 @@ If a villager is not close enough to the where the building is to be
 built, then the above command will first cause the villager to move
 to the correction position, and then the villager will build the
 building.
+
+Note that to build a building in a certain place, there can't
+be any other building or resource (such as wood, stone, etc.)
+occupying any part of the space that the building would take up.
 
 A farm can be built (in the bronze age and on)
 by selecting one or two villagers and then building
@@ -209,6 +222,16 @@ As of yet, towers and markets don't do anything.
 ------In the iron age-------
 'towncenter', 'castle', 'stable', 'library', 'wonder'
 As of yet, castles, libraries, and wonders don't do anything.
+
+------------------------------------------
+---------TO HELP BUILD A BUILDING---------
+
+If a villager is currently building a building, then you can
+command other villagers to help build a building. For example,
+if a villager is building a barracks at position (70, 56),
+then you can select other villagers and then type this:
+"help build barracks 70 56"
+
 
 --------------------------------------------------------------
 ---------TO RESEARCH THINGS eg. ADVANCE TO BRONZE AGE---------
@@ -257,6 +280,7 @@ There is an unfinished help system already built into the game.
 You can type this command:
 "print commands"
 
+TODO: Have the in-game help system print parts of this tutorial.
 
 Note:
 Suppose you have a current population of 18 and a population cap
@@ -266,11 +290,6 @@ only 2 will be built (as it should be), and then it says you've
 reached the population cap (as it should be). But if you
 then build a house, the towncenter will not continue to build
 the other 2 extra villagers.
-
-Note:
-In the stone age, a towncenter can build 1 villager per turn, but
-in the bronze age, it can build 2 per turn, and in the iron age,
-it can build 3 per turn.
 
 Note:
 Each towncenter increases the population limit by 20, and
