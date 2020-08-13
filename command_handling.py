@@ -61,7 +61,7 @@ def remove_unit_from_command_if_there(player, unit, command_type):
     this function does nothing.
 
     command_type should be one of the following:
-    'move', 'build building', 'collect resource'"""
+    'move', 'build building', 'collect resource', 'farm' """
     if command_type not in ('move', 'build building', 'collect resource', 'farm'):
         return
     if unit in list(player.commands['now'][command_type]):
@@ -76,7 +76,7 @@ def remove_unit_from_command_if_there(player, unit, command_type):
 
 def insert_build_building_command(player, command):
     """command must be of the following format:
-    ['build building', ls_of_villagers, building_class, position]"""
+    ['build building', ls_of_villagers, building_class, position, is_help_bld_cmmd]"""
     if len(command) != 5:
         return
 
