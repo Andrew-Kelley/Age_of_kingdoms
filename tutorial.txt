@@ -1,7 +1,6 @@
 Description of commands:
 
-This document is a brief description of the commands
-that a user can use in this game.
+This document is a brief tutorial of this game.
 
 Throughout this document, quotes are used, but when
 entering the commands, don't type the quote marks.
@@ -20,17 +19,81 @@ These are the possible first words in a command:
 Another command is 'help build'.
 
 
+----------------------------------------------------
+---------THE POSITION OF A BUILDING OR UNIT---------
+
 The position of a unit is printed to the user by a tuple (i, j), representing
 that it is at row i and column j. So i is how far up or down it is, with a
-smaller value of i meaning it is further up on the map, and j
+smaller value of i meaning it is further up (i.e. north) on the map, and j
 represents how far left or right it is, with a smaller value of j
-meaning it is further to the left.
+meaning it is further to the left (i.e. further west).
 
-To move a unit or units,
-first select it/them. For example, enter a command like this:
+The position of a building is the position of its lower left
+(i.e. south west) corner.
+
+-------------------------
+---------THE MAP---------
+
+Resources and buildings are shown on the map but (as of now) units are
+not printed on the map. Currently, any number of units may be in the
+same position. Also, a unit can be in any position, regardless of
+whether or not there are resources there or a building there.
+
+A building shows up on the map immediately after a villager is
+commanded to build it.
+
+----------------------------------------------
+---------TO SELECT A UNIT OR BUILDING---------
+
+In order to move units or to build buildings, the units doing the action must
+first be selected. Similarly, to build units from a building or to research
+something from a building (or set its default build position), the
+building must first be selected.
+
+To select villager number 1, type this:
 "select villager 1"
-or
+
+To select villagers 1, 2 and 3, type this:
 "select villagers 1-3"
+
+Similarly to select pikemen 5 through 10 (if they have been built already)
+type this:
+"select pikemen 5-10"
+
+To select all villagers, if you have say 12 built, you can type this:
+"select villagers 1-20"
+You can also replace 20 with any number >= 12.
+
+To select towncenter number 1, type this:
+"select towncenter 1"
+or, if you can type this:
+"select towncenter"
+Any command of the form "select <building type>" without a building number,
+will select the building number 1 of that building type. (The same is
+true for selecting units.)
+
+----------------------------------------------------------------
+---------PRINTING UNITS, THE MAP, AND CURRENT RESOURCES---------
+
+To see what a unit or units is/are currently doing, first select it/them,
+and then type the following command:
+"print"
+
+To print the part of the map centered at (i, j), type this:
+"print map i j"
+
+Note that if you select a unit and then print the map, the unit is still
+selected. So the command "print" will do the same thing whether or not
+you print the map between selecting the unit and printing the unit.
+
+To print what resources you currently have, type this:
+"print resources"
+
+
+-------------------------------
+---------TO MOVE UNITS---------
+
+First select the unit or units to be moved.
 
 Next, type something like this:
 "move w5"  (meaning this: move west 5, i.e. left 5)
@@ -46,27 +109,77 @@ move south 2 and east 13, etc. Later on, when siege weapons are implemented,
 those units will probably be able to move less per turn. Also, mounted troops
 (i.e. knights) will be able to move more per turn.
 
-To see what a unit or units is/are currently doing, first select it/them,
-and then type the following command:
-"print"
 
-To print the part of the map centered at (i, j), type this:
-"print map i j"
+NOTE: Later on, it would be nice if you could simply command units
+to move to an actual map location. So the following type of command
+should be implemented: "move to 70 40".
 
-To print what resources you currently have, type this:
-"print resources"
+--------------------------------
+---------TO BUILD UNITS---------
 
-Resources and buildings are shown on the map but (as of now) units are
-not printed on the map. Currently, any number of units may be in the
-same position. Also, a unit can be in any position, regardless of
-whether or not there are resources there or a building there.
+First select the building that will be building the units.
+For example, type "select towncenter" and then type this:
+"build <num to be built>  <unit type>"
+e.g. "build 2 villagers"
+
+If you only want to build one, than you can also type "build villager"
+instead of "build 1 villager"; both commands work the same.
 
 
-The position of a building is the position of its lower left
-(i.e. south west) corner.
+---------------------------------------------------
+---------TO SET THE DEFAULT BUILD POSITION---------
 
-To build a building at position (i, j) type this (after selecting a
-villager or villagers):
+If you want units built from a building to go towards a certain
+location on the map once the units are built, then you can set
+the building's default build position as follows:
+
+First select the building. Then type this:
+"set default build position <a>  <b>" where you replace <a> and <b>
+with integers so that (<a>, <b>) is a position on the map.
+e.g.
+"set default build position 71 80"
+
+Actually, the word "default" is optional in the command. So this works too:
+"set build position 71 80"
+
+Whenever you set the build position from a towncenter, you are
+asked if you want villagers to start collecting a certain
+resource once they arrive at their build position. When prompted,
+simply type the name of the resource you want them to collect.
+
+--------------------------------------
+---------TO COLLECT RESOURCES---------
+
+First make sure that the villagers are close enough to the
+desired resource. (Currently, that means to be within a
+distance of 6 of the resource.) Then, once the villager(s)
+are selected type this:
+"chop wood"
+or "collect wood"
+or "collect stone"
+or "collect food"
+etc.
+
+If the given resource is within 6 spots of the villager,
+then the villager is allowed to instantly move to such
+a nearby resource and collect that resource this turn.
+
+Note that other than farms, to collect a resource, the
+resource must be within a distance of 15 of an appropriate
+building. A towncenter is appropriate for collecting any
+resource. For the other resources, the following buildings
+also work:
+wood: lumbercamp
+stone: stonequarry
+gold: miningcamp
+bronze: miningcamp
+iron: miningcamp
+
+-------------------------------------
+---------TO BUILD A BUILDING---------
+
+First select a villager or some villagers. Then,
+to build a building at position (i, j) type this:
 "build <name of building> i j"
 For example:
 "build lumbercamp 70 75"
@@ -76,38 +189,57 @@ built, then the above command will first cause the villager to move
 to the correction position, and then the villager will build the
 building.
 
-Here are the building that can be built (and when):
+A farm can be built (in the bronze age and on)
+by selecting one or two villagers and then building
+the farm as if it were any other building. Villagers who build the
+farm automatically start farming it when it is built.
+
+
+          The buildings that can be built (and when):
 
 ------In the stone age (and on)-------
-'house', 'lumbercamp', 'stonequarry', 'miningcamp',
-'barracks'
+'house', 'lumbercamp', 'stonequarry', 'miningcamp', 'barracks'
 not yet implemented: 'woodwall'
 
 ------In the bronze age (and on)-------
 'farm', 'tower', 'archeryrange', 'siegeworks', 'blacksmith', 'market'
 not yet implemented: 'stonewall', 'wallfortification'
-TODO: Can towers or markets actually be built now?
-Regardless, even if they can, then can they do anything?
+As of yet, towers and markets don't do anything.
 
 ------In the iron age-------
 'towncenter', 'castle', 'stable', 'library', 'wonder'
-TODO: Can each of these be built now?
+As of yet, castles, libraries, and wonders don't do anything.
 
+--------------------------------------------------------------
+---------TO RESEARCH THINGS eg. ADVANCE TO BRONZE AGE---------
 
 To advance to the bronze age, select the towncenter and type this:
 "research bronze age"
 (There is currently no requirement to being able to research it
 other than simply having the resources.)
 
-To advance to the iron age, is it only necessary to have the needed
-resources (and also have advanced to the bronze age)?
+To advance to the iron age, you only have to have the needed
+resources and have advanced to the bronze age.
+
+To research something at the blacksmith, (first build one then)
+select a blacksmith building and then type this:
+"research <name of thing to be researched>"
+eg.
+"research bronze tipped plows"
+or
+"research bronze picks"
 
 
-A farm can be built by selecting one or two villagers and then building
-the farm as if it were any other building. Villagers who build the
-farm automatically start farming it when it is built.
+TODO: CHECK if at a blacksmith, you have to research the bronze version
+of something before researching the iron version. (That's how I ought
+to implement it.)
 
-*Differences form the game Age of Empires:
+TODO: Add short descriptions of what different research gets you
+
+
+----------------------------------------------------------
+---------DIFFERENCES FROM THE GAME AGE OF EMPIRES---------
+
 Up to two villagers can farm each farm, and a farm never runs out
 of food. In other words, you never have to rebuild it.
 
@@ -115,23 +247,9 @@ When a villager farms, food is automatically added to the player's
 food resource. (Note that a farm can be built and used anywhere;
 there is no need to be within a certain distance of a towncenter.)
 
-At a blacksmith, do you have to research the bronze version of
-something before researching the iron version? (That's how I ought
-to implement it.)
 
-
-
-
-
-
-The villager self must be within 6 spots of a resource instance
-that is also within 15 spots of an appropriate building.
-
-If the given resource is within 6 spots of the villager,
-then the villager is allowed to instantly move to a nearby
-resource instance and collect
-that resource this turn.
-
+-----------------------------
+---------OTHER NOTES---------
 
 
 Note:
