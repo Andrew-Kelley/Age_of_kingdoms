@@ -322,10 +322,26 @@ Next stage: Finished! (not sure when)
 
 
 At some point:
+
 Be able to print everything that can be built/researched from any given
 building.
 
 Be able to print the current population.
+
+Be able to garrison units in buildings. (If a building is defensible,
+then they should be able to shoot arrows from it. Otherwise, they
+should be immune (or close to immune) from attacks by enemy units,
+and garrisoned units ought to recover health.)
+
+Maybe be able to research 'trained doulas' at the library (or
+the university, if I change it to that). One thought on what
+this could do is allow towncenters to build 2 villagers per
+turn instead of just 1.
+
+Another thought on a possible research item at the library is
+'basic medicine', which would make units garrisoned in buildings
+recover faster. (Right now, units can't yet loose their health
+and so also can't recover.)
 
 
             ------------------------------------------------------
