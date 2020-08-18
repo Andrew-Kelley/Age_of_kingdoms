@@ -27,7 +27,7 @@ class ResearchObject:
 ############################################## Researched at a TownCenter:
 class BronzeAge(ResearchObject):
     num_turns_to_completion = 8
-    cost = Resources({Food: 100, Wood: 500, Stone: 200})
+    cost = Resources({Wood: 700, Stone: 300})
     name = 'bronze age'
 
     def research_completed(self, player):
@@ -38,7 +38,7 @@ class BronzeAge(ResearchObject):
 
 class IronAge(ResearchObject):
     num_turns_to_completion = 8
-    cost = Resources({Food: 500, Gold: 300, Bronze: 300})
+    cost = Resources({Food: 600, Wood: 700, Gold: 300, Bronze: 300})
     name = 'iron age'
 
     def research_completed(self, player):

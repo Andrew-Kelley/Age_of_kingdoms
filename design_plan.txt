@@ -2,8 +2,8 @@
 
 ### Ages
  - Stone Age
- - Bronze Age (100 food, 500 wood, 200 stone)
- - Iron Age (500 food, 300 gold, 300 bronze)
+ - Bronze Age (700 wood, 300 stone)
+ - Iron Age (600 food, 700 wood, 300 gold, 300 bronze)
 
 ### Resources
  - food
