@@ -62,8 +62,8 @@ Cost: 300 wood, 200 stone
 Hit points:
 Can build: villagers (50 food)
   * 1 per turn during Stone Age
-  * 2 per turn during Bronze Age
-  * 3 per turn during Iron Age
+  * 1 per turn during Bronze Age
+  * 1 per turn during Iron Age
 Can research: the next age
 Can garrison: 50 units
 Defensible: True (i.e. units garrisoned shoot arrows at attackers)
@@ -165,7 +165,12 @@ Can research:
 #### Market
 (Bronze Age)
 Cost: 150 wood, 20 gold
-Have the ability trade one resource for another.
+Have the ability sell a resource or buy it.
+Maybe be able to give/trade resources with allies, or
+if I don't want a market to be necessary to give resources to allies,
+perhaps without a market there is a 10% or 15% cost added when giving a
+resource to an ally, but with a market there is no extra cost. Or perhaps,
+'free trade' is something that can be researched at a market.
 Can build: merchant (which travels between markets for trade)
 
 --------------------------------------------------------------------------------
@@ -342,6 +347,9 @@ Another thought on a possible research item at the library is
 'basic medicine', which would make units garrisoned in buildings
 recover faster. (Right now, units can't yet loose their health
 and so also can't recover.)
+
+Another thought on a possible research item at the library is
+something that would improve villagers' construction speed.
 
 
             ------------------------------------------------------
