@@ -50,7 +50,7 @@ class Building:
 
     def __str__(self):
         kind = self.kind.capitalize()
-        return '{} {}'.format(kind, self.number)
+        return '{} {} at position {}'.format(kind, self.number, self.position)
 
     def units_which_can_be_built(self, player):
         # This function needs to be re-implemented for every building which
