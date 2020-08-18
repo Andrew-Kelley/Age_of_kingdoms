@@ -56,7 +56,9 @@ class Building:
         # produces units.
         return []
 
-    def strings_ls_of_things_which_can_be_researched(self, player):
+    def things_which_can_be_researched(self, player):
+        """Returns a list of strings. This needs to be overridden by
+        subclasses."""
         return []
 
     def research(self, thing_to_be_researched, player):

@@ -30,7 +30,7 @@ class TownCenter(Building):
         # default initial action of a newly built villager.
         self.initial_resource_to_collect = None
 
-    def strings_ls_of_things_which_can_be_researched(self, player):
+    def things_which_can_be_researched(self, player):
         research_ls = []
         # Maybe have a 'wheelbarrow', which makes all villagers more efficient
         # at anything they do 'wheelbarrow' could be researched in the bronze age
@@ -72,10 +72,10 @@ class TownCenter(Building):
         player.resources -= Villager.cost
 
     def num_villagers_can_build_in_turn(self, player):
-        # At one point, I thought a towncenter shoulde be able to
+        # At one point, I thought a towncenter should be able to
         # build a different number of villagers in the different ages,
-        # but now I'm thinking to keep it at 1 always. Maybe I'll
-        # change my mind later on.
+        # but now I'm thinking to keep it at 1. Perhaps some research
+        # at the library/university will increase this number.
 
         # The following two lines is what it used to be:
         # key = {'stone age': 1, 'bronze age': 2, 'iron age': 3}
@@ -99,7 +99,7 @@ class Blacksmith(Building):
     kind = 'blacksmith'
     time_to_build = 50
 
-    def strings_ls_of_things_which_can_be_researched(self, player):
+    def things_which_can_be_researched(self, player):
         research_ls = []
         for research_obj in blacksmith_bronze_age_research:
             if research_obj.name not in player.things_researched:
