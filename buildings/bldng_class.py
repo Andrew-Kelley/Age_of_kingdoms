@@ -2,6 +2,7 @@
 
 from resources import Resources, Wood, Stone, Bronze
 from research_classes import BronzeAge, IronAge
+from colors import Color
 
 stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp',
                        'woodwall', 'barracks'}
@@ -144,10 +145,14 @@ class Building:
         i_init, j_init = position.value
         i_final = i_init - self.size[0]
         j_final = j_init + self.size[1]
+
+        # The Color.ENDC is so that the rest of the map isn't also printed in
+        # the color player.color
+        letter_in_color = player.color + self.letter_abbreviation + Color.ENDC
         for i in range(i_init, i_final, -1):
             for j in range(j_init, j_final):
-                game_map[i][j] = self.letter_abbreviation
-                # player.map[i][j] = self.letter_abbreviation
+                game_map[i][j] = letter_in_color
+                # player.map[i][j] = self.letter_in_color
 
     def build(self, villager_who_is_building, player):
         """This function is called multiple times to construct the building."""
@@ -160,3 +165,14 @@ class Building:
             player.buildings[self.kind].append(self)
             player.messages += 'New building: {}\n'.format(self)
 
+if __name__ == '__main__':
+    from player import Player
+    from game_map import Position
+
+
+    p1 = Player(1, Position(80, 80), is_human=True)
+
+    bldng = Building(1, Position(70, 80), p1)
+    print("Ok folks...printing...")
+    print(bldng.letter_abbreviation)
+    print("Finished printing.")
