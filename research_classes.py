@@ -64,6 +64,7 @@ class BronzeTippedSpears(ResearchObject):
     name = 'bronze tipped spears'
 
     def research_completed(self, player):
+        player.messages += 'You researched bronze tipped spears.\n'
         player.things_researched.add(self.name)
 
 # Required to build swordsmen or knights:
@@ -73,6 +74,7 @@ class BronzeSwords(ResearchObject):
     name = 'bronze swords'
 
     def research_completed(self, player):
+        player.messages += 'You researched bronze swords.\n'
         player.things_researched.add(self.name)
 
 
@@ -83,6 +85,7 @@ class BronzeArmorPlates(ResearchObject):
     name = 'bronze armor plates'
 
     def research_completed(self, player):
+        player.messages += 'You researched bronze armor plates.\n'
         player.things_researched.add(self.name)
 
 
@@ -93,6 +96,7 @@ class BronzeChainMailArmor(ResearchObject):
     name = 'bronze chainmail armor'
 
     def research_completed(self, player):
+        player.messages += 'You researched bronze chainmail armor.\n'
         player.things_researched.add(self.name)
 
 
@@ -103,6 +107,7 @@ class BronzeShields(ResearchObject):
     name = 'bronze shields'
 
     def research_completed(self, player):
+        player.messages += 'You researched bronze shields.\n'
         player.things_researched.add(self.name)
 
 
@@ -114,6 +119,7 @@ class BronzeAxes(ResearchObject):
 
     def research_completed(self, player):
         player.collecting_capacity[Wood] += 2
+        player.messages += 'You researched bronze axes.\n'
         player.things_researched.add(self.name)
 
 
@@ -129,6 +135,7 @@ class BronzePicks(ResearchObject):
         # Before the following line is run, we have that
         # player.collecting_capacity[Iron] == 2
         player.collecting_capacity[Iron] += 4
+        player.messages += 'You researched bronze picks.\n'
         player.things_researched.add(self.name)
 
 
@@ -141,6 +148,7 @@ class BronzeTippedPlows(ResearchObject):
     def research_completed(self, player):
         for villager in player.units['villagers'][1:]:
             villager.food_from_farming_per_turn = 12
+        player.messages += 'You researched bronze tipped plows.\n'
         player.things_researched.add(self.name)
 
 
@@ -161,6 +169,7 @@ class IronTippedSpears(ResearchObject):
     name = 'iron tipped spears'
 
     def research_completed(self, player):
+        player.messages += 'You researched iron tipped spears.\n'
         player.things_researched.add(self.name)
 
 
@@ -170,6 +179,7 @@ class IronSwords(ResearchObject):
     name = 'iron swords'
 
     def research_completed(self, player):
+        player.messages += 'You researched iron swords.\n'
         player.things_researched.add(self.name)
 
 
@@ -180,6 +190,7 @@ class IronArmorPlates(ResearchObject):
     name = 'iron armor plates'
 
     def research_completed(self, player):
+        player.messages += 'You researched iron armor plates.\n'
         player.things_researched.add(self.name)
 
 
@@ -190,6 +201,7 @@ class IronChainMailArmor(ResearchObject):
     name = 'iron chainmail armor'
 
     def research_completed(self, player):
+        player.messages += 'You researched iron chainmail armor.\n'
         player.things_researched.add(self.name)
 
 
@@ -200,6 +212,7 @@ class IronShields(ResearchObject):
     name = 'iron shields'
 
     def research_completed(self, player):
+        player.messages += 'You researched iron shields.\n'
         player.things_researched.add(self.name)
 
 
@@ -211,6 +224,7 @@ class IronAxes(ResearchObject):
 
     def research_completed(self, player):
         player.collecting_capacity[Wood] += 2
+        player.messages += 'You researched iron axes.\n'
         player.things_researched.add(self.name)
 
 
@@ -226,6 +240,7 @@ class IronPicks(ResearchObject):
         # Before the following line is run, we have that
         # player.collecting_capacity[Iron] == 2
         player.collecting_capacity[Iron] += 2
+        player.messages += 'You researched iron picks.\n'
         player.things_researched.add(self.name)
 
 
