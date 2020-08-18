@@ -4,11 +4,16 @@
 # a quite arbitrary list index, you'd instead use an (informative)
 # attribute name.
 
-# This change should probably work better when I add more
-# commands such as to attack or defend or to enter a building
-# (to garrison in it).
+# Doing this change would probably be helpful for when I add more
+# commands such as follows:
+# - attack a building or unit
+# - defend an area
+# - garrison units in buildings
+# - create a named "army" of military units
+# - create a named "group" of villagers
+# - sell or buy a particular resource at the market
 
-# Also, having commands structured in this will probably be
+# Also, having commands structured in this way will probably be
 # helpful when creating an AI.
 
 
