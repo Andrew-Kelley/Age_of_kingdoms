@@ -253,9 +253,8 @@ or
 "research bronze picks"
 
 
-TODO: CHECK if at a blacksmith, you have to research the bronze version
-of something before researching the iron version. (That's how I ought
-to implement it.)
+Note that you have to research the bronze version
+of something before researching the iron version.
 
 TODO: Add short descriptions of what different research gets you
 
