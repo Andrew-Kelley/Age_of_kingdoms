@@ -69,8 +69,12 @@ class Unit:
         self.position += delta
 
 
+# Should I inherit from SelectedUnits?
+# But being an army doesn't mean it is selected, so I don't think so.
 class Army:
     """A collection of some units for military purposes."""
+    # Needs to implement the method units (which is all units in this army)
+    # and that method, called units, needs to be a property
     pass
 
 
@@ -78,6 +82,8 @@ class Army:
 # docstring states and then have Army inherit from Group?
 class Group:
     """A collection of villagers."""
+    # Needs to implement the method units (which is all units in this army)
+    # and that method, called units, needs to be a property
     pass
 
 
@@ -95,7 +101,6 @@ class Villager(Unit):
             self.food_from_farming_per_turn = 12
         else:
             self.food_from_farming_per_turn = 10
-
 
     def resource_iter_within_given_distance_of_me(self, distance, resource, player):
         """Returns an iterator of instances of the given resource within
@@ -255,7 +260,6 @@ if __name__ == '__main__':
     from game_map import Position, Vector
     from player import Player
     from buildings.bldng_class import Building
-    from buildings.resource_bldngs import LumberCamp
 
     p1 = Player(1, Position(80, 80), is_human=True)
 
