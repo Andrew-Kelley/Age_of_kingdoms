@@ -16,6 +16,10 @@ class SelectedObject:
         return all(isinstance(u, Villager) for u in self.units)
 
 
+# NOTE: When I make Army and Group classes, they ought to inherit from
+# SelectedObject
+
+
 class SelectedUnits(SelectedObject):
     __units = []
 
@@ -34,7 +38,7 @@ class SelectedUnits(SelectedObject):
         return len(self.__units)
 
     @property
-    def non_empty(self):
+    def is_non_empty(self):
         return self.num_units_selected > 0
 
 
@@ -51,6 +55,7 @@ class SelectedBuilding(SelectedObject):
         return self.__building
 
 
+# TODO: Remove this function.
 def selected_obj_to_ls_of_units(player, selected_obj):
     """selected_obj must be of the type that the fn select_something returns"""
     if selected_obj is None or len(selected_obj) < 2:
@@ -86,6 +91,7 @@ def selected_obj_to_ls_of_units(player, selected_obj):
     return []
 
 
+# TODO: Remove this function.
 def selected_obj_to_actual_building(player, selected_obj):
     """In order to not return None, selected_obj must be in the following format:
     ['building', building.kind, building_num]"""
@@ -134,7 +140,7 @@ def formatted_input_to_SelectedBuilding_obj(formatted_input, player):
     return SelectedBuilding(player.buildings[building_kind][num])
 
 
-
+# TODO: Replace this function with calls to SelectedObject.consists_of_villagers
 def selected_obj_consists_of_villagers(selected_obj):
     if not selected_obj:
         print('You must first select some villager(s) before giving a command to ',
@@ -217,9 +223,9 @@ def formatted_input_to_SelectedUnits_obj(formatted_input, player):
 
 
 def extract_selected_obj(inpt_as_ls, player):
-    """The return format is the same as the fn select_something"""
+    """Returns None or an instance of SelectedObject (or a subclass of it)"""
     if len(inpt_as_ls) < 3:
-        return []
+        return
 
     kind = inpt_as_ls[1]
     not_units = kind not in unit_kinds_singular and \
@@ -238,10 +244,10 @@ def extract_selected_obj(inpt_as_ls, player):
                     inpt_as_ls.append('1')
             else:
                 print("The second word in your command could not be understood.")
-                return []
+                return
         else:
             print("The second word in your command could not be understood.")
-            return []
+            return
 
     if kind in unit_kinds:
         # inpt_as_ls[2] should be of the form 'num1-num2'
@@ -251,46 +257,54 @@ def extract_selected_obj(inpt_as_ls, player):
         except ValueError:
             print('The third part of your command could not be understood.', end=' ')
             print("A number range (such as 1-4) was expected.")
-            return []
+            return
 
         # In case num_range is a list of a single number...
-        a = num_range[0]
-        b = num_range[-1]
-        if a < 1 or b < a:
+        start = num_range[0]
+        stop = num_range[-1]
+        if start < 1 or stop < start:
             print('No units were selected. Try a different number range.')
-            return []
+            return
 
-        if not unit_exists(kind, a, player):
-            return []
+        if not unit_exists(kind, start, player):
+            return
 
-        selected_obj = ['unit', kind, a, b]
-        return selected_obj
+        inpt = ['unit', kind, [(start, stop)]]
+        return formatted_input_to_SelectedUnits_obj(inpt, player)
     else:
         # Now, inpt_as_ls[2] should be of the form 'num'
         try:
             num = int(inpt_as_ls[2])
         except ValueError:
-            return []
+            print("Nothing was selected.")
+            return
 
     if num < 1:
         print('No unit selected since units are numbered beginning with 1.')
-        return []
+        return
 
     if kind in unit_kinds_singular:
         kind = unit_singular_to_plural[kind]
         if not unit_exists(kind, num, player):
-            return []
-        selected_obj = ['unit', kind, num, num]
+            return
+        inpt = ['unit', kind, [(num, num)]]
+        selected_obj = formatted_input_to_SelectedUnits_obj(inpt)
     elif kind in {'group', 'army'}:
-        selected_obj = [kind, num]
+        # selected_obj = [kind, num]
+        # TODO: implement this once I implement the Army And Group classes
+        print("The Army and Group classes have not yet been implemented.")
+        selected_obj = None
     elif kind in buildings:
-        selected_obj = ['building', kind, num]
+        inpt = ['building', kind, num]
+        selected_obj = formatted_input_to_SelectedBuilding_obj(inpt)
     elif kind == 'town':
-        selected_obj = ['town', num]
+        # selected_obj = ['town', num]
+        print("Selecting a town has not yet been implemented.")
+        selected_obj = None
     else:
         # Due to the second conditional statement in this function, this code
         # should never be reached.
-        selected_obj = []
+        selected_obj = None
 
     return selected_obj
 
@@ -308,7 +322,7 @@ def unit_exists(unit_kind, unit_number, player):
 
     return True
 
-
+# TODO: Replace calls to this with isinstance(obj, SelectedObject)
 def is_a_selected_obj(ls):
     """Returns True if ls is a non-empty list of the format of
     what select_something returns"""
@@ -343,6 +357,7 @@ def is_a_selected_obj(ls):
         return type(ls[2]) is int and 1 <= ls[2]
 
 
+# TODO: check that this function is used properly
 def select_something(player, inpt_as_ls, selected_obj=None):
     """The point of this function is to return an output selected_obj
     returns [] or a list in one of the following formats:
@@ -363,7 +378,7 @@ def select_something(player, inpt_as_ls, selected_obj=None):
         # Then the player has specified the building or unit number(s)
         return extract_selected_obj(inpt_as_ls, player)
     elif len(inpt_as_ls) < 2:
-        return []
+        return
     else:
         # Current Usage: In this case, there is an implied '1' as the building
         # or unit number. Alternate usage (not used): It would make sense that
