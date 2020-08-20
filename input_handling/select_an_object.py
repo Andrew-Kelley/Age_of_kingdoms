@@ -263,8 +263,88 @@ def select_something(player, inpt_as_ls, selected_obj=None):
 if __name__ == '__main__':
     from player import Player
     from game_map import Position
+    from buildings.other_bldngs import TownCenter
+    from units import Villager
+
 
     p1 = Player(1, Position(80, 80), is_human=True)
-    print(selected_obj_to_actual_building(p1, ['building', 'towncenter', 1]))
+    towncenter = selected_obj_to_actual_building(p1, ['building', 'towncenter', 1])
+    assert isinstance(towncenter, TownCenter)
+    print(towncenter)
+
+    selected_obj = select_something(p1, ['select', 'towncenter'])
+    # print(selected_obj)
+    towncenter = selected_obj_to_actual_building(p1, selected_obj)
+    assert isinstance(towncenter, TownCenter)
+    print(towncenter)
+
+    selected_obj = select_something(p1, ['select', 'towncenter', 1])
+    # print(selected_obj)
+    towncenter = selected_obj_to_actual_building(p1, selected_obj)
+    assert isinstance(towncenter, TownCenter)
+    print(towncenter)
+
+    for num in range(2, 5):
+        selected_obj = select_something(p1, ['select', 'towncenter', num])
+        # print(selected_obj)
+        towncenter = selected_obj_to_actual_building(p1, selected_obj)
+        assert towncenter is None
+        # print(towncenter)
+
+
+    s_obj = select_something(p1, ['select', 'villager'])
+    assert selected_obj_consists_of_villagers(s_obj)
+    villager_ls = selected_obj_to_ls_of_units(p1, s_obj)
+    for v in villager_ls:
+        print(v)
+        assert isinstance(v, Villager)
+
+    s_obj = select_something(p1, ['select', 'villager', '2'])
+    assert selected_obj_consists_of_villagers(s_obj)
+    villager_ls = selected_obj_to_ls_of_units(p1, s_obj)
+    for v in villager_ls:
+        print(v)
+        assert isinstance(v, Villager)
+
+    s_obj = select_something(p1, ['select', 'villager', '3'])
+    assert selected_obj_consists_of_villagers(s_obj)
+    villager_ls = selected_obj_to_ls_of_units(p1, s_obj)
+    for v in villager_ls:
+        print(v)
+        assert isinstance(v, Villager)
+
+
+    assert not select_something(p1, ['select', 'building'])
+    assert not select_something(p1, ['select', 'blah'])
+    assert not select_something(p1, ['select', 'villagar'])
+
+    # the following two lines don't print anything
+    assert not select_something(p1, ['select', 'towncenter', 'n'])
+    assert not select_something(p1, ['select'])
+
+    assert not select_something(p1, ['select', 'villager', '4'])
+    assert not select_something(p1, ['select', 'villagers', '10-20'])
+    assert not select_something(p1, ['select', 'pikeman', '40'])
+
+    # the following line doesn't print anything
     assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) is None
+
     assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) is None
+
+    # The above code prints the following:
+    # Towncenter 1 at position (80, 80)
+    # Towncenter 1 at position (80, 80)
+    # Towncenter 1 at position (80, 80)
+    # There is no towncenter with number 2
+    # There is no towncenter with number 3
+    # There is no towncenter with number 4
+    # Villager 1 at position (78, 78) doing nothing
+    # Villager 2 at position (82, 78) doing nothing
+    # Villager 3 at position (82, 82) doing nothing
+    # The second word in your command could not be understood.
+    # The second word in your command could not be understood.
+    # The second word in your command could not be understood.
+    # There is no unit with that/those number(s).
+    # There is no unit with that/those number(s).
+    # There is no unit with that/those number(s).
+    # There is no barracks with number 1
