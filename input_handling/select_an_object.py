@@ -9,6 +9,7 @@ building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood',
 
 
 class SelectedObject:
+    @property
     def consists_of_villagers(self):
         if not isinstance(self, SelectedUnits):
             return False
@@ -21,7 +22,9 @@ class SelectedObject:
 
 
 class SelectedUnits(SelectedObject):
-    __units = []
+
+    def __init__(self):
+        self.__units = []
 
     def add_unit(self, unit):
         if not isinstance(unit, Unit):
@@ -288,7 +291,7 @@ def extract_selected_obj(inpt_as_ls, player):
         if not unit_exists(kind, num, player):
             return
         inpt = ['unit', kind, [(num, num)]]
-        selected_obj = formatted_input_to_SelectedUnits_obj(inpt)
+        selected_obj = formatted_input_to_SelectedUnits_obj(inpt, player)
     elif kind in {'group', 'army'}:
         # selected_obj = [kind, num]
         # TODO: implement this once I implement the Army And Group classes
@@ -296,7 +299,7 @@ def extract_selected_obj(inpt_as_ls, player):
         selected_obj = None
     elif kind in buildings:
         inpt = ['building', kind, num]
-        selected_obj = formatted_input_to_SelectedBuilding_obj(inpt)
+        selected_obj = formatted_input_to_SelectedBuilding_obj(inpt, player)
     elif kind == 'town':
         # selected_obj = ['town', num]
         print("Selecting a town has not yet been implemented.")
@@ -402,42 +405,42 @@ if __name__ == '__main__':
 
     selected_obj = select_something(p1, ['select', 'towncenter'])
     # print(selected_obj)
-    towncenter = selected_obj_to_actual_building(p1, selected_obj)
+    towncenter = selected_obj.building
     assert isinstance(towncenter, TownCenter)
     print(towncenter)
 
     selected_obj = select_something(p1, ['select', 'towncenter', 1])
     # print(selected_obj)
-    towncenter = selected_obj_to_actual_building(p1, selected_obj)
+    towncenter = selected_obj.building
     assert isinstance(towncenter, TownCenter)
     print(towncenter)
 
     for num in range(2, 5):
         selected_obj = select_something(p1, ['select', 'towncenter', num])
         # print(selected_obj)
-        towncenter = selected_obj_to_actual_building(p1, selected_obj)
-        assert towncenter is None
+        assert selected_obj is None
         # print(towncenter)
 
 
     s_obj = select_something(p1, ['select', 'villager'])
-    assert selected_obj_consists_of_villagers(s_obj)
-    villager_ls = selected_obj_to_ls_of_units(p1, s_obj)
-    for v in villager_ls:
+    assert s_obj.consists_of_villagers
+    villagers = s_obj.units
+    for v in villagers:
         print(v)
         assert isinstance(v, Villager)
 
     s_obj = select_something(p1, ['select', 'villager', '2'])
-    assert selected_obj_consists_of_villagers(s_obj)
-    villager_ls = selected_obj_to_ls_of_units(p1, s_obj)
-    for v in villager_ls:
+    assert s_obj.consists_of_villagers
+    villagers = s_obj.units
+    for v in villagers:
         print(v)
         assert isinstance(v, Villager)
 
+
     s_obj = select_something(p1, ['select', 'villager', '3'])
-    assert selected_obj_consists_of_villagers(s_obj)
-    villager_ls = selected_obj_to_ls_of_units(p1, s_obj)
-    for v in villager_ls:
+    assert s_obj.consists_of_villagers
+    villagers = s_obj.units
+    for v in villagers:
         print(v)
         assert isinstance(v, Villager)
 
@@ -472,6 +475,7 @@ if __name__ == '__main__':
     # The second word in your command could not be understood.
     # The second word in your command could not be understood.
     # The second word in your command could not be understood.
+    # Nothing was selected.
     # There is no unit with that/those number(s).
     # There is no unit with that/those number(s).
     # There is no unit with that/those number(s).
