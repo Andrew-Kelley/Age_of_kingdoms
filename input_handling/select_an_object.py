@@ -41,8 +41,8 @@ class SelectedUnits(SelectedObject):
         return len(self.__units)
 
     @property
-    def is_non_empty(self):
-        return self.num_units_selected > 0
+    def is_empty(self):
+        return self.num_units_selected == 0
 
 
 class SelectedBuilding(SelectedObject):

@@ -1,9 +1,10 @@
 from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
+from units import Group, Army
 from game_map import Position, game_map
 from resources import resource_kind_to_class
-from input_handling.select_an_object import selected_obj_to_actual_building
-from input_handling.select_an_object import selected_obj_consists_of_villagers
-from input_handling.select_an_object import selected_obj_to_ls_of_units, building_first_words
+from input_handling.select_an_object import SelectedObject, SelectedBuilding
+from input_handling.select_an_object import SelectedUnits
+from input_handling.select_an_object import building_first_words
 from input_handling.print import str_to_int
 from buildings.bldng_class import stone_age_buildings, bronze_age_buildings, buildings
 from buildings.other_bldngs import building_kind_to_class
@@ -19,7 +20,7 @@ def build_something(player, inpt_as_ls, selected_obj=None):
     (b) a building (which builds units)"""
     if len(inpt_as_ls) < 2:
         return []
-    if not selected_obj or not type(selected_obj) is list:
+    if not isinstance(selected_obj, SelectedObject):
         print('Command rejected:')
         print('You must first select an object before building something.')
         print('For building a building, you must first select which villagers '
@@ -27,17 +28,19 @@ def build_something(player, inpt_as_ls, selected_obj=None):
         print('To build units, you must first select which building to build '
               'them from.')
         return []
-    if len(selected_obj) < 2:
-        return []
 
-    if selected_obj[0] == 'building':
+
+    if isinstance(selected_obj, SelectedBuilding):
         return build_unit(player, inpt_as_ls, selected_obj)
 
-    elif selected_obj[0] in ('unit', 'group'):
-        if not selected_obj_consists_of_villagers(selected_obj):
+    elif isinstance(selected_obj, SelectedUnits):
+        if not selected_obj.consists_of_villagers:
             return []
         else:
             return build_building(player, inpt_as_ls, selected_obj)
+    elif isinstance(selected_obj, Army) or isinstance(selected_obj, Group):
+        #Todo: implement this
+        pass
     else:
         print('The selected object was neither a building nor a group of villagers.',
               'Command rejected.')
@@ -57,12 +60,11 @@ def build_unit(player, inpt_as_ls, selected_obj):
     If not returning [], this function returns a list of the following format:
     ['build unit', <building>, <unit type>, num_to_be_built], where
     num_to_be_built >= 1"""
-    if not selected_obj or not type(selected_obj) is list:
-        return []
-    if len(selected_obj) < 2:
+    if not isinstance(selected_obj, SelectedBuilding):
         return []
 
-    building = selected_obj_to_actual_building(player, selected_obj)
+
+    building = selected_obj.building
     if not building:
         return []
 
@@ -109,10 +111,18 @@ def build_building(player, inpt_as_ls, selected_obj):
     else:
         this_is_a_help_build_command = False
 
-    ls_of_villagers = selected_obj_to_ls_of_units(player, selected_obj)
-    if len(ls_of_villagers) < 1:
+    if not selected_obj.consists_of_villagers:
         print('No villagers were selected that could build the building.')
         return []
+
+    if selected_obj.is_empty:
+        print('No villagers were selected that could build the building.')
+        return []
+
+    # TODO: change the following line by changing whatever function
+    # uses the output of this function. i.e. change the next function
+    # to use an iterator instead of a list of villagers.
+    ls_of_villagers = list(selected_obj.units)
 
     building_kind = inpt_as_ls[1]
     if building_kind not in buildings:
@@ -179,13 +189,11 @@ def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
 
 
 def set_default_build_position(player, inpt_as_ls, selected_obj=None):
-    """selected_obj must be in the following format:
-    ['building', building.kind, building_num]
-
+    """selected_obj must be a building that can build units
     Returns []"""
-    if not selected_obj:
+    if not selected_obj or not isinstance(selected_obj, SelectedBuilding):
         return []
-    building = selected_obj_to_actual_building(player, selected_obj)
+    building = selected_obj.building
     if not building:
         return []
 

@@ -4,6 +4,7 @@
 
 from input_handling.handle_input import input_next_command
 from input_handling.select_an_object import is_a_selected_obj
+from input_handling.select_an_object import SelectedObject
 from command_handling import insert_command, update_now_and_later_commands
 from command_handling import implement_commands_if_possible
 
@@ -52,14 +53,14 @@ while True:
         if player.messages:
             print(player.messages)
             player.messages = ''
-        selected_obj = []
+        selected_obj = None
         update_now_and_later_commands(player)
 
         if not player.is_human:
             continue  # Even a rudimentary AI will have to wait quite some time.
         while True:
             command = input_next_command(player, selected_obj)
-            if is_a_selected_obj(command):
+            if isinstance(command, SelectedObject):
                 selected_obj = command
                 continue
             if command == ['end of turn']:

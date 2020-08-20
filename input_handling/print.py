@@ -1,26 +1,24 @@
 from game_map import game_map
-from input_handling.select_an_object import selected_obj_to_actual_building
-from input_handling.select_an_object import selected_obj_to_ls_of_units, extract_selected_obj
+from input_handling.select_an_object import SelectedBuilding
+from input_handling.select_an_object import extract_selected_obj
 from game_map import Position
 from input_handling.help import help_on
 
 
 def print_something(player, inpt_as_ls, selected_obj=None):
     """returns []"""
-    if selected_obj is None:
-        selected_obj = []
 
     def print_selected_obj(player, selected_obj):
-        if len(selected_obj) == 0:
+        if not selected_obj:
             print('There is nothing to print.')
             return []
-        if selected_obj[0] == 'building':
-            building = selected_obj_to_actual_building(player, selected_obj)
+        if isinstance(selected_obj, SelectedBuilding): #selected_obj[0] == 'building':
+            building = selected_obj.building
             print(building)
             return []
         else:
-            ls_of_units = selected_obj_to_ls_of_units(player, selected_obj)
-            for unit in ls_of_units:
+            #Todo Check that this works for Army and Group
+            for unit in selected_obj.units:
                 print(unit)
             return []
 
@@ -30,11 +28,14 @@ def print_something(player, inpt_as_ls, selected_obj=None):
     elif len(inpt_as_ls) == 2:
         if inpt_as_ls[1] == 'commands':
             # Then inpt_as_ls == ['print', 'commands']
-            help_on(selected_obj) # WRONG! This is not what I mean.
+            help_on(selected_obj)
             return []
         elif inpt_as_ls[1] == 'resources':
             print(player.resources)
             return []
+        #TODO: add the following lines:
+        # elif inpt_as_ls[1] == 'population':
+        #     then print the current population and the current pop limit.
         else:
             inpt_as_ls.append('1')
 

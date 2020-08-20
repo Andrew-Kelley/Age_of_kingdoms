@@ -69,8 +69,6 @@ assert set(functions) == main_commands
 
 
 def input_next_command(player, selected_obj=None):
-    if selected_obj is None:
-        selected_obj = []
     while True:
         inpt = input('Enter a command: ').lower()
         if inpt == '':

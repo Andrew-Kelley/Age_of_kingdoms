@@ -1,14 +1,14 @@
 from input_handling.direction_vector import get_direction_vector
-from input_handling.select_an_object import selected_obj_to_ls_of_units, extract_selected_obj
+from input_handling.select_an_object import SelectedUnits, extract_selected_obj
 
 def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
-    """If selected_obj is not None, then it must be in the format of what the
-    function select_something returns
+    """If selected_obj must be None or an instance of SelectedObject
 
     In order for this function to not return [], inpt_as_ls must be of the following
     type:
     (In what follows, each list may end with one or two entries of <direction string>)
 
+    # WHAT DID I MEAN BY THE FOLLOWING LINE?
     # In the first two cases, selected_obj must be of the type that select_something
     returns ['move', <direction string>], or
 
@@ -31,20 +31,25 @@ def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
 
     if len(inpt_as_ls) in {2, 3}:
         # Then the player is trying to move selected_obj
-        if selected_obj is None or len(selected_obj) < 2:
+
+        if not isinstance(selected_obj, SelectedUnits):
+            # TODO: edit this once I add the Army and Group class?
+            return []
+        if selected_obj.is_empty:
             return []
 
-        ls_of_units = selected_obj_to_ls_of_units(player, selected_obj)
-        if len(ls_of_units) == 0:
-            return []
+        # Todo: Change the following so that I can use an iterator instead.
+        ls_of_units = list(selected_obj.units)
         return ['move', ls_of_units, delta]
 
     else:  # len(inpt_as_ls) > 3
         selected_obj = extract_selected_obj(inpt_as_ls, player)
-        if selected_obj == []:
+        if not isinstance(selected_obj, SelectedUnits):
+            # TODO: edit this once I add the Army and Group class?
             return []
 
-        ls_of_units = selected_obj_to_ls_of_units(player, selected_obj)
-        if len(ls_of_units) == 0:
+        if selected_obj.is_empty:
             return []
+        # Todo: Change the following so that I can use an iterator instead.
+        ls_of_units = list(selected_obj.units)
         return ['move', ls_of_units, delta]

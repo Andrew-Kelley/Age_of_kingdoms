@@ -1,4 +1,4 @@
-from input_handling.select_an_object import selected_obj_to_actual_building
+from input_handling.select_an_object import SelectedBuilding
 from buildings.bldng_class import Building
 from research_classes import research_string_to_class, stone_age_research, bronze_age_research
 
@@ -12,11 +12,11 @@ def research_something(player, inpt_as_ls, selected_obj=None):
     ['research', building, thing_to_be_researched], where thing_to_be_researched is a
     subclass of ResearchObject and building is a Building instance that is not currently
     researching anything."""
-    if not selected_obj:
+    if not isinstance(selected_obj, SelectedBuilding):
         print('You must first select a building to research something.')
         return []
 
-    building = selected_obj_to_actual_building(player, selected_obj)
+    building = selected_obj.building
     if not isinstance(building, Building):
         print('The selected object was not a building.')
         print('You must first select a building to research something.')
