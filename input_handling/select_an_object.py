@@ -147,6 +147,46 @@ def selected_obj_consists_of_villagers(selected_obj):
     return True
 
 
+def formatted_input_to_SelectedUnits_obj(formatted_input, player):
+    """Returns None or an instance of SelectedUnits
+
+    formatted_input should be of the following form:
+    ['unit', unit_kind, [(start1, stop1), (start2, stop2),...]]
+    where startN <= stopN for N = 1, 2, 3, ...
+
+    The intention of what units represented by formatted_input is all the
+    units of type unit_kind of player with numbers any any of the ranges
+    start1 to stop1 (inclusive), start2 to stop2, etc.
+    """
+    if not type(formatted_input) is list:
+        return
+    if len(formatted_input) != 3:
+        return
+    unit_kind = formatted_input[1]
+    if unit_kind not in unit_kinds:
+        return
+    ranges = formatted_input[2]
+    if not type(ranges) is list or len(ranges) == 0:
+        return
+    for rng in ranges:
+        if len(rng) != 2 or rng[0] > rng[1]:
+            return
+
+    selected_units = SelectedUnits()
+
+    for rng in ranges:
+        start = rng[0]
+        stop = rng[1]
+        for unit in player.units[unit_kind][start:stop + 1]:
+            if unit.is_alive:
+                selected_units.add_unit(unit)
+        return selected_units
+
+
+
+
+
+
 def extract_selected_obj(inpt_as_ls, player):
     """The return format is the same as the fn select_something"""
     if len(inpt_as_ls) < 3:
