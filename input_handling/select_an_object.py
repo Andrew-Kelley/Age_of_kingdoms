@@ -105,6 +105,36 @@ def selected_obj_to_actual_building(player, selected_obj):
     return player.buildings[kind][building_num]
 
 
+def formatted_input_to_SelectedBuilding_obj(formatted_input, player):
+    """Returns None or an instance of SelectedBuilding
+
+    formatted_input should be of the following form:
+    ['building', building_kind, building_num]
+
+    This function is intended to only be used inside the function
+    extract_selected_obj
+    """
+    if not type(formatted_input) is list:
+        return
+    if len(formatted_input) != 3:
+        return
+    if formatted_input[0] != 'building':
+        return
+    building_kind = formatted_input[1]
+    if building_kind not in buildings:
+        return
+    num = formatted_input[2]
+    if not type(num) is int:
+        return
+
+    if not 1 <= num < len(player.buildings[building_kind]):
+        print('There is no {} with number {}'.format(building_kind, num))
+        return
+
+    return SelectedBuilding(player.buildings[building_kind][num])
+
+
+
 def selected_obj_consists_of_villagers(selected_obj):
     if not selected_obj:
         print('You must first select some villager(s) before giving a command to ',
@@ -157,6 +187,9 @@ def formatted_input_to_SelectedUnits_obj(formatted_input, player):
     The intention of what units represented by formatted_input is all the
     units of type unit_kind of player with numbers any any of the ranges
     start1 to stop1 (inclusive), start2 to stop2, etc.
+
+    This function is intended to only be used inside the function
+    extract_selected_obj
     """
     if not type(formatted_input) is list:
         return
@@ -181,10 +214,6 @@ def formatted_input_to_SelectedUnits_obj(formatted_input, player):
             if unit.is_alive:
                 selected_units.add_unit(unit)
         return selected_units
-
-
-
-
 
 
 def extract_selected_obj(inpt_as_ls, player):
