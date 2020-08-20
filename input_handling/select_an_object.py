@@ -1,10 +1,54 @@
+from units import Unit, Villager
 from units import unit_kinds, unit_kinds_singular, unit_singular_to_plural
-from buildings.bldng_class import buildings
+from buildings.bldng_class import Building, buildings
 
 # For building names that really are two words, I would like to be able to
 # handle a space between those words:
 building_first_words = {'town', 'lumber', 'stone', 'mining', 'wood',
                         'archery', 'siege'}
+
+
+class SelectedObject:
+    def consists_of_villagers(self):
+        if not isinstance(self, SelectedUnits):
+            return False
+
+        return all(isinstance(u, Villager) for u in self.units)
+
+
+class SelectedUnits(SelectedObject):
+    __units = []
+
+    def add_unit(self, unit):
+        if not isinstance(unit, Unit):
+            return
+        self.__units.append(unit)
+
+    @property
+    def units(self):
+        for u in self.__units:
+            yield u
+
+    @property
+    def num_units_selected(self):
+        return len(self.__units)
+
+    @property
+    def non_empty(self):
+        return self.num_units_selected > 0
+
+
+class SelectedBuilding(SelectedObject):
+    __building = None
+
+    def __init__(self, building):
+        if not isinstance(building, Building):
+            return
+        self.__building = building
+
+    @property
+    def building(self):
+        return self.__building
 
 
 def selected_obj_to_ls_of_units(player, selected_obj):
