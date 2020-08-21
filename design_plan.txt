@@ -367,12 +367,22 @@ something that would improve villagers' construction speed.
 
 - Implement a random map generator.
 
-- It might be worthwhile to completely change how commands are represented in
-  the various files. (So this includes handle_input.py and command_handling_.py
-  but probably includes other files too.) Right now, a command handled by
-  the function insert_command in command_handling.py is simply a list. But
+- It might be worthwhile to completely change how commands are represented.
+  Right now, a command handled by command_handling.py is simply a list. But
   actually creating an object that represents a command would probably be
-  better.
+  better. The following are the files that would need to be changed:
+  * commands.py
+  * command_handling.py
+  * handle_input.py
+  * build.py
+  * collect_resources.py
+  * move_units.py
+  * print.py (very minor changes here)
+  * research.py
+  * main.py  (very minor changes here)
+  * military_bldngs.py
+  * other_bldngs.py
+
 
 - Be able to save a game and then restart where I left off. (Similar
   functionality might be really useful for testing purposes.)
