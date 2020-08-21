@@ -578,4 +578,50 @@ def implement_farm_commands(player):
 
 
 if __name__ == '__main__':
-    pass
+    from player import Player
+    from game_map import Position
+    from input_handling.get_input import get_next_command
+
+    p1 = Player(1, Position(80, 80), is_human=True)
+
+    def given_this_input_insert_command(inpt, sel_obj=None, player=p1):
+        """Given this input, insert the command specified by the input"""
+        command = get_next_command(player, inpt, sel_obj)
+        insert_command(p1, command)
+
+
+    # The following tests were done by first running them to see what they'd get
+    # and then creating a test that just states the results I just saw.
+    # (My purpose here is to check that when editing this file, the behavior of
+    # this module doesn't change.
+    villagers = p1.units['villagers']
+    villager1 = villagers[1]
+    villager2 = villagers[2]
+    villager3 = villagers[3]
+
+    # Checking the function insert_move_command
+    vector1 = Vector(-2, 5)
+    given_this_input_insert_command('move villager 1 n2 e5')
+    assert p1.commands['now']['move'][villager1] == vector1
+
+    vector2 = Vector(7, -8)
+    vector3 = Vector(3, -2)
+    # Note that vector2 + vector3 == Vector(10, -10)
+    given_this_input_insert_command('move villagers 2-3 s10 w10')
+    for v in villagers[2:]:
+        assert p1.commands['now']['move'][v] == vector2
+        assert p1.commands['later']['move'][v] == vector3
+
+    vector4 = Vector(4, 8)
+    given_this_input_insert_command('move villager 2 s4 e8')
+    assert p1.commands['now']['move'][villager2] == vector4
+
+    selected_obj = get_next_command(p1, 'select villagers 1-3')
+    vector5 = Vector(-1, -9)
+    given_this_input_insert_command('move n1 w9', selected_obj)
+    for villager in villagers[1:]:
+        assert p1.commands['now']['move'][villager] == vector5
+
+    assert p1.commands['later']['move'] == {}
+
+
