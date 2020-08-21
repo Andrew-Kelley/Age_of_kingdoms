@@ -41,6 +41,11 @@ class Vector(Position):
         j = self.value[1] + other.value[1]
         return Vector(i, j)
 
+    def __eq__(self, other):
+        coord0_matches = self.value[0] == other.value[0]
+        coord1_matches = self.value[1] == other.value[1]
+        return  coord0_matches and coord1_matches
+
     @property
     def magnitude(self):
         return abs(self.value[0]) + abs(self.value[1])
@@ -303,3 +308,10 @@ if __name__ == '__main__':
     #             wrong.append(v)
     # print(len(wrong)) #  Great! len(wrong) == 0
     # print(wrong[:5])
+
+    v1 = Vector(1, 2)
+    v2 = Vector(1, 2)
+
+    assert v1 == v2
+    v3 = Vector(2, 1)
+    assert v1 != v3
