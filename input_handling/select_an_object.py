@@ -58,62 +58,6 @@ class SelectedBuilding(SelectedObject):
         return self.__building
 
 
-# TODO: Remove this function.
-def selected_obj_to_ls_of_units(player, selected_obj):
-    """selected_obj must be of the type that the fn select_something returns"""
-    if selected_obj is None or len(selected_obj) < 2:
-        return []
-
-    ls_of_units = []
-    if selected_obj[0] == 'unit':
-        # Then selected_obj == ['unit', unit.kind, starting_num, ending_num]
-        # The following four lines of code should be unnecessary. I believe it
-        # is redundant, assuming that the fn select_something works properly.
-        if len(selected_obj) != 4 or selected_obj[1] not in unit_kinds:
-            return []
-        if not all(type(i) is int for i in selected_obj[2:]):
-            return []
-
-        unit_kind = selected_obj[1]
-        n1 = selected_obj[2]
-        n2 = selected_obj[3]
-        for unit in player.units[unit_kind][n1:n2 + 1]:
-            if unit.is_alive:
-                ls_of_units.append(unit)
-        return ls_of_units
-
-    # TODO: implement the rest of this function (when the selected object is
-    # an army or a group)
-    # I first need to implement the Group and Army classes.
-    if selected_obj[0] == 'group':
-        return []
-
-    if selected_obj[0] == 'army':
-        return []
-
-    return []
-
-
-# TODO: Remove this function.
-def selected_obj_to_actual_building(player, selected_obj):
-    """In order to not return None, selected_obj must be in the following format:
-    ['building', building.kind, building_num]"""
-    if len(selected_obj) != 3:
-        return
-    if selected_obj[0] != 'building':
-        return
-    kind = selected_obj[1]
-    if kind not in buildings:
-        return
-
-    building_num = selected_obj[2]
-    if not 1 <= building_num < len(player.buildings[kind]):
-        print('There is no {} with number {}'.format(kind, building_num))
-        return
-
-    return player.buildings[kind][building_num]
-
-
 def formatted_input_to_SelectedBuilding_obj(formatted_input, player):
     """Returns None or an instance of SelectedBuilding
 
@@ -141,49 +85,6 @@ def formatted_input_to_SelectedBuilding_obj(formatted_input, player):
         return
 
     return SelectedBuilding(player.buildings[building_kind][num])
-
-
-# TODO: Replace this function with calls to SelectedObject.consists_of_villagers
-def selected_obj_consists_of_villagers(selected_obj):
-    if not selected_obj:
-        print('You must first select some villager(s) before giving a command to ',
-              'collect a resource or build a building.')
-        return False
-
-    if not type(selected_obj) is list or len(selected_obj) < 2:
-        print('Error: selected_obj is not proper')
-        return False
-
-    negative_message = 'Only villagers can collect resources and build buildings. '
-    negative_message += 'Your selected object was not a group of villagers.'
-
-    if not selected_obj[0] in ('unit', 'group'):
-        print(negative_message)
-        return False
-
-    if selected_obj[0] == 'group':
-        if not len(selected_obj) == 2:
-            return False
-        num = selected_obj[1]
-        if not type(num) is int or num < 0:
-            print('The group selected is not proper.')
-            return False
-
-    if selected_obj[0] == 'unit':
-        if not selected_obj[1] == 'villagers':
-            print(negative_message)
-            return False
-        if not len(selected_obj) == 4:
-            print("Developer message: Error: selected_obj[0] == 'unit', but",
-                  "len(selected_obj) is not 4.")
-            return False
-        num1, num2 = selected_obj[2:4]
-        if not type(num1) is int or not type(num2) is int or \
-                num1 > num2 or num1 < 1 or num2 < 1:
-            print("The selected object's numbers were not proper.")
-            return False
-
-    return True
 
 
 def formatted_input_to_SelectedUnits_obj(formatted_input, player):
@@ -325,42 +226,7 @@ def unit_exists(unit_kind, unit_number, player):
 
     return True
 
-# TODO: Replace calls to this with isinstance(obj, SelectedObject)
-def is_a_selected_obj(ls):
-    """Returns True if ls is a non-empty list of the format of
-    what select_something returns"""
-    if type(ls) != list:
-        return False
-    if len(ls) < 2 or len(ls) > 4:
-        return False
-    if ls[0] not in ('unit', 'army', 'group', 'building', 'town'):
-        return False
 
-    if ls[0] == 'unit':
-        if len(ls) != 4:
-            return False
-        if ls[1] not in unit_kinds:
-            return False
-        if not type(ls[2]) is int or not type(ls[3]) is int:
-            return False
-        if not 1 <= ls[2] <= ls[3]:
-            return False
-        return True
-
-    if ls[0] in ('army', 'group',  'town'):
-        if len(ls) != 2:
-            return False
-        return type(ls[1]) is int and 1 <= ls[1]
-
-    if ls[0] == 'building':
-        if len(ls) != 3:
-            return False
-        if ls[1] not in buildings:
-            return False
-        return type(ls[2]) is int and 1 <= ls[2]
-
-
-# TODO: check that this function is used properly
 def select_something(player, inpt_as_ls, selected_obj=None):
     """The point of this function is to return an output selected_obj
     returns [] or a list in one of the following formats:
@@ -399,7 +265,8 @@ if __name__ == '__main__':
 
 
     p1 = Player(1, Position(80, 80), is_human=True)
-    towncenter = selected_obj_to_actual_building(p1, ['building', 'towncenter', 1])
+    selected_obj = select_something(p1, ['select', 'towncenter', '1'])
+    towncenter = selected_obj.building
     assert isinstance(towncenter, TownCenter)
     print(towncenter)
 
@@ -449,18 +316,20 @@ if __name__ == '__main__':
     assert not select_something(p1, ['select', 'blah'])
     assert not select_something(p1, ['select', 'villagar'])
 
-    # the following two lines don't print anything
+
     assert not select_something(p1, ['select', 'towncenter', 'n'])
+
+    # The following line doesn't print anything.
     assert not select_something(p1, ['select'])
+
 
     assert not select_something(p1, ['select', 'villager', '4'])
     assert not select_something(p1, ['select', 'villagers', '10-20'])
     assert not select_something(p1, ['select', 'pikeman', '40'])
 
-    # the following line doesn't print anything
-    assert selected_obj_to_actual_building(p1, ['building', 'blah', 1]) is None
 
-    assert selected_obj_to_actual_building(p1, ['building', 'barracks', 1]) is None
+    assert select_something(p1, ['building', 'blah', '1']) is None
+    assert select_something(p1, ['building', 'barracks', '1']) is None
 
     # The above code prints the following:
     # Towncenter 1 at position (80, 80)
@@ -479,4 +348,5 @@ if __name__ == '__main__':
     # There is no unit with that/those number(s).
     # There is no unit with that/those number(s).
     # There is no unit with that/those number(s).
+    # The second word in your command could not be understood.
     # There is no barracks with number 1

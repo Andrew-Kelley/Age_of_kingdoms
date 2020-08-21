@@ -3,7 +3,6 @@
 # Started July 21, 2018.
 
 from input_handling.handle_input import input_next_command
-from input_handling.select_an_object import is_a_selected_obj
 from input_handling.select_an_object import SelectedObject
 from command_handling import insert_command, update_now_and_later_commands
 from command_handling import implement_commands_if_possible
