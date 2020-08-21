@@ -154,6 +154,7 @@ def insert_collect_resource_now_command(player, command):
             player.commands['now']['collect resource'][villager] = resource
             villager.current_action = 'collecting {}'.format(resource.kind)
         else:
+            villager.current_action = 'doing nothing'
             print(villager, ' cannot collect {} now.'.format(resource.kind))
 
 
@@ -599,7 +600,7 @@ if __name__ == '__main__':
     villager2 = villagers[2]
     villager3 = villagers[3]
 
-    #################################################
+    ################################################################
     # Checking the function insert_move_command
     vector1 = Vector(-2, 5)
     given_this_input_insert_command('move villager 1 n2 e5')
@@ -625,7 +626,7 @@ if __name__ == '__main__':
 
     assert p1.commands['later']['move'] == {}
 
-    #################################################
+    ################################################################
     # Checking the function insert_build_unit_command
     towncenter = p1.buildings['towncenter'][1]
 
@@ -652,3 +653,16 @@ if __name__ == '__main__':
     assert p1.commands['now']['build unit'][barracks] == ['pikemen', 1]
     assert p1.commands['later']['build unit'][barracks] == ['pikemen', 5]
 
+    ################################################################
+    # Checking the function insert_collect_resource_now_command
+    from resources import Food
+
+    selected_obj = get_next_command(p1, 'select villagers 1-3')
+    given_this_input_insert_command('collect food', selected_obj)
+    for villager in (villager1, villager2):
+        assert villager.current_action == 'collecting food'
+        assert p1.commands['now']['collect resource'][villager] == Food
+    # villager3 is too far away to collect food now, and so his current
+    # action (which was to move) was overridden by the (failed) command
+    # to collect food.
+    assert villager3.current_action == 'doing nothing'
