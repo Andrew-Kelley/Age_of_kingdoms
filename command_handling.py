@@ -590,15 +590,16 @@ if __name__ == '__main__':
         insert_command(p1, command)
 
 
-    # The following tests were done by first running them to see what they'd get
-    # and then creating a test that just states the results I just saw.
-    # (My purpose here is to check that when editing this file, the behavior of
-    # this module doesn't change.
+    # The following tests were mostly done by first running them to see what
+    # they'd get and then creating a test that just states the results I just
+    # saw. (My purpose here is to check that when editing this file, the behavior
+    # of this module doesn't change.)
     villagers = p1.units['villagers']
     villager1 = villagers[1]
     villager2 = villagers[2]
     villager3 = villagers[3]
 
+    #################################################
     # Checking the function insert_move_command
     vector1 = Vector(-2, 5)
     given_this_input_insert_command('move villager 1 n2 e5')
@@ -624,4 +625,30 @@ if __name__ == '__main__':
 
     assert p1.commands['later']['move'] == {}
 
+    #################################################
+    # Checking the function insert_build_unit_command
+    towncenter = p1.buildings['towncenter'][1]
+
+    selected_obj = get_next_command(p1, 'select towncenter')
+    # The following line is to check that the unit test
+    # immediately after does have the proper input.
+    assert selected_obj.building == towncenter
+    given_this_input_insert_command('build 4 villagers', selected_obj)
+    assert p1.commands['now']['build unit'][towncenter] == ['villagers', 1]
+    assert p1.commands['later']['build unit'][towncenter] == ['villagers', 3]
+
+    from buildings.military_bldngs import Barracks
+    position = Position(80, 50)
+    barracks = Barracks(1, position, p1)
+    p1.buildings[Barracks.kind].append(barracks)
+    selected_obj = get_next_command(p1, 'select barracks')
+    assert selected_obj.building == barracks
+    get_next_command(p1, 'set build position 60 40', selected_obj)
+    the_build_position = Position(60, 40)
+    # The following line isn't really testing insert_build_unit_command
+    assert barracks.build_position == the_build_position
+
+    given_this_input_insert_command('build 6 pikemen', selected_obj)
+    assert p1.commands['now']['build unit'][barracks] == ['pikemen', 1]
+    assert p1.commands['later']['build unit'][barracks] == ['pikemen', 5]
 
