@@ -232,7 +232,7 @@ def select_something(player, inpt_as_ls, selected_obj=None):
 
     Note: The argument selected_obj is not used, but
     it is included so that this function can easily be called by the function
-    input_next_command in handle_input.py
+    input_next_command in get_input.py
     """
     if len(inpt_as_ls) > 2:
         # Then the player has specified the building or unit number(s)

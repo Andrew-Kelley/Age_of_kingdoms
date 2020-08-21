@@ -373,7 +373,7 @@ something that would improve villagers' construction speed.
   better. The following are the files that would need to be changed:
   * commands.py
   * command_handling.py
-  * handle_input.py
+  * get_input.py
   * build.py
   * collect_resources.py
   * move_units.py

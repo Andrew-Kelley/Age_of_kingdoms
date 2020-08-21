@@ -136,7 +136,7 @@ def initial_position_of_player(player_number, game_map):
 
 
 if __name__ == '__main__':
-    from input_handling.handle_input import input_next_command
+    from input_handling.get_input import input_next_command
 
     p1 = Player(1, Position(80, 80), is_human=True)
     for villager in p1.units['villagers'][1:]:
