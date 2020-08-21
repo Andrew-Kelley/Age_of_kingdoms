@@ -1,6 +1,3 @@
-# The main function this module defines is input_next_command
-
-
 from input_handling.help import help_on
 from input_handling.build import build_something, set_default_build_position
 from input_handling.select_an_object import select_something
@@ -8,6 +5,7 @@ from input_handling.move_units import move_unit_or_units
 from input_handling.print import print_something
 from input_handling.collect_resources import collect_resource, farm
 from input_handling.research import research_something
+
 
 def input_number_of_players(human=True):
     if human:
@@ -52,14 +50,14 @@ def closest_word_to(word, some_words):
     return closest
 
 
-
-#  The following dictionary of functions are the main functions that the function
+# The following dictionary of functions are the main functions that the function
 # input_next_command uses to delegate its work. These functions all have the same arguments
 # so that they can be called uniformly via **kwargs.
 
-functions = {'build': build_something, 'help build':build_something, 'select': select_something,
+functions = {'build': build_something, 'help build': build_something,
+             'select': select_something, 'farm': farm,
              'move': move_unit_or_units, 'set': set_default_build_position,
-             'print': print_something, 'research':research_something, 'farm':farm}
+             'print': print_something, 'research': research_something}
 
 # Intended use: 'collect <any resource>', 'chop wood', 'mine gold', 'mine bronze', 'mine iron'
 for word in ('collect', 'chop', 'mine'):
@@ -114,6 +112,41 @@ def input_next_command(player, selected_obj=None):
         return functions[first_argument_of_command](**kwargs)
 
 
+def get_next_command(player, inpt='', selected_obj=None, inpt_as_ls=None):
+    """Return the command produced by the given input.
+
+    The input can be given either as a string or a list.
+    If both inpt and inpt_as_ls are non-empty, then inpt overrides
+    inpt_as_ls
+
+    This function is intended only for testing purposes,
+    and perhaps for a rudimentary ability to load a
+    saved game."""
+    if not inpt and not inpt_as_ls:
+        return
+    if inpt:
+        inpt_as_ls = inpt.split()
+    if not type(inpt_as_ls) is list or len(inpt_as_ls) == 0:
+        return
+
+    first_arg = inpt_as_ls[0]
+    if first_arg not in possible_first_words:
+        return
+    if first_arg in done_with_turn:
+        return ['end of turn']
+    elif first_arg == 'help' and len(inpt_as_ls) == 1:
+        return
+    elif first_arg == 'help' and inpt_as_ls[1] == 'build':
+        del inpt_as_ls[0]
+        inpt_as_ls[0] = 'help build'
+    elif first_arg not in main_commands:
+        return
+
+    kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj}
+
+    return functions[first_arg](**kwargs)
+
+
 if __name__ == '__main__':
     from units import unit_kinds
 
@@ -123,7 +156,12 @@ if __name__ == '__main__':
     assert closest_word_to('battering', unit_kinds) == 'batteringrams'
     assert closest_word_to('treebucket', unit_kinds) == 'trebuchets'
 
-    # a = input_next_command(p1)
-    # print(a)
 
-
+    # from player import Player
+    # from game_map import Position
+    #
+    # p1 = Player(1, Position(80, 80), is_human=True)
+    #
+    # print(get_next_command(p1, 'move villager 1 n2 e5'))
+    # selected_obj = get_next_command(p1, 'select villagers 2-3')
+    # print(get_next_command(p1, 'build lumbercamp 67 76', selected_obj))
