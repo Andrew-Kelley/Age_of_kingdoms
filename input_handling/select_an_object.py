@@ -228,20 +228,11 @@ def unit_exists(unit_kind, unit_number, player):
 
 
 def select_something(player, inpt_as_ls, selected_obj=None):
-    """The point of this function is to return an output selected_obj
-    returns [] or a list in one of the following formats:
+    """Returns None or an instance of SelectedObject (or a subclass of it)
 
-    ['unit', unit.kind, starting_num, ending_num],  1 <= where starting_num <= ending_num
-    or
-    ['army', army_num], where 1 <= army_num
-    or
-    ['group', group_num], where 1 <= group_num
-    or
-    ['building', building.kind, building_num], where 1 <= building_num
-    or
-    ['town', town_num], where 1 <= town_num
-
-    Note: The arguments player, selected_obj, and selected_town_num are not used.
+    Note: The argument selected_obj is not used, but
+    it is included so that this function can easily be called by the function
+    input_next_command in handle_input.py
     """
     if len(inpt_as_ls) > 2:
         # Then the player has specified the building or unit number(s)
@@ -255,6 +246,18 @@ def select_something(player, inpt_as_ls, selected_obj=None):
         # with the given selected_town_num.
         inpt_as_ls.append('1')
         return extract_selected_obj(inpt_as_ls, player)
+
+# This used to be the options for what select_something returns:
+# ['unit', unit.kind, starting_num, ending_num],  1 <= where starting_num <= ending_num
+# or
+# ['army', army_num], where 1 <= army_num
+# or
+# ['group', group_num], where 1 <= group_num
+# or
+# ['building', building.kind, building_num], where 1 <= building_num
+# or
+# ['town', town_num], where 1 <= town_num
+
 
 
 if __name__ == '__main__':
