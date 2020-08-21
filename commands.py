@@ -29,7 +29,7 @@ class Command:
 
 
 class MoveCmd(Command):
-    # A move command used to be of this form: ['move', ls_of_units, delta]
+    # Prior format: ['move', ls_of_units, delta]
     # But I want to eventually allow multiple units to be commanded to move
     # to a given position (instead of saying all should move by te same
     # delta). Hence each unit should have its own delta.
@@ -53,24 +53,39 @@ class MoveCmd(Command):
 
 
 class BuildUnitCmd(Command):
+    # Prior format: ['build unit', building, unit_type, num_to_be_built]
+    # building was an instance of Building
+    # unit_type was a string in unit_kinds from units.py
     pass
 
 
 class BuildBuildingCmd(Command):
+    # Prior format: ['build building', ls_of_villagers, building_class,
+    #             position, this_is_a_help_build_command]
+    # position was an instance of Position
+    # this_is_a_help_build_command was a bool
     pass
 
 
 class ResearchCmd(Command):
+    # Prior format: ['research', building, thing_to_be_researched]
+    # building was an instance of Building
+    # thing_to_be_researched was an instance of a subclass of ResearchObject
     pass
 
 
 class CollectResourceCmd(Command):
+    # Prior format: ['collect resource', resource, ls_of_villagers]
+    # resource was one of the classes Food, Gold, Stone, etc.
     pass
 
 
 class FarmCmd(Command):
+    # Prior format: ['farm', farm, ls_of_villagers]
+    # farm was an instance of Farm
     pass
 
 
 class EndOfTurnCmd(Command):
+    # Prior format: ['end of turn']
     pass
