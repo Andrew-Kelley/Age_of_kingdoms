@@ -149,9 +149,9 @@ Can build: battering ram, catapult, trebuchet (Iron Age)
 #### Blacksmith
 (Bronze Age)
 Cost: 150 wood, 25 stone
-Should blacksmiths create armor for each unit or should they research better
-armor and have the research apply automatically to every unit (of a specified
-type)?
+When a research is completed at a blacksmith, it applies to all units
+(present and future) of the affected type. (In other words, it doesn't
+create individual pieces of armor for individual units.)
 
 #### Library
 (Iron Age)
@@ -176,8 +176,7 @@ Can build: merchant (which travels between markets for trade)
 --------------------------------------------------------------------------------
 ## The map
 I think the map will just be an n x n square grid. (There should be options
-of what to choose for n: say from 100 to 1000. This could be done by choosing a
-number from 1 to 10 and then just multiplying that by 100.) I plan on
+of what to choose for n: say from 60 to 200.) I plan on
 representing a map as a Python list of lists called map. So len(map) == n and
 each ls in map has len(ls) == n.
 
@@ -186,8 +185,9 @@ Unless the map is very small, only a part of the map can be printed at once.
 IMPORTANT SIMPLIFICATION:
 Ideally, only one unit or building can occupy a given space in the map at
 the same time, but it would greatly simplify pathfinding if units can walk
-through everything except walls. So in the first playable version of this game,
-units can walk through all buildings except walls, and multiple units can occupy
+through everything except walls. Once I implement walls, it becomes harder.
+So in the first playable version of this game,
+units can walk through all buildings, and multiple units can occupy
 the same space at the same time. (I think I will even allow units to walk
 through their own walls too, just not enemy walls.) Also, if walls could be
 built in arbitrary shape, then pathfinding would still have difficult cases.
@@ -208,7 +208,7 @@ letters (except for walls).
 Resources
  - f: food:
  - w: wood:
- - s: stone: (Conflicts with swordsman.)
+ - s: stone: (Conflicts with swordsman, but colors should differentiate them.)
  - g: gold:
  - b: bronze:
  - i: iron:
@@ -218,7 +218,7 @@ For a possible later version of the game, when only one unit can occupy a space
 and also cannot occupy a space a building is in...
   - v: villager
   - p: pikeman
-  - s: swordsman (Conflicts with stone. Oh well.)
+  - s: swordsman
   - a: archer
   - k: knight
   - r: battering ram (To not conflict with bronze.)
@@ -254,17 +254,12 @@ Buildings (with the space they take up:)
   - K: market (not to conflict with mining camp) 3 x 3
   - W: wonder (conflicts with siege works) 6 x 6
 
-Spots with nothing in them will be represented by a blank: ' '
+Spots with nothing in them are represented by a blank: ' '
 Should each player have their own viewable map? If so, then spots not yet
 examined should be a question mark. Whether or not players have their own
 viewable map, there should be a master map.
 
-It would be nice if different players were printed with different color text,
-but for now, everyone will have the same color. After all. this is a text-based
-game, and printing (part of) the map is a bonus feature and perhaps not to be
-expected.
-
-I think distances should be calculated using the taxicab metric. i.e.
+Distances are calculated using the taxicab metric. i.e.
 distance(map[i1][j1], map[i2][j2]) == abs(i2 - i1) + abs(j2 - j1)
 A consequence of this is that the farthest point from the south-east corner of
 the map is the north-west corner of the map.
@@ -280,7 +275,7 @@ Stage 1: Finished! - on August 16, 2018.
  - enable villagers to move
  - enable villagers to collect wood
 
- Next stage: Finished! - on August 16 (or 14th?), 2018.
+Next stage: Finished! - on August 16 (or 14th?), 2018.
   - enable villagers to gather food
 
 Next stage: Finished! - on August 18, 2018.
@@ -318,7 +313,7 @@ Next stage: Finished! (not sure when)
    * bronze axes (benefits villagers chopping wood)
    * bronze picks (benefits villagers collecting stone, gold, bronze, or iron)
 
- Next stage: Finished! - (probably on August 6, 2020).
+Next stage: Finished! - (probably on August 6, 2020).
  - enable the following to be researched at the blacksmith:
    * bronze swords (necessary for swordsmen and knights)
    * bronze shields (necessary for swordsmen and knights)
@@ -329,7 +324,12 @@ Next stage: Finished! (not sure when)
 At some point:
 
 Be able to print everything that can be built/researched from any given
-building.
+building. For listing the research, it would be nice if it somehow
+differentiated between things already researched and things yet to be
+researched.
+
+Maybe when a unit-producing building is printed, the current default
+build position should also be printed.
 
 Be able to print the current population.
 
