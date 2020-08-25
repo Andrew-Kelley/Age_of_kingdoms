@@ -666,3 +666,25 @@ if __name__ == '__main__':
     # action (which was to move) was overridden by the (failed) command
     # to collect food.
     assert villager3.current_action == 'doing nothing'
+
+    ################################################################
+    # Checking the function insert_build_building_command
+
+    from buildings.other_bldngs import House
+
+    selected_obj = get_next_command(p1, 'select villagers 1-2')
+    given_this_input_insert_command('build house 75 75', selected_obj)
+    ls = p1.commands['now']['build building'][villager1]
+    house = ls[0]
+    assert isinstance(house, House)
+    position = ls[1]
+    assert position == Position(75, 75)
+    assert ls == p1.commands['later']['build building'][villager2]
+    delta = position - villager2.position
+    assert p1.commands['now']['move'][villager2] == delta
+
+    selected_obj = get_next_command(p1, 'select villager 3')
+    given_this_input_insert_command('help build house 75 75', selected_obj)
+    delta = position - villager3.position
+    assert p1.commands['now']['move'][villager3] == delta
+    assert ls == p1.commands['later']['build building'][villager3]
