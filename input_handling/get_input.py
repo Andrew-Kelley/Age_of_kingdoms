@@ -139,6 +139,7 @@ def get_next_command(player, inpt='', selected_obj=None, inpt_as_ls=None):
     elif first_arg == 'help' and inpt_as_ls[1] == 'build':
         del inpt_as_ls[0]
         inpt_as_ls[0] = 'help build'
+        first_arg = 'help build'
     elif first_arg not in main_commands:
         return
 
