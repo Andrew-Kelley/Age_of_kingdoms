@@ -580,7 +580,6 @@ def implement_farm_commands(player):
 
 if __name__ == '__main__':
     from player import Player
-    from game_map import Position
     from input_handling.get_input import get_next_command
 
     p1 = Player(1, Position(80, 80), is_human=True)
@@ -688,3 +687,36 @@ if __name__ == '__main__':
     delta = position - villager3.position
     assert p1.commands['now']['move'][villager3] == delta
     assert ls == p1.commands['later']['build building'][villager3]
+
+    ################################################################
+    # Checking the function insert_research_command
+    from research_classes import BronzeAge
+
+    selected_obj = get_next_command(p1, 'select towncenter')
+    given_this_input_insert_command('research bronze age', selected_obj)
+
+    assert isinstance(p1.commands['now']['research'][towncenter], BronzeAge)
+
+    ################################################################
+    # Checking the function insert_farm_command
+
+    position = Position(74, 78)
+    farm = Farm(1, position, p1)
+    p1.buildings[Farm.kind].append(farm)
+
+    selected_obj = get_next_command(p1, 'select villager 1')
+    given_this_input_insert_command('farm 74 78', selected_obj)
+    assert p1.commands['now']['farm'][villager1] == farm
+
+    selected_obj = get_next_command(p1, 'select villager 3')
+    given_this_input_insert_command('farm 74 78', selected_obj)
+    assert p1.commands['later']['farm'][villager3] == farm
+    delta = p1.commands['now']['move'][villager3]
+    assert delta == position - villager3.position
+
+    # TODO: Doublecheck in the game itself that a 3rd villager
+    # more than 6 or maybe 15 units away from a farm cannot start
+    # farming it, if the farm already has 2 farmers farming it.
+    # selected_obj = get_next_command(p1, 'select villager 2')
+    # given_this_input_insert_command('farm 74 78', selected_obj)
+    # assert p1.commands['later']['farm'][villager2] == farm
