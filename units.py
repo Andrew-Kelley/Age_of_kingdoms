@@ -299,7 +299,7 @@ if __name__ == '__main__':
     assert isinstance(ls[0], Wood)
 
     lumber_camp = LumberCamp(1, Position(67, 92), p1)
-    Building.build_on_map(lumber_camp, p1, Position(67, 92), game_map)
+    lumber_camp.build_on_map(Position(67, 92), game_map)
     p1.buildings[LumberCamp.kind].append(lumber_camp)
     # print(game_map)
     v5 = Villager(Position(67, 90), p1)

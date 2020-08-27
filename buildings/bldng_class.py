@@ -34,6 +34,7 @@ class Building:
         Further buildings built (of the same type) are consecutively numbered.
 
         position is the south-west (i.e. bottom left) corner of the building."""
+        self.player = player
         self.number = number
         self.position = position
         # The following is only relevant for unit-producing buildings. It sets
@@ -43,27 +44,29 @@ class Building:
         self.build_position = position
         # The following is used when villagers build a building:
         self.progress_to_construction = 0
-        self.insert_into_building_position_pairs(player)
+        self.insert_into_building_position_pairs()
 
-    def insert_into_building_position_pairs(self, player):
+    def insert_into_building_position_pairs(self):
+        player = self.player
         player.building_position_pairs[self.position] = self
 
     def __str__(self):
         kind = self.kind.capitalize()
         return '{} {} at position {}'.format(kind, self.number, self.position)
 
-    def units_which_can_be_built(self, player):
+    def units_which_can_be_built(self):
         # This function needs to be re-implemented for every building which
         # produces units.
         return []
 
-    def things_which_can_be_researched(self, player):
+    def things_which_can_be_researched(self):
         """Returns a list of strings. This needs to be overridden by
         subclasses."""
         return []
 
-    def research(self, thing_to_be_researched, player):
+    def research(self, thing_to_be_researched):
         thing = thing_to_be_researched
+        player = self.player
         if thing.progress_to_completion == 0:
             player.resources -= thing.cost
 
@@ -87,7 +90,7 @@ class Building:
                 print('Error! Developer message: In the Building method called research'
                       'thing.name was not in player.things_being_currently_researched.')
 
-    def build_unit(self, player, unit_type):
+    def build_unit(self, unit_type):
         """This function (in the Building class) should NEVER be called."""
         print("ERROR! You are trying to build a unit from a building that does not "
               "yet have a build_unit method defined.")
@@ -139,7 +142,7 @@ class Building:
 
         return True
 
-    def build_on_map(self, player, position, game_map):
+    def build_on_map(self, position, game_map):
         """This function is called when construction starts
         (so before construction is complete)."""
         i_init, j_init = position.value
@@ -148,14 +151,16 @@ class Building:
 
         # The Color.ENDC is so that the rest of the map isn't also printed in
         # the color player.color
+        player = self.player
         letter_in_color = player.color + self.letter_abbreviation + Color.ENDC
         for i in range(i_init, i_final, -1):
             for j in range(j_init, j_final):
                 game_map[i][j] = letter_in_color
                 # player.map[i][j] = self.letter_in_color
 
-    def build(self, villager_who_is_building, player):
+    def build_by(self, villager_who_is_building):
         """This function is called multiple times to construct the building."""
+        player = self.player
         if self.progress_to_construction >= self.time_to_build:
             # Then another villager already finished building this building.
             return

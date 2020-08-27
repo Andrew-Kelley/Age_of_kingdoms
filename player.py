@@ -76,8 +76,9 @@ class Player:
         self.building_position_pairs = dict()
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
-        Building.build_on_map(TownCenter, self, position, game_map)
-        self.buildings[TownCenter.kind].append(TownCenter(1, position, self))
+        towncenter = TownCenter(1, position, self)
+        towncenter.build_on_map(position, game_map)
+        self.buildings[TownCenter.kind].append(towncenter)
 
         # Each player begins with 3 villagers
         for i, delta in enumerate([(-2, -2), (2, -2), (2, 2)], start=1):
@@ -153,7 +154,7 @@ if __name__ == '__main__':
 
     for j in range(4, 22):
         if p1.can_build(Villager):
-            t.build_unit(p1, Villager.kind)
+            t.build_unit(Villager.kind)
 
     print(p1.population)
     print(p1.resources)

@@ -33,7 +33,7 @@ def research_something(player, inpt_as_ls, selected_obj=None):
             return []
 
     thing_to_be_researched = ' '.join(inpt_as_ls[1:])
-    what_can_be_researched = building.things_which_can_be_researched(player)
+    what_can_be_researched = building.things_which_can_be_researched()
     if thing_to_be_researched not in what_can_be_researched:
         print('Sorry, a {} cannot research {}.'.format(building.kind, thing_to_be_researched))
         return []

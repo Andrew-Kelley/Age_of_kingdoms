@@ -30,21 +30,23 @@ class TownCenter(Building):
         # default initial action of a newly built villager.
         self.initial_resource_to_collect = None
 
-    def things_which_can_be_researched(self, player):
+    def things_which_can_be_researched(self):
         research_ls = []
         # Maybe have a 'wheelbarrow', which makes all villagers more efficient
         # at anything they do 'wheelbarrow' could be researched in the bronze age
 
+        player = self.player
         if player.age == 'stone age':
             research_ls.append('bronze age')
         elif player.age == 'bronze age':
             research_ls.append('iron age')
         return research_ls
 
-    def units_which_can_be_built(self, player):
+    def units_which_can_be_built(self):
         return ['villagers']
 
-    def build_unit(self, player, unit_type='villagers'):
+    def build_unit(self, unit_type='villagers'):
+        player = self.player
         if unit_type != 'villagers':
             print('Error! A TownCenter can only build Villagers.')
             return
@@ -99,7 +101,8 @@ class Blacksmith(Building):
     kind = 'blacksmith'
     time_to_build = 50
 
-    def things_which_can_be_researched(self, player):
+    def things_which_can_be_researched(self):
+        player = self.player
         research_ls = []
         for research_obj in blacksmith_bronze_age_research:
             if research_obj.name not in player.things_researched:

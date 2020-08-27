@@ -13,9 +13,10 @@ class Barracks(Building):
     kind = 'barracks'
     time_to_build = 50
 
-    def units_which_can_be_built(self, player):
+    def units_which_can_be_built(self):
         """Returns a list of unit kind strings."""
         what_can_be_built = [Pikeman.kind]
+        player = self.player
         if player.age in ('bronze age', 'iron age'):
             shields = BronzeShields
             swords = BronzeSwords
@@ -23,8 +24,9 @@ class Barracks(Building):
                 what_can_be_built.append(Swordsman.kind)
         return what_can_be_built
 
-    def build_unit(self, player, unit_type):
-        if unit_type not in self.units_which_can_be_built(player):
+    def build_unit(self, unit_type):
+        player = self.player
+        if unit_type not in self.units_which_can_be_built():
             # This should never happen because the function units_which_can_be_built
             # is called in in the command_handling.py module (in the function
             # insert_build_unit_command)
@@ -65,10 +67,11 @@ class ArcheryRange(Building):
     kind = 'archeryrange'
     time_to_build = 50
 
-    def units_which_can_be_built(self, player):
+    def units_which_can_be_built(self):
         return ['archers']
 
-    def build_unit(self, player, unit_type):
+    def build_unit(self, unit_type):
+        player = self.player
         if unit_type != 'archers':
             # This should never happen.
             return
@@ -86,7 +89,7 @@ class Stable(Building):
     kind = 'stable'
     time_to_build = 50
 
-    def units_which_can_be_built(self, player):
+    def units_which_can_be_built(self):
         return []
 
 
@@ -97,5 +100,5 @@ class SiegeWorks(Building):
     kind = 'siegeworks'
     time_to_build = 50
 
-    def units_which_can_be_built(self, player):
+    def units_which_can_be_built(self):
         return []

@@ -31,7 +31,7 @@ def build_something(player, inpt_as_ls, selected_obj=None):
 
 
     if isinstance(selected_obj, SelectedBuilding):
-        return build_unit(player, inpt_as_ls, selected_obj)
+        return build_unit(inpt_as_ls, selected_obj)
 
     elif isinstance(selected_obj, SelectedUnits):
         if not selected_obj.consists_of_villagers:
@@ -48,7 +48,7 @@ def build_something(player, inpt_as_ls, selected_obj=None):
 
 
 # The following is intended to only be used by the function build_something
-def build_unit(player, inpt_as_ls, selected_obj):
+def build_unit(inpt_as_ls, selected_obj):
     """Returns a list.
 
     In order to not return [],

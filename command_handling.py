@@ -111,7 +111,7 @@ def insert_build_building_command(player, command):
         building_number = len(player.buildings[building_class.kind])
         building = building_class(building_number, building_position, player)
         player.resources -= building.cost
-        building.build_on_map(player, building_position, game_map)
+        building.build_on_map(building_position, game_map)
 
     for i, villager in enumerate(ls_of_villagers):
         if isinstance(building, Farm):
@@ -272,7 +272,7 @@ def insert_build_unit_command(player, command):
     if num_to_be_built < 1 or not type(num_to_be_built) is int:
         return
 
-    if unit_type not in building.units_which_can_be_built(player):
+    if unit_type not in building.units_which_can_be_built():
         print('The selected building cannot build that unit.')
         print(cannot_build_unit_yet_error_message(player, building, unit_type))
         return
@@ -530,7 +530,7 @@ def implement_build_building_command(player):
             pass
         else:
             villager.move_by(delta)
-        building.build(villager, player)
+        building.build_by(villager)
 
 
 def implement_collect_resource_command(player):
@@ -556,7 +556,7 @@ def implement_build_unit_commands(player):
                     continue
                 unit = unit_kind_to_class[unit_type]
                 if player.can_build(unit):
-                    building.build_unit(player, unit_type)
+                    building.build_unit(unit_type)
                 else:
                     unit_type = unit_kind_to_singular[unit.kind].capitalize()
                     print('You do not have enough resources to build a ', unit_type)
@@ -569,7 +569,7 @@ def implement_build_unit_commands(player):
 def implement_research_commands(player):
     for building in player.commands['now']['research']:
         thing_to_research = player.commands['now']['research'][building]
-        building.research(thing_to_research, player)
+        building.research(thing_to_research)
 
 
 def implement_farm_commands(player):
