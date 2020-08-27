@@ -14,18 +14,21 @@
 # - create a named "army" of military units
 # - create a named "group" of villagers
 # - sell or buy a particular resource at the market
+# - give (or trade?) a resource with another player
 # - quit game
 # - save game (hopefully, at some point)
 
 # Also, having commands structured in this way will probably be
 # helpful when creating an AI.
 
-from units import Unit
+from units import Unit, unit_kinds
+from buildings.bldng_class import Building
 from game_map import Vector
 
 
 class Command:
-    pass
+    # The following should always be overridden by subclasses
+    kind = 'a command'
 
 
 class MoveCmd(Command):
@@ -33,21 +36,28 @@ class MoveCmd(Command):
     # But I want to eventually allow multiple units to be commanded to move
     # to a given position (instead of saying all should move by te same
     # delta). Hence each unit should have its own delta.
+
+    kind = 'move'
+
     def __init__(self):
         self.__unit_delta_pairs = []
 
     def add_unit_with_delta(self, unit, delta):
         if not isinstance(unit, Unit):
+            print("Error. Developer message: MoveCmd.__init__ was called,")
+            print("but unit was not an instance of Unit.")
             return
         if not isinstance(delta, Vector):
+            print("Error. Developer message: MoveCmd.__init__ was called,")
+            print("but delta was not an instance of Vector.")
             return
         self.__unit_delta_pairs.append((unit, delta))
 
-    def units_iter(self):
+    def units(self):
         for pair in self.__unit_delta_pairs:
             yield pair[0]
 
-    def units_and_deltas_iter(self):
+    def units_and_deltas(self):
         for pair in self.__unit_delta_pairs:
             yield pair
 
@@ -56,7 +66,32 @@ class BuildUnitCmd(Command):
     # Prior format: ['build unit', building, unit_type, num_to_be_built]
     # building was an instance of Building
     # unit_type was a string in unit_kinds from units.py
-    pass
+
+    kind = 'build unit'
+
+    def __init__(self, building, unit_kind, num_to_be_built):
+        if not isinstance(building, Building):
+            print("Error. Developer message: BuildUnitCmd.__init__ was called,")
+            print("but building was not an instance of Building.")
+            return
+        if unit_kind not in unit_kinds:
+            print("Error. Developer message: BuildUnitCmd.__init__ was called,")
+            print("but unit_kind was not in unit_kinds.")
+            return
+        if not type(num_to_be_built) is int:
+            print("Error. Developer message: BuildUnitCmd.__init__ was called,")
+            print("but num_to_be_built was not an int.")
+            return
+        if num_to_be_built < 1:
+            print("Error. Developer message: BuildUnitCmd.__init__ was called,")
+            print("but num_to_be_built < 1")
+            return
+        # if unit_kind not in building.units_which_can_be_built()
+        self.building = building
+        self.unit_kind = unit_kind
+        self.num_to_build = num_to_be_built
+
+
 
 
 class BuildBuildingCmd(Command):
@@ -64,28 +99,33 @@ class BuildBuildingCmd(Command):
     #             position, this_is_a_help_build_command]
     # position was an instance of Position
     # this_is_a_help_build_command was a bool
-    pass
+
+    kind = 'build building'
 
 
 class ResearchCmd(Command):
     # Prior format: ['research', building, thing_to_be_researched]
     # building was an instance of Building
     # thing_to_be_researched was an instance of a subclass of ResearchObject
-    pass
+
+    kind = 'research'
 
 
 class CollectResourceCmd(Command):
     # Prior format: ['collect resource', resource, ls_of_villagers]
     # resource was one of the classes Food, Gold, Stone, etc.
-    pass
+
+    kind = 'collect resource'
 
 
 class FarmCmd(Command):
     # Prior format: ['farm', farm, ls_of_villagers]
     # farm was an instance of Farm
-    pass
+
+    kind = 'farm'
 
 
 class EndOfTurnCmd(Command):
     # Prior format: ['end of turn']
-    pass
+
+    kind = 'end of turn'
