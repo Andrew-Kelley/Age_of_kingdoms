@@ -21,14 +21,21 @@
 # Also, having commands structured in this way will probably be
 # helpful when creating an AI.
 
-from units import Unit, unit_kinds
+from units import Unit, unit_kinds, Villager
 from buildings.bldng_class import Building
-from game_map import Vector
+from game_map import Vector, Position
+
+from inspect import isclass
 
 
 class Command:
     # The following should always be overridden by subclasses
     kind = 'a command'
+    __is_initialized = False
+
+    @property
+    def is_initialized(self):
+        return self.__is_initialized
 
 
 class MoveCmd(Command):
@@ -41,6 +48,9 @@ class MoveCmd(Command):
 
     def __init__(self):
         self.__unit_delta_pairs = []
+        # As this is guaranteed to run when a MoveCmd instance is created,
+        # I will instead set self.__is_initialized to True if at least
+        # one (unit, delta) pair has been successfully added.
 
     def add_unit_with_delta(self, unit, delta):
         if not isinstance(unit, Unit):
@@ -52,6 +62,7 @@ class MoveCmd(Command):
             print("but delta was not an instance of Vector.")
             return
         self.__unit_delta_pairs.append((unit, delta))
+        self.__is_initialized = True
 
     def units(self):
         for pair in self.__unit_delta_pairs:
@@ -68,6 +79,9 @@ class BuildUnitCmd(Command):
     # unit_type was a string in unit_kinds from units.py
 
     kind = 'build unit'
+    __building = None
+    __unit_kind = None
+    __num_to_build = None
 
     def __init__(self, building, unit_kind, num_to_be_built):
         if not isinstance(building, Building):
@@ -87,9 +101,22 @@ class BuildUnitCmd(Command):
             print("but num_to_be_built < 1")
             return
         # if unit_kind not in building.units_which_can_be_built()
-        self.building = building
-        self.unit_kind = unit_kind
-        self.num_to_build = num_to_be_built
+        self.__building = building
+        self.__unit_kind = unit_kind
+        self.__num_to_build = num_to_be_built
+        self.__is_initialized = True
+
+    @property
+    def building(self):
+        return self.__building
+
+    @property
+    def unit_kind(self):
+        return self.__unit_kind
+
+    @property
+    def num_to_build(self):
+        return self.__num_to_build
 
 
 
@@ -101,6 +128,53 @@ class BuildBuildingCmd(Command):
     # this_is_a_help_build_command was a bool
 
     kind = 'build building'
+    __building_class = None
+    __position = None
+    __is_a_help_build_cmd = None
+
+    def __init__(self, villagers, building_class, position, is_a_help_build_cmd):
+        message = "Error. Developer message: BuildBuildingCmd.__init__ was called,"
+        for v in villagers:
+            if not isinstance(v, Villager):
+                print(message)
+                print("and some element of villagers was not a villager.")
+                return
+        if not isclass(building_class):
+            print(message)
+            print("and building_class was not a class.")
+            return
+        if not issubclass(building_class, Building):
+            print(message)
+            print("and building_class was not a subclass of Building.")
+            return
+        if not isinstance(position, Position):
+            print(message)
+            print("and position was not an instance of Position.")
+            return
+        def is_bool(obj):
+            return obj is False or obj is True
+        if not is_bool(is_a_help_build_cmd):
+            print(message)
+            print("and is_a_help_build_cmd was not a bool.")
+            return
+
+        self.__building_class = building_class
+        self.__position = position
+        self.__is_a_help_build_cmd = is_a_help_build_cmd
+        self.__is_initialized = True
+
+    @property
+    def building_class(self):
+        return self.__building_class
+
+    @property
+    def position(self):
+        return self.__position
+
+    @property
+    def is_a_help_build_cmd(self):
+        return self.__is_a_help_build_cmd
+
 
 
 class ResearchCmd(Command):
@@ -129,3 +203,8 @@ class EndOfTurnCmd(Command):
     # Prior format: ['end of turn']
 
     kind = 'end of turn'
+
+
+if __name__ == '__main__':
+    obj = BuildUnitCmd(1, 2, 3)
+    print(obj.building)
