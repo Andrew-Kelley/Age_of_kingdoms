@@ -24,6 +24,8 @@
 from units import Unit, unit_kinds, Villager
 from buildings.bldng_class import Building
 from game_map import Vector, Position
+from research_classes import ResearchObject
+from resources import Resource
 
 from inspect import isclass
 
@@ -183,6 +185,31 @@ class ResearchCmd(Command):
     # thing_to_be_researched was an instance of a subclass of ResearchObject
 
     kind = 'research'
+    __building = None
+    __thing_to_be_researched = None
+
+    def __init__(self, building, thing_to_be_researched):
+        message = "Error. Developer message: ResearchCmd.__init__ was called,"
+        if not isinstance(building, Building):
+            print(message)
+            print("but building was not an instance of Building.")
+            return
+        if not isinstance(thing_to_be_researched, ResearchObject):
+            print(message)
+            print("but thing_to_be_researched was not an instance of")
+            print("ResearchObject.")
+            return
+        self.__building = building
+        self.__thing_to_be_researched = thing_to_be_researched
+        self.__is_initialized = True
+
+    @property
+    def building(self):
+        return self.__building
+
+    @property
+    def thing_to_be_researched(self):
+        return self.__thing_to_be_researched
 
 
 class CollectResourceCmd(Command):
@@ -190,6 +217,34 @@ class CollectResourceCmd(Command):
     # resource was one of the classes Food, Gold, Stone, etc.
 
     kind = 'collect resource'
+    __resource = None
+    __villagers = tuple()
+
+    def __init__(self, resource, villagers):
+        message = "Error. Developer message: CollectResourceCmd.__init__ was called,"
+        for v in villagers:
+            if not isinstance(v, Villager):
+                print(message)
+                print("and some element of villagers was not a villager.")
+                return
+        if not isinstance(resource, Resource):
+            print(message)
+            print("and resource was not an instance of Resource.")
+            return
+
+        self.__resource = resource
+        self.__villagers = []
+        for villager in villagers:
+            self.__villagers.append(villager)
+        self.__is_initialized = True
+
+    @property
+    def resource(self):
+        return self.__resource
+
+    def villagers(self):
+        for villager in self.__villagers:
+            yield villager
 
 
 class FarmCmd(Command):
