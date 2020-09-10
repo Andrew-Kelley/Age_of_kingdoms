@@ -36,7 +36,7 @@ help_commands = {'help', 'commands'}
 main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine',
                  'research', 'help build', 'farm'}
 possible_first_words = main_commands.union(done_with_turn).union(help_commands)
-
+possible_first_words.add('save')
 
 def closest_word_to(word, some_words):
     """This function is not perfect, but it should work well enough."""
@@ -94,7 +94,13 @@ def input_next_command(player, selected_obj=None):
         assert first_argument_of_command in possible_first_words
 
         if first_argument_of_command in done_with_turn:
+            player.log_command('done')
             return ['end of turn']
+        elif first_argument_of_command == 'save':
+            if inpt_as_ls[-1] == 'game':
+                return ['save game']
+            else:
+                print("Command rejected.")
         elif first_argument_of_command in help_commands and len(inpt_as_ls) == 1:
             help_on(selected_obj)
             continue
@@ -106,6 +112,8 @@ def input_next_command(player, selected_obj=None):
         elif first_argument_of_command not in main_commands:
             print('Your command was not understood. Please enter another command.')
             continue
+
+        player.log_command(inpt)
 
         kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj}
 

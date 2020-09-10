@@ -55,6 +55,8 @@ class Player:
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 
+        self._commands_history = []
+
         # self.messages is for printing messages that are produced
         # while the player's commands are implemented.
         self.messages = ''
@@ -84,6 +86,11 @@ class Player:
         for i, delta in enumerate([(-2, -2), (2, -2), (2, 2)], start=1):
             new_position = position + Position(*delta)
             Villager(new_position, self)
+
+    def log_command(self, cmd_as_inpt_string):
+        """Temporarily save the command entered by adding it to
+        the list that keeps track of all (valid-ish) commands."""
+        self._commands_history.append(cmd_as_inpt_string)
 
     @property
     def population_cap(self):

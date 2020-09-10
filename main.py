@@ -6,6 +6,7 @@ from input_handling.get_input import input_next_command
 from input_handling.select_an_object import SelectedObject
 from command_handling import insert_command, update_now_and_later_commands
 from command_handling import implement_commands_if_possible
+from save_and_load.save_game import save_game
 
 from game_map import game_map
 from player import Player, initial_position_of_player
@@ -16,7 +17,7 @@ print("Starting a game of Age of Kingdoms...")
 # n2 = input_number_of_players(human=False)
 # Note: for testing purposes, I'll start off with only 1 human player
 # (and no computer players).
-n1 = 1
+n1 = 2
 n2 = 0
 print("Starting a game with {} human player(s) and {} "
       "computer player(s).".format(n1, n2))
@@ -64,6 +65,9 @@ while True:
                 continue
             if command == ['end of turn']:
                 break
+            elif command == ['save game']:
+                save_game(players)
+                continue
             insert_command(player, command)
 
     # Every other turn, the order in which the players' commands are
