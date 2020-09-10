@@ -2,9 +2,11 @@
 # commands that each player enters. (And as of now, all players
 # are human.)
 
-# TODO: These also need to be edited:
+# When creating load_game.py note that these need to be taken
+# into account:
 # - the set_default_build_position fn in input_handling/build.py
 # - the research_something fn in input_handling/research.py
+
 
 from datetime import datetime
 

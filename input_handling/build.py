@@ -212,8 +212,10 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None):
                              '\nIf none, type "none" or just hit enter. ').lower().strip()
             if resource in ('', 'none'):
                 building.initial_resource_to_collect = None
+                player.log_command("Resource=none")
                 break
             elif resource in resource_kind_to_class:
+                player.log_command("Resource=" + resource)
                 building.initial_resource_to_collect = resource_kind_to_class[resource]
                 break
             else:

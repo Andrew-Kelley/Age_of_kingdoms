@@ -27,9 +27,11 @@ def research_something(player, inpt_as_ls, selected_obj=None):
         yes_or_no = input('Would you like the building to research '
                           'this afterwards? ').lower().strip()
         if yes_or_no.startswith('y'):
-            pass
+            # Then the rest of this function will still run.
+            player.log_command("Yes, add to research queue.")
         else:
             print('Ok, the building will not research it.')
+            player.log_command("No, do not add to research queue.")
             return []
 
     thing_to_be_researched = ' '.join(inpt_as_ls[1:])
