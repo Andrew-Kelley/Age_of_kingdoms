@@ -4,44 +4,24 @@
 
 from input_handling.get_input import input_next_command
 from input_handling.select_an_object import SelectedObject
+from input_handling.set_up_players import players, initialize_players
 from command_handling import insert_command, update_now_and_later_commands
 from command_handling import implement_commands_if_possible
 from save_and_load.save_game import save_game
-
-from game_map import game_map
-from player import Player, initial_position_of_player
+from save_and_load.load_game import load_game_if_user_wants_to
 
 
 print("Starting a game of Age of Kingdoms...")
-# n1 = input_number_of_players(human=True)
-# n2 = input_number_of_players(human=False)
-# Note: for testing purposes, I'll start off with only 1 human player
-# (and no computer players).
-n1 = 2
-n2 = 0
-print("Starting a game with {} human player(s) and {} "
-      "computer player(s).".format(n1, n2))
 
-# The actual players are listed starting at index 1.
-# Thus players[i] == player number i.
-players = [None]
-for i in range(1, n1+1):
-    initial_position = initial_position_of_player(i, game_map)
-    players.append(Player(number=i, position=initial_position, is_human=True))
-for i in range(n1+1, n1 + n2 + 1):
-    initial_position = initial_position_of_player(i, game_map)
-    players.append(Player(number=i, position=initial_position, is_human=False))
+initialize_players()
 
-for player in players[1:]:
-    print("Is player number {} human? {}".format(player.number, player.is_human))
+load_game_if_user_wants_to()
 
-
-turn_number = 0
-while True:
-    turn_number += 1
-    if turn_number > 5000:
+max_num_turns = 5000
+for turn_number in range(max_num_turns):
+    if turn_number >= max_num_turns - 1:
         print('The limit of {} turns has been reached. '
-              'Game over.'.format(turn_number - 1))
+              'Game over.'.format(max_num_turns))
         break
 
     for player in players[1:]:
