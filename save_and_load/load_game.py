@@ -4,16 +4,10 @@
 # the game was in when it was saved.)
 
 from input_handling.get_input import get_next_command
-
-# TODO: the following line fails, so fix it!
-from main import players
-
-# some global variables for use in loading:
-loading_game = True
-# the following is used by the set_default_build_position fn in input_handling/build.py
-resource = 'none'
-# The following is used by the research_something fn in input_handling/research.py
-queue_research_decision = 'yes'
+from input_handling.set_up_players import players
+from input_handling.select_an_object import SelectedObject
+from command_handling import insert_command, update_now_and_later_commands
+from command_handling import implement_commands_if_possible
 
 
 def get_name_of_file_to_load():
@@ -22,7 +16,7 @@ def get_name_of_file_to_load():
 
 
 def get_command_from_line(line):
-    return line[4:]
+    return line[4:-1]
 
 
 def extract_resource_from_command(command):
@@ -46,30 +40,80 @@ def is_a_yes_or_no_decision(command):
     return prefix in ("Yes,", "No, ")
 
 
-def set_decision(command):
+def get_decision(command):
     global queue_research_decision
     prefix = command[:4]
     if prefix == "Yes,":
-        queue_research_decision = 'yes'
+        return 'yes'
     elif prefix == "No, ":
-        queue_research_decision = "no"
+        return"no"
+
+def get_player_number(line):
+    return int(line[1])
+
+def get_player(line):
+    player_num = get_player_number(line)
+    return players[player_num]
 
 
 def load_game():
-    global resource
-    global queue_research_decision
+    resource = 'none'
+    # resource is for when setting the default build position of the
+    # towncenter, in which case the player is asked what (if any) resource
+    # they want a newly built villager to collect.
+    research_decision = 'yes'
+    # research_decision is for adding a research item to the queue of
+    # a building's research queue if multiple things are being researched.
+    loading_game = True
     file_name = get_name_of_file_to_load()
     try:
         with open(file_name, 'r') as f:
+            selected_obj = None
+            previous_player = None
+            starting_new_turn = True
+            previous_cmd_txt = ''
             for line in f:
+                player = get_player(line)
+                if starting_new_turn:
+                    update_now_and_later_commands(player)
+                    starting_new_turn = False
+                if player is not previous_player:
+                    previous_player = player
+                    selected_obj = None
+                    resource = 'none'
                 command_txt = get_command_from_line(line)
                 if is_a_resource_specification(command_txt):
+                    # Then the previous command was a set default build position
+                    # and was not implemented in the else part below
                     resource = extract_resource_from_command(command_txt)
-                elif is_a_yes_or_no_decision(command_txt):
-                    set_decision(command_txt)
+                    command_obj = get_next_command(player, previous_cmd_txt, selected_obj,
+                                                       loading_game, resource,
+                                                       research_decision)
+                    insert_command(player, command_obj)
                 else:
-                    pass
-                    # command_obj = get_next_command() #TODO Fill this in
+                    if is_a_yes_or_no_decision(command_txt):
+                        # TODO: The following is set after I need to use it.
+                        # SO THIS MUST BE A BUG (which wouldn't even come up often)
+                        research_decision = get_decision(command_txt)
+                    else:
+                        if command_txt == 'done':
+                            starting_new_turn = True
+                            implement_commands_if_possible(player)
+                            continue
+                        if command_txt[:3] == 'set':
+                            # Then we need to get the resource from the next line
+                            # before implementing this command
+                            previous_cmd_txt = command_txt
+                            continue
+                        command_obj = get_next_command(player, command_txt, selected_obj,
+                                                       loading_game, resource,
+                                                       research_decision)
+                        if isinstance(command_obj, SelectedObject):
+                            selected_obj = command_obj
+                            continue
+                        if command_obj == ['end of turn']:
+                            continue
+                        insert_command(player, command_obj)
     except IOError:
         print("File not found. Command to load game rejected.")
 
@@ -88,7 +132,7 @@ def load_game_if_user_wants_to():
 
 
 if __name__ == '__main__':
-    line = "P1: Resource=wood"
+    line = "P1: Resource=wood\n"
     command = get_command_from_line(line)
     if is_a_resource_specification(command):
         resource = extract_resource_from_command(command)
@@ -105,3 +149,8 @@ if __name__ == '__main__':
     line = "P1: select towncenter"
     command = get_command_from_line(line)
     assert not is_a_yes_or_no_decision(command)
+
+    line = 'P1: done\n'
+    command = get_command_from_line(line)
+    print(command)
+    assert command == 'done'
