@@ -96,9 +96,9 @@ def load_game(type_of_loading_to_do):
                     update_now_and_later_commands(player)
                     starting_new_turn = False
                 command_txt = get_command_from_line(line)
-                # if command_txt[:5] == "print":
+                if command_txt[:5] == "print":
                     # Then no need to re-enter the print commands.
-                    # continue
+                    continue
                 if is_a_resource_specification(command_txt):
                     # Then the previous command was a set default build position
                     # and was not implemented in the else part below
