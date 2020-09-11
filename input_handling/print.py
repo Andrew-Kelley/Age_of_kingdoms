@@ -1,4 +1,4 @@
-from game_map import game_map
+import game_map as game_map_module
 from input_handling.select_an_object import SelectedBuilding
 from input_handling.select_an_object import extract_selected_obj
 from game_map import Position
@@ -65,7 +65,7 @@ def print_part_of_map(player, inpt_as_ls):
     if i is None or j is None:
         return []
 
-    game_map.print_centered_at(Position(i, j))
+    game_map_module.game_map.print_centered_at(Position(i, j))
     return []
 
 
