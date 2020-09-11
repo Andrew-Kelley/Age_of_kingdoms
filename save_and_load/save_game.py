@@ -1,14 +1,11 @@
-# My first implementation of saving a game will only save the
-# commands that each player enters. (And as of now, all players
-# are human.)
-
-# When creating load_game.py note that these need to be taken
-# into account:
+# The following had to be edited to  make save_game and load_game work:
 # - the set_default_build_position fn in input_handling/build.py
 # - the research_something fn in input_handling/research.py
 
+import game_map as gm_module
 
 from datetime import datetime
+import pickle
 
 
 def replace_with(string, index, replacement):
@@ -66,7 +63,12 @@ file_first_part = 'save_and_load/saved_games/'
 
 
 def save_game(players):
+    """This saves the game in two ways.
+
+    First, it saves the state of each player object and also the game_map.
+    Second, it saves all commands entered up to this point."""
     file_name = get_name_of_file()
+    save_game_state(players, file_name)
     indexes = [0] * len(players)
     file_name = file_first_part + file_name
     with open(file_name, 'w') as f:
@@ -87,3 +89,14 @@ def save_game(players):
             if not still_saving_given(indexes, players):
                 print('Game successfully saved.')
                 return
+
+
+def get_pickle_file_name(the_txt_file):
+    file_name = the_txt_file[:-4] # this removes the ".txt" at the end
+    return file_first_part + file_name + ".p"
+
+def save_game_state(players, the_txt_file):
+    file_name = get_pickle_file_name(the_txt_file)
+    players_and_map = [players, gm_module.game_map]
+    with open(file_name, 'wb') as f:
+        pickle.dump(players_and_map, f)
