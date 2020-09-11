@@ -4,7 +4,9 @@
 
 from input_handling.get_input import input_next_command
 from input_handling.select_an_object import SelectedObject
-from input_handling.set_up_players import players, initialize_players
+from input_handling.set_up_players import initialize_players
+# The following line is to reference plyrs.players directly
+import input_handling.set_up_players as plyrs
 from command_handling import insert_command, update_now_and_later_commands
 from command_handling import implement_commands_if_possible
 from save_and_load.save_game import save_game
@@ -17,6 +19,8 @@ initialize_players()
 
 load_game_if_user_wants_to()
 
+players = plyrs.players
+
 max_num_turns = 5000
 for turn_number in range(max_num_turns):
     if turn_number >= max_num_turns - 1:
@@ -28,11 +32,7 @@ for turn_number in range(max_num_turns):
         print("It is now Player number {}'s turn".format(player.number))
         print(player.resources)
 
-        # player.messages contains all messages for the player produced
-        # while the player's commands are being implemented.
-        if player.messages:
-            print(player.messages)
-            player.messages = ''
+        player.print_and_clear_messages()
         selected_obj = None
         update_now_and_later_commands(player)
 

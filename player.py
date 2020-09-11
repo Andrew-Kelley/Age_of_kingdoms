@@ -1,4 +1,3 @@
-from buildings.bldng_class import Building
 from buildings.other_bldngs import TownCenter, House, Blacksmith, Library, Market
 from buildings.other_bldngs import Wonder
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
@@ -123,6 +122,14 @@ class Player:
         if not self.resources >= thing.cost:
             return False
         return True
+
+    def print_and_clear_messages(self):
+        if self.messages:
+            print(self.messages)
+            self.messages = ''
+
+    def compare_to(self, other):
+        pass
 
 
 def initial_position_of_player(player_number, game_map):
