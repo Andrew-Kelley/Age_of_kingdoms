@@ -120,7 +120,8 @@ def input_next_command(player, selected_obj=None):
         return functions[first_argument_of_command](**kwargs)
 
 
-def get_next_command(player, inpt='', selected_obj=None, inpt_as_ls=None):
+def get_next_command(player, inpt='', selected_obj=None,
+                     loading_game=False, resource='none'):
     """Return the command produced by the given input.
 
     The input can be given either as a string or a list.
@@ -130,10 +131,9 @@ def get_next_command(player, inpt='', selected_obj=None, inpt_as_ls=None):
     This function is intended only for testing purposes,
     and perhaps for a rudimentary ability to load a
     saved game."""
-    if not inpt and not inpt_as_ls:
+    if not inpt:
         return
-    if inpt:
-        inpt_as_ls = inpt.split()
+    inpt_as_ls = inpt.split()
     if not type(inpt_as_ls) is list or len(inpt_as_ls) == 0:
         return
 
@@ -151,7 +151,21 @@ def get_next_command(player, inpt='', selected_obj=None, inpt_as_ls=None):
     elif first_arg not in main_commands:
         return
 
-    kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj}
+    player.log_command(inpt)
+
+    kwargs = {'player': player, 'inpt_as_ls': inpt_as_ls, 'selected_obj': selected_obj,
+              'loading_game': loading_game}
+    # The following would only be used if first_arg == 'set'
+    kwargs['resource'] = resource
+    if first_arg == 'set':
+        return set_default_build_position(**kwargs)
+
+    del(kwargs['resource'])
+
+    if first_arg == 'research':
+        return research_something(**kwargs)
+
+    del(kwargs['loading_game'])
 
     return functions[first_arg](**kwargs)
 

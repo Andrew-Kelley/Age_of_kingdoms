@@ -188,7 +188,8 @@ def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
     return []
 
 
-def set_default_build_position(player, inpt_as_ls, selected_obj=None):
+def set_default_build_position(player, inpt_as_ls, selected_obj=None,
+                               loading_game=False, resource='none'):
     """selected_obj must be a building that can build units
     Returns []"""
     if not selected_obj or not isinstance(selected_obj, SelectedBuilding):
@@ -206,6 +207,11 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None):
     building.change_build_position_to(position, game_map)
 
     if building.kind == 'towncenter':
+        if loading_game:
+            if resource in resource_kind_to_class:
+                building.initial_resource_to_collect = resource_kind_to_class[resource]
+            return []
+        # The following of course runs if not loading_game
         while True:
             resource = input('Which resource would you like newly built '
                              'villagers to collect?'

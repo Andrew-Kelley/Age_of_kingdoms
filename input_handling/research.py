@@ -3,7 +3,8 @@ from buildings.bldng_class import Building
 from research_classes import research_string_to_class, stone_age_research, bronze_age_research
 
 
-def research_something(player, inpt_as_ls, selected_obj=None):
+def research_something(player, inpt_as_ls, selected_obj=None,
+                       loading_game=False):
     """To not return [], inpt_as_ls must be of the following format:
     ['research','word1', <optional> 'word2'], and
     'word1 word2' must be something that can be researched from the selected building.
@@ -23,9 +24,16 @@ def research_something(player, inpt_as_ls, selected_obj=None):
         return []
 
     if building in player.commands['now']['research']:
-        print('The selected building is already researching something.', end = '\n\n')
-        yes_or_no = input('Would you like the building to research '
+        if not loading_game:
+            print('The selected building is already researching something.', end = '\n\n')
+            yes_or_no = input('Would you like the building to research '
                           'this afterwards? ').lower().strip()
+        else:
+            # The following technically is a small bug:
+            # If in a game, you actually input "no", then if you save the game
+            # and then load it, this assumed incorrectly that the answer was "yes".
+            yes_or_no = "yes"
+
         if yes_or_no.startswith('y'):
             # Then the rest of this function will still run.
             player.log_command("Yes, add to research queue.")
