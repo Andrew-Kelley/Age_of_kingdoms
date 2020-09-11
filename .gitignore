@@ -8,3 +8,4 @@ __pycache__
 
 # I don't want to use git to save the games that I've saved locally:
 /save_and_load/saved_games/*.txt
+/save_and_load/saved_games/*.p
