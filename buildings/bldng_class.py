@@ -170,6 +170,22 @@ class Building:
             player.buildings[self.kind].append(self)
             player.messages += 'New building: {}\n'.format(self)
 
+    def compare_to(self, other):
+        """For use in testing only."""
+        there_is_an_error = False
+        if self.position != other.position:
+            print("Error: these building's positions don't match.")
+            print(self, self.position)
+            print(other, other.position)
+            there_is_an_error = True
+        if self.build_position != other.build_position:
+            print("Error: these building's build positions don't match.")
+            print(self, self.build_position)
+            print(other, other.build_position)
+            there_is_an_error = True
+        return there_is_an_error
+
+
 if __name__ == '__main__':
     from player import Player
     from game_map import Position
