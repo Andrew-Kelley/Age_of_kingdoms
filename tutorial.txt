@@ -11,7 +11,7 @@ or "done"
 
 These are the possible first words in a command:
 'build', 'select', 'move', 'print', 'set', 'collect',
-'chop', 'mine', 'research', 'farm',
+'chop', 'mine', 'research', 'farm', 'save'
 'help', 'commands'
 
 Another command is 'help build'.
@@ -258,6 +258,16 @@ of something before researching the iron version.
 
 TODO: Add short descriptions of what different research gets you
 
+---------------------------------------
+-------------TO SAVE A GAME------------
+
+Just type "save game"
+
+Warning: Do not load a saved game unless you completely
+trust the saved game .p file. This game uses the
+Python pickle module to save and load games, and so
+arbitrary Python code can be run when a pickle file is
+loaded.
 
 ----------------------------------------------------------
 ---------DIFFERENCES FROM THE GAME AGE OF EMPIRES---------
@@ -268,6 +278,11 @@ of food. In other words, you never have to rebuild it.
 When a villager farms, food is automatically added to the player's
 food resource. (Note that a farm can be built and used anywhere;
 there is no need to be within a certain distance of a towncenter.)
+
+Currently, when a towncenter is researching the next age, it
+can still build villagers. This will likely be changed later on
+to match Age of Empires, and so then a towncenter couldn't do
+anything else while researching the next age.
 
 
 -----------------------------
