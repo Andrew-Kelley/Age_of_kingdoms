@@ -8,9 +8,7 @@ from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
 from units import BatteringRam, Catapult, Trebuchet, Merchant
 
 from colors import Color
-
 from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
-
 from game_map import game_map, Position
 
 from copy import deepcopy
@@ -129,7 +127,84 @@ class Player:
             self.messages = ''
 
     def compare_to(self, other):
-        pass
+        """For use in testing only."""
+        compare_resources(self, other)
+        compare_units(self, other)
+        compare_buildings(self, other)
+        compare_research(self, other)
+
+
+def compare_resources(player_a, player_b):
+    """For use in testing only."""
+    there_is_an_error = False
+    if player_a.resources != player_b.resources:
+        print("Unequal resources!!")
+        print(player_a, player_a.resources)
+        print(player_b, player_b.resources)
+        there_is_an_error = True
+    else:
+        print("a success: resources match")
+    return there_is_an_error
+
+
+def compare_units(player_a, player_b):
+    """For use in testing only."""
+    there_is_an_error = False
+    for unit_type in units_ls:
+        kind = unit_type.kind
+        units_a = player_a.units[kind][1:]
+        units_b = player_b.units[kind][1:]
+        if len(units_a) != len(units_b):
+            print(kind, "Unequal number of units!!")
+            there_is_an_error = True
+        for u_a, u_b in zip(units_a, units_b):
+            status = u_a.compare_to(u_b)
+            if status:
+                there_is_an_error = True
+    if not there_is_an_error:
+        print("a success: all units match")
+    return there_is_an_error
+
+
+def compare_buildings(player_a, player_b):
+    """For use in testing only."""
+    there_is_an_error = False
+    for building_type in buildings_ls:
+        kind = building_type.kind
+        bldngs_a = player_a.buildings[kind][1:]
+        bldngs_b = player_b.buildings[kind][1:]
+    if len(bldngs_a) != len(bldngs_b):
+        print(kind, "Unequal number of buildings!!")
+        there_is_an_error = True
+    for bldng_a, bldng_b in zip(bldngs_a, bldngs_b):
+        status = bldng_a.compare_to(bldng_b)
+        if status:
+            there_is_an_error = True
+    if not there_is_an_error:
+        print("a success: all buildings match")
+    return there_is_an_error
+
+
+def compare_research(player_a, player_b):
+    """For use in testing only."""
+    there_is_an_error = False
+    if player_a.things_researched != player_b.things_researched:
+        print("Error: the two players have not researched the same things")
+        print(player_a, player_a.things_researched)
+        print(player_b, player_b.things_researched)
+        there_is_an_error = True
+
+    current_rsrch_a = player_a.things_being_currently_researched
+    current_rsrch_b = player_b.things_being_currently_researched
+    if current_rsrch_a != current_rsrch_b:
+        print("Error: the two players are not currently researching the")
+        print("same thing.")
+        print(player_a, current_rsrch_a)
+        print(player_b, current_rsrch_b)
+        there_is_an_error = True
+    if not there_is_an_error:
+        print("a success: all research matches")
+    return there_is_an_error
 
 
 def initial_position_of_player(player_number, game_map):
