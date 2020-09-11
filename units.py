@@ -68,6 +68,35 @@ class Unit:
         """delta must of of type Vector (or Position)"""
         self.position += delta
 
+    def compare_to(self, other):
+        there_is_an_error = False
+        if self.number != other.number:
+            print("Error: their numbers don't match:")
+            print("Numbers: ", self.number, other.number)
+            there_is_an_error = True
+
+        delta = self.position - other.position
+        error_margin = 5 # Somewhat arbitrary
+        # Recall that when villagers collect resources, which resource
+        # they go to next uses randomness. When military units attack,
+        # I might also use randomness to which unit they choose to attack.
+        if delta.magnitude > error_margin:
+            print("Possible error: their positions are different:")
+            print("positions: ", self.position, other.position)
+            there_is_an_error = True
+        if self.is_alive != other.is_alive:
+            print("Error: one is dead and the other alive.")
+            there_is_an_error = True
+        if self.current_action != other.current_action:
+            print("Error: their actions don't match.")
+            print(self.current_action, other.current_action)
+            there_is_an_error = True
+        if there_is_an_error:
+            print(self)
+            print(other)
+        return there_is_an_error
+
+
 
 # Should I inherit from SelectedUnits?
 # But being an army doesn't mean it is selected, so I don't think so.
