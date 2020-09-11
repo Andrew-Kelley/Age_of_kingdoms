@@ -261,7 +261,10 @@ TODO: Add short descriptions of what different research gets you
 ---------------------------------------
 -------------TO SAVE A GAME------------
 
-Just type "save game"
+FIRST, make sure you have a directory called
+saved_games inside the save_and_load directory.
+
+Then, in a given game, just type "save game"
 
 Warning: Do not load a saved game unless you completely
 trust the saved game .p file. This game uses the
