@@ -10,6 +10,7 @@ from units import BatteringRam, Catapult, Trebuchet, Merchant
 from colors import Color
 from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
 from game_map import game_map, Position
+from research_classes import ResearchObject
 
 from copy import deepcopy
 
@@ -120,6 +121,15 @@ class Player:
         if not self.resources >= thing.cost:
             return False
         return True
+
+    def has_resources_to_research(self, thing):
+        if not isinstance(thing, ResearchObject):
+            print("Developer message: ERROR! player was asked if he/she")
+            print("had enough resources to research something that was not")
+            print("an instance of ResearchObject class.")
+        if self.resources >= thing.cost:
+            return True
+        return False
 
     def print_and_clear_messages(self):
         if self.messages:

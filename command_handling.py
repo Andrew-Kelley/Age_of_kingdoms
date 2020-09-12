@@ -318,6 +318,10 @@ def insert_research_command(player, command):
 
     building = command[1]
     thing_to_be_researched = command[2]
+    if not player.has_resources_to_research(thing_to_be_researched):
+        print("You do not have enough resources to research this:")
+        print(thing_to_be_researched.name)
+        return
     player.resources -= thing_to_be_researched.cost
     if building in player.commands['now']['research']:
         if building in player.commands['later']['research']:
