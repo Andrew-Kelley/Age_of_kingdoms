@@ -50,7 +50,7 @@ def still_saving_given(indexes, players):
     for player in players:
         if player is None:
             continue
-        if indexes[player.number] < len(player._commands_history):
+        if indexes[player.number] < len(player.commands_history):
             return True
     return False
 
@@ -78,9 +78,9 @@ def save_game(players):
                     # Then so-called player is None
                     continue
                 while True:
-                    if indexes[player_num] >= len(player._commands_history):
+                    if indexes[player_num] >= len(player.commands_history):
                         break
-                    cmd = player._commands_history[indexes[player_num]]
+                    cmd = player.commands_history[indexes[player_num]]
                     indexes[player_num] += 1
                     f.write(prefix(player) + cmd + '\n')
                     if cmd == 'done':

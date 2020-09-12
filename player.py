@@ -53,7 +53,7 @@ class Player:
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 
-        self._commands_history = []
+        self.commands_history = []
 
         # self.messages is for printing messages that are produced
         # while the player's commands are implemented.
@@ -88,7 +88,7 @@ class Player:
     def log_command(self, cmd_as_inpt_string):
         """Temporarily save the command entered by adding it to
         the list that keeps track of all (valid-ish) commands."""
-        self._commands_history.append(cmd_as_inpt_string)
+        self.commands_history.append(cmd_as_inpt_string)
 
     @property
     def population_cap(self):
@@ -118,18 +118,15 @@ class Player:
         if issubclass(thing, Unit) or isinstance(thing, Unit):
             if self.population > self.population_cap - number:
                 return False
-        if not self.resources >= thing.cost:
-            return False
-        return True
+        return self.resources >= thing.cost
 
     def has_resources_to_research(self, thing):
         if not isinstance(thing, ResearchObject):
             print("Developer message: ERROR! player was asked if he/she")
             print("had enough resources to research something that was not")
             print("an instance of ResearchObject class.")
-        if self.resources >= thing.cost:
-            return True
-        return False
+            return False
+        return self.resources >= thing.cost
 
     def print_and_clear_messages(self):
         if self.messages:
