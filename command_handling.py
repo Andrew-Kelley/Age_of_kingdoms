@@ -318,6 +318,7 @@ def insert_research_command(player, command):
 
     building = command[1]
     thing_to_be_researched = command[2]
+    player.resources -= thing_to_be_researched.cost
     if building in player.commands['now']['research']:
         if building in player.commands['later']['research']:
             player.commands['later']['research'][building].append(thing_to_be_researched)

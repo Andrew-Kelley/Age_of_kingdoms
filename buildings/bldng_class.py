@@ -67,8 +67,6 @@ class Building:
     def research(self, thing_to_be_researched):
         thing = thing_to_be_researched
         player = self.player
-        if thing.progress_to_completion == 0:
-            player.resources -= thing.cost
 
         thing.make_progress()
 
