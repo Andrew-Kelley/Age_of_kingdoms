@@ -101,6 +101,7 @@ def input_next_command(player, selected_obj=None):
                 return ['save game']
             else:
                 print("Command rejected.")
+                return
         elif first_argument_of_command in help_commands and len(inpt_as_ls) == 1:
             help_on(selected_obj)
             continue
