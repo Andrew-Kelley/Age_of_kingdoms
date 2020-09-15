@@ -13,85 +13,107 @@ import game_map as gm_module
 import pickle
 from copy import deepcopy
 
+decision_both = "both"
+decision_re_enter = "re-enter commands"
+decision_pickle = "pickle"
+decision_abort = "abort"
+
+
+def load_game_if_user_wants_to():
+    print()
+    print("Do you want to load a saved game?")
+    yes_or_no = input("Type 'y' or 'n' (or 'yes' or 'no'): ").lower()
+    if len(yes_or_no) > 0 and yes_or_no[0] == 'y':
+        decision = get_type_of_loading_to_do()
+        if decision == decision_abort:
+            print("Loading game aborted. Nothing was loaded.")
+            return
+        load_game(decision)
+    else:
+        print("Okay, no game was loaded.")
+
+
+def get_type_of_loading_to_do():
+    global decision_both, decision_re_enter, decision_pickle, decision_abort
+    print()
+    print("What type of loading do you want, pickle, re-enter commands, or both?")
+    print("Type 'p' for pickle, 'r' to re-enter commands, and 'b' for both.")
+    print("(Pickle is loading from a .p file.)")
+    print("(Loading both ways is for testing purposes.)")
+    decision = input("Enter your choice: ").lower()
+    if not decision:
+        return decision_abort
+    elif decision[0] == 'b':
+        return decision_both
+    elif decision[0] == 'r':
+        return decision_re_enter
+    elif decision[0] == 'p':
+        return decision_pickle
+    else:
+        return decision_abort
+
+
+def load_game(type_of_loading_to_do):
+    """This loads a game according to three options."""
+    global decision_both, decision_re_enter, decision_pickle
+    file_name = get_name_of_file_to_load()
+    if type_of_loading_to_do == decision_both:
+        # Then the commands need to be re-entered for a deepcopy of
+        # plyrs.players
+        players = deepcopy(plyrs.players)
+        re_enter_commands(file_name, players)
+    if type_of_loading_to_do in (decision_pickle, decision_both):
+        load_pickled_file(file_name)
+        if type_of_loading_to_do == decision_both:
+            compare_two_modes_of_loading(players_copy=players)
+        return
+    if type_of_loading_to_do == decision_re_enter:
+        re_enter_commands(file_name, plyrs.players)
+        return
+    if type_of_loading_to_do not in (decision_both, decision_pickle,
+                                     decision_re_enter):
+        print("Developer error! No game was loaded.")
+
 
 def get_name_of_file_to_load():
     print()
-    print("WARNING: This uses the Python pickle module.")
-    print("Only load a file if you completely trust it.")
+    print("WARNING: This can use the Python pickle module.")
+    print("Only load a pickle file if you completely trust it.")
     print("Without using the .p or .txt suffix,")
     file_name = input("enter the name of the file to load: ")
     return 'save_and_load/saved_games/' + file_name
 
 
-def get_command_from_line(line):
-    return line[4:-1]
+def load_pickled_file(file_name):
+    print("Loading from pickle...")
+    file_name = file_name + ".p"
+    try:
+        with open(file_name, "rb") as f:
+            players_and_map = pickle.load(f)
+            plyrs.players = players_and_map[0]
+            gm_module.game_map = players_and_map[1]
+            print("Pickled file successfully loaded.")
+    except IOError:
+        print("The .p file was not found. Loading failed.")
+        print("Attempted to open: ")
+        print(file_name)
 
 
-def extract_resource_from_command(command):
-    index = command.index('=')
-    return command[index+1:]
-
-
-def is_a_resource_specification(command):
-    resource_prefix = "Resource="
-    length = len(resource_prefix)
-    if command[:length] == resource_prefix:
-        return True
-    else:
-        return False
-
-
-def is_a_yes_or_no_decision(command):
-    if len(command) < 2:
-        return False
-    prefix = command[:4]
-    return prefix in ("Yes,", "No, ")
-
-
-def get_decision(command):
-    prefix = command[:4]
-    if prefix == "Yes,":
-        return 'yes'
-    elif prefix == "No, ":
-        return "no"
-
-
-def get_player_number(line):
-    return int(line[1])
-
-players = [None]
-
-def get_player(line):
-    player_num = get_player_number(line)
-    return players[player_num]
-
-
-def load_game(type_of_loading_to_do):
-    """This re-enters all the commands saved in a file."""
+def re_enter_commands(file_name, players):
+    print("Re-entering commands...")
+    file_name = file_name + ".txt"
+    loading_game = True
     resource = 'none'
     # resource is for when setting the default build position of the
     # towncenter, in which case the player is asked what (if any) resource
     # they want a newly built villager to collect.
-    global players
-    players = deepcopy(plyrs.players)
-    loading_game = True
-    file_name = get_name_of_file_to_load()
-    print("Loading from pickle...")
-    load_pickled_file(file_name)
-    if type_of_loading_to_do == 'usual':
-        return
-    if type_of_loading_to_do != 'testing':
-        print("Developer error! re-entering commands aborted.")
-        return
-    print("For testing purposes, re-entering commands...")
-    file_name = file_name + ".txt"
     try:
         with open(file_name, 'r') as f:
             selected_obj = None
             starting_new_turn = True
             previous_cmd_txt = ''
             for line in f:
-                player = get_player(line)
+                player = get_player(line, players)
                 if starting_new_turn:
                     update_now_and_later_commands(player)
                     starting_new_turn = False
@@ -134,65 +156,65 @@ def load_game(type_of_loading_to_do):
                             continue
                         insert_command(player, command_obj)
         print("Commands successfully re-entered.")
-        compare_two_modes_of_loading()
     except IOError:
-        print("File not found. Command to load game by "
+        print("The .txt file was not found. Command to load game by "
               "re-entering commands rejected.")
         print("Attempted to open: ")
         print(file_name)
 
 
-def load_pickled_file(file_name):
-    file_name = file_name + ".p"
-    try:
-        with open(file_name, "rb") as f:
-            players_and_map = pickle.load(f)
-            plyrs.players = players_and_map[0]
-            gm_module.game_map = players_and_map[1]
-            print("Pickled file successfully loaded.")
-    except IOError:
-        print("File not found. Loading failed.")
-        print("Attempted to open: ")
-        print(file_name)
+def get_command_from_line(line):
+    # The first four characters of the command are of this form:
+    # "P1: "
+    # The last character of line is a new line character.
+    return line[4:-1]
 
 
-def load_game_if_user_wants_to():
-    print()
-    print("Do you want to load a saved game?")
-    yes_or_no = input("Type 'y' or 'n' (or 'yes' or 'no'): ").lower()
-    if len(yes_or_no) > 0 and yes_or_no[0] == 'y':
-        decision = get_type_of_loading_to_do()
-        if decision == "abort":
-            print("Loading game aborted. Nothing was loaded.")
-            return
-        load_game(decision)
+def extract_resource_from_command(command):
+    index = command.index('=')
+    return command[index+1:]
+
+
+def is_a_resource_specification(command):
+    resource_prefix = "Resource="
+    length = len(resource_prefix)
+    if command[:length] == resource_prefix:
+        return True
     else:
-        print("Okay, no game was loaded.")
+        return False
 
 
-def get_type_of_loading_to_do():
-    print()
-    print("To load saved game as usual, just hit enter.")
-    print("For testing purposes, type 't'.")
-    decision = input("Enter your choice: ").lower()
-    usual = 'usual'
-    if not decision:
-        print("Loading as usual (without testing)...")
-        return usual
-    elif decision[0] == 't':
-        return 'testing'
-    else:
-        print("Loading as usual (without testing)...")
-        return usual
+def is_a_yes_or_no_decision(command):
+    if len(command) < 2:
+        return False
+    prefix = command[:4]
+    return prefix in ("Yes,", "No, ")
 
 
-def compare_two_modes_of_loading():
+def get_decision(command):
+    prefix = command[:4]
+    if prefix == "Yes,":
+        return "yes"
+    elif prefix == "No, ":
+        return "no"
+
+
+def get_player_number(line):
+    return int(line[1])
+
+
+def get_player(line, players):
+    player_num = get_player_number(line)
+    return players[player_num]
+
+
+def compare_two_modes_of_loading(players_copy):
     """Test if re-entering the commands produces the same state as pickled file."""
-    global players
     print("Comparing the two modes of loading this saved game...")
-    if len(players) != len(plyrs.players):
+    if len(players_copy) != len(plyrs.players):
         print("The number of players doesn't match!!")
-    for playerA, playerB in zip(players[1:], plyrs.players[1:]):
+        return
+    for playerA, playerB in zip(players_copy[1:], plyrs.players[1:]):
         playerA.compare_to(playerB)
 
 
