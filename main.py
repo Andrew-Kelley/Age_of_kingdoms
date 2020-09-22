@@ -7,8 +7,9 @@ from input_handling.select_an_object import SelectedObject
 from input_handling.set_up_players import initialize_players
 # The following line is to reference plyrs.players directly
 import input_handling.set_up_players as plyrs
-from command_handling import insert_command, update_now_and_later_commands
-from command_handling import implement_commands_if_possible
+from command_handling.insert_commands import insert_command
+from command_handling.update_now_and_later_cmds import update_now_and_later_commands
+from command_handling.implement_commands import implement_commands_if_possible
 from save_and_load.save_game import save_game
 from save_and_load.load_game import load_game_if_user_wants_to
 

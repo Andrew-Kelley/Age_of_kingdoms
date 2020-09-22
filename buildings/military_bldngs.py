@@ -4,7 +4,7 @@ from buildings.bldng_class import Building
 from resources import Resources, Wood
 from units import Pikeman, Swordsman, Archer
 from research_classes import BronzeShields, BronzeSwords
-from command_handling import insert_move_later_command
+from command_handling.insert_commands import insert_move_later_command
 
 class Barracks(Building):
     cost = Resources({Wood: 150})

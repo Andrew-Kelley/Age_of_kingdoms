@@ -8,8 +8,9 @@ from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tow
 from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
-from command_handling import insert_move_later_command, insert_collect_resource_later_command
-from command_handling import insert_collect_resource_now_command
+from command_handling.insert_commands import insert_move_later_command
+from command_handling.insert_commands import insert_collect_resource_later_command
+from command_handling.insert_commands import insert_collect_resource_now_command
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.

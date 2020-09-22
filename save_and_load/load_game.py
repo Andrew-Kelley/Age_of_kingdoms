@@ -5,8 +5,9 @@
 from input_handling.get_input import get_next_command
 import input_handling.set_up_players as plyrs
 from input_handling.select_an_object import SelectedObject
-from command_handling import insert_command, update_now_and_later_commands
-from command_handling import implement_commands_if_possible
+from command_handling.insert_commands import insert_command
+from command_handling.update_now_and_later_cmds import update_now_and_later_commands
+from command_handling.implement_commands import implement_commands_if_possible
 
 import game_map as gm_module
 
@@ -34,7 +35,6 @@ def load_game_if_user_wants_to():
 
 
 def get_type_of_loading_to_do():
-    global decision_both, decision_re_enter, decision_pickle, decision_abort
     print()
     print("What type of loading do you want, pickle, re-enter commands, or both?")
     print("Type 'p' for pickle, 'r' to re-enter commands, and 'b' for both.")
@@ -55,7 +55,6 @@ def get_type_of_loading_to_do():
 
 def load_game(type_of_loading_to_do):
     """This loads a game according to three options."""
-    global decision_both, decision_re_enter, decision_pickle
     file_name = get_name_of_file_to_load()
     if type_of_loading_to_do == decision_both:
         # Then the commands need to be re-entered for a deepcopy of
