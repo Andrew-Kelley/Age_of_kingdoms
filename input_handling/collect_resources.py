@@ -2,102 +2,98 @@ from input_handling.select_an_object import SelectedUnits
 from input_handling.print import str_to_int
 from resources import resource_kind_to_class, Wood, Stone, Gold, Bronze, Iron
 from buildings.resource_bldngs import Farm
+from command_handling.commands import CollectResourceCmd, FarmCmd
 from game_map import Position
 
 
 def collect_resource(player, inpt_as_ls, selected_obj=None):
-    """In order to not return [], selected_obj must be of villager type.
+    """In order to not return None, selected_obj must consist of villagers.
 
     If not returning [], returns
     ['collect resource', <resource>, ls_of_villagers], where
     ls_of_villagers is non-empty"""
     if not isinstance(selected_obj, SelectedUnits):
-        return []
+        return
     if not selected_obj.consists_of_villagers:
-        return []
+        return
 
 
     if selected_obj.is_empty:
         print('Command to collect resources rejected since the selected '
               'object was empty.')
-        return []
+        return
 
     if len(inpt_as_ls) != 2:
         print('Your command was not understood. Any command to collect '
               'resources must consist',
               'of two words.')
-        return []
+        return
 
     resource = inpt_as_ls[1]
     if not resource in resource_kind_to_class:
         print('The resource you want to collect was not understood.')
-        return []
+        return
 
     resource = resource_kind_to_class[resource]
     command = inpt_as_ls[0]
     if command == 'chop':
         if not resource is Wood:
             print('Only wood can be chopped.')
-            return []
+            return
 
     if command == 'mine':
         if not resource in {Stone, Gold, Bronze, Iron}:
             print('Only stone, gold, bronze, and iron can be mined.')
-            return []
+            return
 
     if resource == Iron:
         if player.age == 'stone age':
             print('Iron can only be mined in the Bronze age and later.')
-            return []
+            return
 
-    # Todo: Change the following so that I can use an iterator instead.
-    ls_of_villagers = list(selected_obj.units)
-    return ['collect resource', resource, ls_of_villagers]
+    villagers = selected_obj.units
+    return CollectResourceCmd(resource, villagers)
 
 
 def farm(player, inpt_as_ls, selected_obj=None):
-    """In order to not return [], selected_obj must be of villager type and
+    """In order to not return None, selected_obj must consist of villagers and
     inpt_as_ls must be in the following format:
     ['farm', ..., 'num1', 'num2'], where there is an available farm at
-    Position(num1, num2).
-
-    If not returning [], returns
-    ['farm', farm_instance, ls_of_villagers], where ls_of_villagers is non-empty"""
+    Position(num1, num2)."""
     if len(inpt_as_ls) < 3:
         print('Your command was invalid.')
-        return []
+        return
 
     if not isinstance(selected_obj, SelectedUnits):
         print('Command rejected. Only villagers can farm.')
-        return []
+        return
     if not selected_obj.consists_of_villagers:
         print('Command rejected. Only villagers can farm.')
-        return []
+        return
 
     if selected_obj.is_empty:
         print('Command to farm was rejected since no villagers were selected.')
-        return []
+        return
 
     i = str_to_int(inpt_as_ls[-2])
     j = str_to_int(inpt_as_ls[-1])
 
     if i is None or j is None:
         print('The position of the farm was not understood. Command rejected.')
-        return []
+        return
 
     position = Position(i, j)
     if position in player.building_position_pairs:
         farm = player.building_position_pairs[position]
         if not isinstance(farm, Farm):
             print('There is no farm at position', position)
-            return []
+            return
     else:
         print('There is no building (or farm) at position', position)
-        return []
+        return
 
-    # Todo: Change the following so that I can use an iterator instead.
-    ls_of_villagers = list(selected_obj.units)
-    return ['farm', farm, ls_of_villagers]
+    villagers = selected_obj.units
+    return FarmCmd(farm, villagers)
 
 
 if __name__ == '__main__':

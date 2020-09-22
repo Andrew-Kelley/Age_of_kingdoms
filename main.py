@@ -10,6 +10,7 @@ import input_handling.set_up_players as plyrs
 from command_handling.insert_commands import insert_command
 from command_handling.update_now_and_later_cmds import update_now_and_later_commands
 from command_handling.implement_commands import implement_commands_if_possible
+from command_handling.commands import SaveGameCmd, EndOfTurnCmd
 from save_and_load.save_game import save_game
 from save_and_load.load_game import load_game_if_user_wants_to
 
@@ -44,9 +45,9 @@ for turn_number in range(max_num_turns):
             if isinstance(command, SelectedObject):
                 selected_obj = command
                 continue
-            if command == ['end of turn']:
+            if isinstance(command, EndOfTurnCmd):
                 break
-            elif command == ['save game']:
+            elif isinstance(command, SaveGameCmd):
                 save_game(players)
                 continue
             insert_command(player, command)

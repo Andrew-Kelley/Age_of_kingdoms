@@ -8,6 +8,7 @@ from input_handling.select_an_object import building_first_words
 from input_handling.print import str_to_int
 from buildings.bldng_class import stone_age_buildings, bronze_age_buildings, buildings
 from buildings.other_bldngs import building_kind_to_class
+from command_handling.commands import BuildUnitCmd, BuildBuildingCmd
 
 unit_kinds_singular = set(unit_kinds_singular)
 unit_kinds = set(unit_kinds)
@@ -15,11 +16,11 @@ units_plural = unit_kinds
 
 
 def build_something(player, inpt_as_ls, selected_obj=None):
-    """In order to not return [], selected_obj must either be
+    """In order to not return None, selected_obj must either be
     (a) a villager, or villagers, or group of villagers OR
     (b) a building (which builds units)"""
     if len(inpt_as_ls) < 2:
-        return []
+        return
     if not isinstance(selected_obj, SelectedObject):
         print('Command rejected:')
         print('You must first select an object before building something.')
@@ -27,7 +28,7 @@ def build_something(player, inpt_as_ls, selected_obj=None):
               'to build it.')
         print('To build units, you must first select which building to build '
               'them from.')
-        return []
+        return
 
 
     if isinstance(selected_obj, SelectedBuilding):
@@ -35,7 +36,7 @@ def build_something(player, inpt_as_ls, selected_obj=None):
 
     elif isinstance(selected_obj, SelectedUnits):
         if not selected_obj.consists_of_villagers:
-            return []
+            return
         else:
             return build_building(player, inpt_as_ls, selected_obj)
     elif isinstance(selected_obj, Army) or isinstance(selected_obj, Group):
@@ -44,35 +45,30 @@ def build_something(player, inpt_as_ls, selected_obj=None):
     else:
         print('The selected object was neither a building nor a group of villagers.',
               'Command rejected.')
-        return []
+        return
 
 
 # The following is intended to only be used by the function build_something
 def build_unit(inpt_as_ls, selected_obj):
-    """Returns a list.
+    """Returns None or an instance of BuildUnitCmd.
 
-    In order to not return [],
+    In order to not return None,
     (a) The building which builds the unit(s) must be selected as selected_obj, and
     (b) inpt_as_ls must be of the following type:
     ['build', <unit type>], (which builds 1 of the given unit type) or
-    ['build', 'num', <unit type>]
-
-    If not returning [], this function returns a list of the following format:
-    ['build unit', <building>, <unit type>, num_to_be_built], where
-    num_to_be_built >= 1"""
+    ['build', 'num', <unit type>]"""
     if not isinstance(selected_obj, SelectedBuilding):
-        return []
-
+        return
 
     building = selected_obj.building
     if not building:
-        return []
+        return
 
     unit_type = inpt_as_ls[-1]
     if unit_type not in unit_kinds and unit_type not in unit_kinds_singular:
         print('The last part of your command (which type of unit to be built) '
               'was not understood.')
-        return []
+        return
     if unit_type in unit_kinds_singular:
         unit_type = unit_singular_to_plural[unit_type]
 
@@ -82,20 +78,20 @@ def build_unit(inpt_as_ls, selected_obj):
             if num_to_be_built < 1:
                 print('Your command must specify a positive number of units '
                       'to be built.')
-                return []
+                return
         except ValueError:
             print('The second part of your command (how many units to be built) '
                   'was not understood.')
-            return []
+            return
     else:
         num_to_be_built = 1
 
-    return ['build unit', building, unit_type, num_to_be_built]
+    return BuildUnitCmd(building, unit_type, num_to_be_built)
 
 
 # The following is intended to only be used by the function build_something
 def build_building(player, inpt_as_ls, selected_obj):
-    """In order to not return [],  inpt_as_ls must be of the following format:
+    """In order to not return None,  inpt_as_ls must be of the following format:
      ['build', <building name>, 'num1', 'num2']. Also, the player must first
      have advanced to the appropriate age for the building they wish to build.
 
@@ -104,7 +100,7 @@ def build_building(player, inpt_as_ls, selected_obj):
     if len(inpt_as_ls) < 4:
         print('Your command to build a building was not understood since it had '
               'fewer than 4 parts/words.')
-        return []
+        return
 
     if inpt_as_ls[0] == 'help build':
         this_is_a_help_build_command = True
@@ -113,16 +109,13 @@ def build_building(player, inpt_as_ls, selected_obj):
 
     if not selected_obj.consists_of_villagers:
         print('No villagers were selected that could build the building.')
-        return []
+        return
 
     if selected_obj.is_empty:
         print('No villagers were selected that could build the building.')
-        return []
+        return
 
-    # TODO: change the following line by changing whatever function
-    # uses the output of this function. i.e. change the next function
-    # to use an iterator instead of a list of villagers.
-    ls_of_villagers = list(selected_obj.units)
+    villagers = selected_obj.units
 
     building_kind = inpt_as_ls[1]
     if building_kind not in buildings:
@@ -131,19 +124,19 @@ def build_building(player, inpt_as_ls, selected_obj):
                 building_kind = inpt_as_ls[1] + inpt_as_ls[2]
             else:
                 print('The building kind you want to build was not understood.')
-                return []
+                return
         else:
             print('The building kind you want to build was not understood.')
-            return []
+            return
 
     if player.age == 'stone age':
         if building_kind not in stone_age_buildings:
             print('That building cannot be built in the Stone Age.')
-            return []
+            return
     elif player.age == 'bronze age':
         if building_kind not in stone_age_buildings.union(bronze_age_buildings):
             print('That building can only be built in the Iron Age.')
-            return []
+            return
 
     if building_kind == 'wallfortification':
         return build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command)
@@ -155,29 +148,29 @@ def build_building(player, inpt_as_ls, selected_obj):
         # This should never happen because I already checked that
         # building_kind is in buildings
         print('The building you want to build was not understood.')
-        return []
+        return
 
     building_class = building_kind_to_class[building_kind]
 
     i = str_to_int(inpt_as_ls[-2])
     j = str_to_int(inpt_as_ls[-1])
     if i is None or j is None:
-        return []
+        return
     position = Position(i, j)
 
     if not this_is_a_help_build_command:
         if not building_class.can_build_on_map(building_class, position, game_map):
             print('Command rejected. Try a different position.')
-            return []
+            return
 
-    return ['build building', ls_of_villagers, building_class,
-            position, this_is_a_help_build_command]
+    return BuildBuildingCmd(villagers, building_class, position,
+                            this_is_a_help_build_command)
 
 
 def build_wall(player, inpt_as_ls, this_is_a_help_build_command):
     """Returns a list"""
     print('Sorry this game is not yet finished. You cannot yet build walls.')
-    return []
+    return
 
 
 def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
@@ -185,23 +178,23 @@ def build_wall_fortification(player, inpt_as_ls, this_is_a_help_build_command):
     print('You must first build a wall before building a wallfortification.',
           'But unfortunatelly, this game is not finished, and you cannot '
           'build walls either.')
-    return []
+    return
 
 
 def set_default_build_position(player, inpt_as_ls, selected_obj=None,
                                loading_game=False, resource='none'):
     """selected_obj must be a building that can build units
-    Returns []"""
+    Returns None"""
     if not selected_obj or not isinstance(selected_obj, SelectedBuilding):
-        return []
+        return
     building = selected_obj.building
     if not building:
-        return []
+        return
 
     i = str_to_int(inpt_as_ls[-2])
     j = str_to_int(inpt_as_ls[-1])
     if i is None or j is None:
-        return []
+        return
 
     position = Position(i, j)
     building.change_build_position_to(position, game_map)
@@ -210,7 +203,7 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None,
         if loading_game:
             if resource in resource_kind_to_class:
                 building.initial_resource_to_collect = resource_kind_to_class[resource]
-            return []
+            return
         # The following of course runs if not loading_game
         while True:
             resource = input('Which resource would you like newly built '
@@ -226,5 +219,3 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None,
                 break
             else:
                 print('Your command was not understood. Please try again.')
-
-    return []

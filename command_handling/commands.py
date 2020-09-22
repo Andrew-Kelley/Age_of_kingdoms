@@ -14,7 +14,7 @@
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
 # - quit game
-# - save game (hopefully, at some point)
+# - save game
 
 # Also, having commands structured in this way will probably be
 # helpful when creating an AI.
@@ -141,6 +141,7 @@ class BuildBuildingCmd(Command):
     def __init__(self, villagers, building_class, position, is_a_help_build_cmd):
         # villagers can be any iterator of villagers
         message = "Error. Developer message: BuildBuildingCmd.__init__ was called,"
+        villagers = list(villagers)
         for v in villagers:
             if not isinstance(v, Villager):
                 print(message)
@@ -233,12 +234,13 @@ class CollectResourceCmd(Command):
 
     def __init__(self, resource, villagers):
         message = "Error. Developer message: CollectResourceCmd.__init__ was called,"
+        villagers = list(villagers)
         for v in villagers:
             if not isinstance(v, Villager):
                 print(message)
                 print("and some element of villagers was not a villager.")
                 return
-        if not isinstance(resource, Resource):
+        if not issubclass(resource, Resource):
             print(message)
             print("and resource was not an instance of Resource.")
             return
@@ -254,6 +256,12 @@ class CollectResourceCmd(Command):
     def villagers(self):
         for villager in self._villagers:
             yield villager
+
+    def __str__(self):
+        kind = self._kind + " "
+        resource = str(self._resource) + " "
+        villagers = str(self._villagers)
+        return kind + resource + villagers
 
 
 class FarmCmd(Command):
@@ -291,6 +299,11 @@ class FarmCmd(Command):
 class EndOfTurnCmd(Command):
     # Prior format: ['end of turn']
     _kind = 'end of turn'
+
+
+class SaveGameCmd(Command):
+    # Prior format: ['save game']
+    _kind = 'save game'
 
 
 if __name__ == '__main__':

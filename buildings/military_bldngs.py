@@ -5,6 +5,7 @@ from resources import Resources, Wood
 from units import Pikeman, Swordsman, Archer
 from research_classes import BronzeShields, BronzeSwords
 from command_handling.insert_commands import insert_move_later_command
+from command_handling.commands import MoveCmd
 
 class Barracks(Building):
     cost = Resources({Wood: 150})
@@ -56,7 +57,8 @@ def set_position_of_unit_and_command_to_move_if_far(building, new_unit, player, 
         delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=distance)
         build_position = building.position + delta1
         new_unit.position = build_position
-        command = ['move', [new_unit], delta2]
+        command = MoveCmd()
+        command.add_unit_with_delta(new_unit, delta2)
         insert_move_later_command(player, command)
 
 

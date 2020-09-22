@@ -6,6 +6,8 @@ from input_handling.print import print_something
 from input_handling.collect_resources import collect_resource, farm
 from input_handling.research import research_something
 
+from command_handling.commands import SaveGameCmd, EndOfTurnCmd
+
 
 def input_number_of_players(human=True):
     if human:
@@ -95,10 +97,10 @@ def input_next_command(player, selected_obj=None):
 
         if first_argument_of_command in done_with_turn:
             player.log_command('done')
-            return ['end of turn']
+            return EndOfTurnCmd()
         elif first_argument_of_command == 'save':
             if inpt_as_ls[-1] == 'game':
-                return ['save game']
+                return SaveGameCmd()
             else:
                 print("Command rejected.")
                 return
@@ -125,13 +127,10 @@ def get_next_command(player, inpt='', selected_obj=None,
                      loading_game=False, resource='none'):
     """Return the command produced by the given input.
 
-    The input can be given either as a string or a list.
-    If both inpt and inpt_as_ls are non-empty, then inpt overrides
-    inpt_as_ls
-
     This function is intended only for testing purposes,
-    and perhaps for a rudimentary ability to load a
-    saved game."""
+    and for a rudimentary ability to load a saved game
+    by re-entering commands (which also happens to be
+    for testing purposes)."""
     if not inpt:
         return
     inpt_as_ls = inpt.split()
@@ -142,7 +141,7 @@ def get_next_command(player, inpt='', selected_obj=None,
     if first_arg not in possible_first_words:
         return
     if first_arg in done_with_turn:
-        return ['end of turn']
+        return EndOfTurnCmd()
     elif first_arg == 'help' and len(inpt_as_ls) == 1:
         return
     elif first_arg == 'help' and inpt_as_ls[1] == 'build':

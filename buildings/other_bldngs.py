@@ -11,6 +11,7 @@ from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from command_handling.insert_commands import insert_move_later_command
 from command_handling.insert_commands import insert_collect_resource_later_command
 from command_handling.insert_commands import insert_collect_resource_now_command
+from command_handling.commands import MoveCmd
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
@@ -58,7 +59,8 @@ class TownCenter(Building):
             delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=6)
             build_position = self.position + delta1
             new_villager = Villager(build_position, player)
-            command = ['move', [new_villager], delta2]
+            command = MoveCmd()
+            command.add_unit_with_delta(new_villager, delta2)
             insert_move_later_command(player, command)
         else:
             new_villager = Villager(self.build_position, player)

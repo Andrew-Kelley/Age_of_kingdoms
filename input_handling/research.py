@@ -1,27 +1,24 @@
 from input_handling.select_an_object import SelectedBuilding
 from buildings.bldng_class import Building
 from research_classes import research_string_to_class, stone_age_research, bronze_age_research
-
+from command_handling.commands import ResearchCmd
 
 def research_something(player, inpt_as_ls, selected_obj=None,
                        loading_game=False):
-    """To not return [], inpt_as_ls must be of the following format:
+    """To not return None, inpt_as_ls must be of the following format:
     ['research','word1', <optional> 'word2'], and
     'word1 word2' must be something that can be researched from the selected building.
 
-    Returns [] or
-    ['research', building, thing_to_be_researched], where thing_to_be_researched is a
-    subclass of ResearchObject and building is a Building instance that is not currently
-    researching anything."""
+    Returns None or an instance of ResearchCmd"""
     if not isinstance(selected_obj, SelectedBuilding):
         print('You must first select a building to research something.')
-        return []
+        return
 
     building = selected_obj.building
     if not isinstance(building, Building):
         print('The selected object was not a building.')
         print('You must first select a building to research something.')
-        return []
+        return
 
     if building in player.commands['now']['research']:
         if not loading_game:
@@ -40,43 +37,43 @@ def research_something(player, inpt_as_ls, selected_obj=None,
         else:
             print('Ok, the building will not research it.')
             player.log_command("No, do not add to research queue.")
-            return []
+            return
 
     thing_to_be_researched = ' '.join(inpt_as_ls[1:])
     what_can_be_researched = building.things_which_can_be_researched()
     if thing_to_be_researched not in what_can_be_researched:
         print('Sorry, a {} cannot research {}.'.format(building.kind, thing_to_be_researched))
-        return []
+        return
 
     if player.age == 'stone age':
         if thing_to_be_researched not in stone_age_research:
             print('Sorry,', thing_to_be_researched, 'cannot be researched in the stone age.')
-            return []
+            return
     elif player.age == 'bronze age':
         if thing_to_be_researched not in bronze_age_research:
             print('Sorry,', thing_to_be_researched, 'cannot be researched in the bronze age.')
-            return []
+            return
 
     if thing_to_be_researched not in research_string_to_class:
         print('Error. This game is still unfinished, and researching',
               thing_to_be_researched, 'has not yet been enabled.',
               'Developer note: specifically,', thing_to_be_researched,
               'has not yet been added to the research_string_to_class dictionary.')
-        return []
+        return
 
     if thing_to_be_researched in player.things_being_currently_researched:
         print('You are already researching ', thing_to_be_researched)
         print('Command rejected.')
-        return []
+        return
     elif thing_to_be_researched in player.things_researched:
         print('You already researched', thing_to_be_researched)
         print('Command rejected.')
-        return []
+        return
 
     player.things_being_currently_researched.add(thing_to_be_researched)
 
     research_object_class = research_string_to_class[thing_to_be_researched]
     thing_to_be_researched = research_object_class()
 
-    return ['research', building, thing_to_be_researched]
+    return ResearchCmd(building, thing_to_be_researched)
 

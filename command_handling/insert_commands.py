@@ -1,36 +1,48 @@
 
 from collections import deque
 
-from game_map import Position, Vector, game_map
-from buildings.bldng_class import Building
-from units import unit_kinds, Villager
-from resources import resource_ls
+from game_map import Position, game_map
+from units import Villager
 from buildings.resource_bldngs import Farm
 
+from command_handling.commands import Command, BuildUnitCmd, BuildBuildingCmd
+from command_handling.commands import CollectResourceCmd, ResearchCmd, FarmCmd
+from command_handling.commands import MoveCmd
 
 def insert_command(player, command):
-    if not type(command) is list or len(command) == 0:
+    if command is None:
+        return
+    message = "Developer error: insert_command was called when command was"
+    if not isinstance(command, Command):
+        print(message)
+        print(command)
+        print("But command should have been an instance of Command.")
         return
 
     # MAYBE call all of the functions with one call (and a dictionary of functions).
-    if command[0] == 'move':
+    if isinstance(command, MoveCmd):
         insert_move_command(player, command)
         return
-    elif command[0] == 'build unit':
+    elif isinstance(command, BuildUnitCmd):
         insert_build_unit_command(player, command)
         return
-    elif command[0] == 'collect resource':
+    elif isinstance(command, CollectResourceCmd):
         insert_collect_resource_now_command(player, command)
         return
-    elif command[0] == 'build building':
+    elif isinstance(command, BuildBuildingCmd):
         insert_build_building_command(player, command)
         return
-    elif command[0] == 'research':
+    elif isinstance(command, ResearchCmd):
         insert_research_command(player, command)
         return
-    elif command[0] == 'farm':
+    elif isinstance(command, FarmCmd):
         insert_farm_command(player, command)
         return
+    else:
+        print(message)
+        print(command)
+        print("So command was not an instance of a sublcass of Command that")
+        print("input_command can handle yet.")
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
@@ -52,29 +64,38 @@ def remove_unit_from_command_if_there(player, unit, command_type):
             unit.farm_currently_farming = None
 
 
+def is_initialized_instance(command, CommandClass):
+    if not isinstance(command, CommandClass):
+        print("Developer error: command was not an instance of the proper class.")
+        print("command: ", command)
+        print("Class: ", CommandClass)
+        return False
+    if not command.is_initialized:
+        print("Developer error. The following command was not initialized:")
+        print(command)
+        return False
+    return True
+
+
 def insert_build_building_command(player, command):
-    """command must be of the following format:
-    ['build building', ls_of_villagers, building_class, position, is_help_bld_cmmd]"""
-    if len(command) != 5:
+    if not is_initialized_instance(command, BuildBuildingCmd):
         return
 
-    building_class = command[2]
+    building_class = command.building_class
 
-    ls_of_villagers = command[1]
-    if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
-        return
+    villagers = command.villagers()
 
-    building_position = command[3]
+    building_position = command.position
     if not isinstance(building_position, Position):
         return
 
-    for villager in ls_of_villagers:
+    for villager in villagers:
         for command_type in ('move', 'collect resource', 'farm'):
             remove_unit_from_command_if_there(player, villager, command_type)
 
     # The following few lines are to handle the situation that other villagers are already
     # building an instance of building_class at building_position
-    this_is_a_help_build_command = command[4]
+    this_is_a_help_build_command = command.is_a_help_build_cmd
     if this_is_a_help_build_command:
         building = building_already_in_progress(player, building_class, building_position)
         if not building:
@@ -91,7 +112,7 @@ def insert_build_building_command(player, command):
         player.resources -= building.cost
         building.build_on_map(building_position, game_map)
 
-    for i, villager in enumerate(ls_of_villagers):
+    for i, villager in enumerate(villagers):
         if isinstance(building, Farm):
             if i < 2:
                 player.commands['later']['farm'][villager] = building
@@ -100,7 +121,8 @@ def insert_build_building_command(player, command):
             player.commands['now']['build building'][villager] = [building, building_position]
             villager.current_action = 'building {}'.format(building)
         else:
-            new_command = ['move', [villager], delta]
+            new_command = MoveCmd()
+            new_command.add_unit_with_delta(villager, delta)
             insert_move_command(player, new_command)
             player.commands['later']['build building'][villager] = [building, building_position]
 
@@ -118,16 +140,15 @@ def building_already_in_progress(player, building_class, position):
 
 
 def insert_collect_resource_now_command(player, command):
-    if not collect_resource_command_is_properly_formatted(command):
+    if not is_initialized_instance(command, CollectResourceCmd):
         return
-    resource = command[1]
-    ls_of_villagers = command[2]
+    resource = command.resource
 
-    for unit in ls_of_villagers:
+    for unit in command.villagers():
         for command_type in ('move', 'build building', 'farm'):
             remove_unit_from_command_if_there(player, unit, command_type)
 
-    for villager in ls_of_villagers:
+    for villager in command.villagers():
         if villager.can_collect_resource_now(resource, player):
             player.commands['now']['collect resource'][villager] = resource
             villager.current_action = 'collecting {}'.format(resource.kind)
@@ -141,127 +162,98 @@ def insert_collect_resource_now_command(player, command):
 # useful for "smart" villagers i.e. for villagers who collect resources after building a
 # building such as a lumber camp.
 def insert_collect_resource_later_command(player, command):
-    if not collect_resource_command_is_properly_formatted(command):
+    if not is_initialized_instance(command, CollectResourceCmd):
         return
-    resource = command[1]
-    ls_of_villagers = command[2]
 
-    for villager in ls_of_villagers:
+    resource = command.resource
+    villagers = command.villagers()
+
+    for villager in villagers:
         player.commands['later']['collect resource'][villager] = resource
-
-
-def collect_resource_command_is_properly_formatted(command):
-    if len(command) != 3:
-        return False
-    resource = command[1]
-    if resource not in resource_ls:
-        return False
-    ls_of_villagers = command[2]
-    if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
-        return False
-    if not all(isinstance(u, Villager) for u in ls_of_villagers):
-        return False
-    return True
 
 
 # The following function could instead be named insert_a_command_of_type_move
 def insert_move_command(player, command):
-    """In order for command to be handled properly, it must be in the following format:
-    ['move', ls_of_units, delta], where delta is of type Vector"""
-    if not move_command_is_properly_formatted(command):
+    if not is_initialized_instance(command, MoveCmd):
         return
-    ls_of_units = command[1]
-    delta = command[2]
 
-    for unit in ls_of_units:
+    for unit, delta in command.units_and_deltas():
         for command_type in ('build building', 'collect resource', 'farm'):
             remove_unit_from_command_if_there(player, unit, command_type)
 
-    if delta.magnitude > 15:
-        beginning, the_rest = delta.beginning_plus_the_rest()
-        move_now = dict((unit, beginning) for unit in ls_of_units)
-        move_later = dict((unit, the_rest) for unit in ls_of_units)
-    else:
-        move_now = dict((unit, delta) for unit in ls_of_units)
-        move_later = dict()
-
-    # NOTE: THE FOLLOWING TWO LINES DO NOT WORK! The reason is that the player might
-    # make multiple move commands during a turn (each of which might move different
-    # units). What the following two lines would do would be to erase all previous
-    # move commands and replace them with the most current one.
-    # player.commands['now']['move'] = move_now
-    # player.commands['later']['move'] = move_later
-
-    # The following only replaces old move commands with new ones if they are about the
-    # same unit.
-    for unit in move_now:
-        player.commands['now']['move'][unit] = move_now[unit]
         unit.current_action = 'moving to {}'.format(unit.position + delta)
-        if unit in player.commands['later']['move']:
-            del player.commands['later']['move'][unit]
-    for unit in move_later:
-        player.commands['later']['move'][unit] = move_later[unit]
-    return
+
+        if delta.magnitude > 15:
+            beginning, the_rest = delta.beginning_plus_the_rest()
+            player.commands['now']['move'][unit] = beginning
+            player.commands['later']['move'][unit] = the_rest
+        else:
+            player.commands['now']['move'][unit] = delta
+            if unit in player.commands['later']['move']:
+                del player.commands['later']['move'][unit]
+
+    # TODO: delete the following commented code if this function works.
+    # if delta.magnitude > 15:
+    #     beginning, the_rest = delta.beginning_plus_the_rest()
+    #     move_now = dict((unit, beginning) for unit in ls_of_units)
+    #     move_later = dict((unit, the_rest) for unit in ls_of_units)
+    # else:
+    #     move_now = dict((unit, delta) for unit in ls_of_units)
+    #     move_later = dict()
+    #
+    # # NOTE: THE FOLLOWING TWO COMMENTED LINES DO NOT WORK! The reason is that
+    # # the player might make multiple move commands during a turn (each of which
+    # # might move different units).
+    # # What the following two lines would do would be to erase all previous
+    # # move commands and replace them with the most current one.
+    # # player.commands['now']['move'] = move_now
+    # # player.commands['later']['move'] = move_later
+    #
+    # # The following only replaces old move commands with new ones if they are about the
+    # # same unit.
+    # for unit in move_now:
+    #     player.commands['now']['move'][unit] = move_now[unit]
+    #     unit.current_action = 'moving to {}'.format(unit.position + delta)
+    #     if unit in player.commands['later']['move']:
+    #         del player.commands['later']['move'][unit]
+    # for unit in move_later:
+    #     player.commands['later']['move'][unit] = move_later[unit]
+    # return
 
 
 def insert_move_later_command(player, command):
     """This should ONLY be used when a unit is initially built."""
-    if not move_command_is_properly_formatted(command):
+    if not is_initialized_instance(command, MoveCmd):
         return
-    ls_of_units = command[1]
-    delta = command[2]
 
-    for unit in ls_of_units:
+    for unit, delta in command.units_and_deltas():
         player.commands['later']['move'][unit] = delta
         unit.current_action = 'moving to {}'.format(unit.position + delta)
 
 
-def move_command_is_properly_formatted(command):
-    if len(command) != 3:
-        return False
-    ls_of_units = command[1]
-    if not type(ls_of_units) is list:
-        return False
-    delta = command[2]
-    if not isinstance(delta, Vector):
-        return False
-    return True
-
-
 def insert_build_unit_command(player, command):
-    """Modifies player.commands['now']['build unit'] and player.commands['later']['build unit']
-
-    The argument command must be of the following format (which is what the function build_unit
-    in the input_handling module returns):
-    ['build unit', <building>, <unit type>, num_to_be_built]"""
-    if len(command) != 4:
-        # This should never be the case.
-        print('Python Error! The function insert_build_unit_command was given an '
-              'argument command that is not of length 4.')
+    """Modifies player.commands['now']['build unit'] and...
+    also modifies player.commands['later']['build unit']
+    """
+    if not is_initialized_instance(command, BuildUnitCmd):
         return
 
-    building = command[1]
-    unit_type = command[2]
-    num_to_be_built = command[3]
-    if not isinstance(building, Building):
-        return
-    if unit_type not in unit_kinds:
-        return
-    if num_to_be_built < 1 or not type(num_to_be_built) is int:
-        return
+    building = command.building
+    unit_kind = command.unit_kind
+    num_to_be_built = command.num_to_build
 
-    if unit_type not in building.units_which_can_be_built():
+    if unit_kind not in building.units_which_can_be_built():
         print('The selected building cannot build that unit.')
-        print(cannot_build_unit_yet_error_message(player, building, unit_type))
+        print(cannot_build_unit_yet_error_message(player, building, unit_kind))
         return
 
-    num_can_build = number_of_units_can_build_in_one_turn(player, building, unit_type)
+    num_can_build = number_of_units_can_build_in_one_turn(player, building, unit_kind)
 
     num_to_build_now = min(num_can_build, num_to_be_built)
     num_to_build_later = num_to_be_built - num_to_build_now
-    player.commands['now']['build unit'][building] = [unit_type, num_to_build_now]
+    player.commands['now']['build unit'][building] = [unit_kind, num_to_build_now]
     if num_to_build_later > 0:
-        player.commands['later']['build unit'][building] = [unit_type, num_to_build_later]
+        player.commands['later']['build unit'][building] = [unit_kind, num_to_build_later]
     return
 
 
@@ -291,11 +283,11 @@ def cannot_build_unit_yet_error_message(player, building, unit_type):
 
 
 def insert_research_command(player, command):
-    if len(command) != 3:
+    if not is_initialized_instance(command, ResearchCmd):
         return
 
-    building = command[1]
-    thing_to_be_researched = command[2]
+    building = command.building
+    thing_to_be_researched = command.thing_to_be_researched
     if not player.has_resources_to_research(thing_to_be_researched):
         print("You do not have enough resources to research this:")
         print(thing_to_be_researched.name)
@@ -312,20 +304,14 @@ def insert_research_command(player, command):
 
 
 def insert_farm_command(player, command):
-    if len(command) != 3:
+    if not is_initialized_instance(command, FarmCmd):
         return
 
-    farm = command[1]
-    if not isinstance(farm, Farm):
-        return
+    farm = command.farm
 
-    ls_of_villagers = command[2]
-    if not type(ls_of_villagers) is list or len(ls_of_villagers) == 0:
-        return
-    if not all(isinstance(u, Villager) for u in ls_of_villagers):
-        return
+    villagers = command.villagers()
 
-    for villager in ls_of_villagers:
+    for villager in villagers:
         delta = farm.position - villager.position
         if delta.magnitude <= 6:
             if delta.magnitude >= 2:
@@ -339,7 +325,7 @@ def insert_farm_command(player, command):
             else:
                 print('The farm already has 2 villagers farming it.')
         else:
-            new_command = ['move', [villager], delta]
+            new_command = MoveCmd()
+            new_command.add_unit_with_delta(villager, delta)
             insert_move_command(player, new_command)
             player.commands['later']['farm'][villager] = farm
-
