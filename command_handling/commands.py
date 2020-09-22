@@ -175,8 +175,7 @@ class BuildBuildingCmd(Command):
         self._is_initialized = True
 
     def villagers(self):
-        for villager in self._villagers:
-            yield villager
+        return self._villagers
 
     @property
     def building_class(self):
