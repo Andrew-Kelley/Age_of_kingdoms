@@ -1,7 +1,7 @@
-from buildings.bldng_class import Building, buildings
+from buildings.bldng_class import Building
 from units import Villager
-from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
-from research_classes import BronzeAge, IronAge, blacksmith_bronze_age_research
+from resources import Resources, Wood, Stone, Gold, Iron
+from research_classes import blacksmith_bronze_age_research
 from research_classes import bronze_to_iron_research_str
 
 from buildings.defense_bldngs import WoodWall, StoneWall, WallFortification, Tower, Castle
@@ -12,6 +12,7 @@ from command_handling.insert_commands import insert_move_later_command
 from command_handling.insert_commands import insert_collect_resource_later_command
 from command_handling.insert_commands import insert_collect_resource_now_command
 from command_handling.commands import MoveCmd, CollectResourceCmd
+
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
