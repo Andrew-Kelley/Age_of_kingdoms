@@ -11,7 +11,7 @@ from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from command_handling.insert_commands import insert_move_later_command
 from command_handling.insert_commands import insert_collect_resource_later_command
 from command_handling.insert_commands import insert_collect_resource_now_command
-from command_handling.commands import MoveCmd
+from command_handling.commands import MoveCmd, CollectResourceCmd
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
@@ -65,8 +65,8 @@ class TownCenter(Building):
         else:
             new_villager = Villager(self.build_position, player)
         if self.initial_resource_to_collect:
-            command = ['collect resource',
-                       self.initial_resource_to_collect, [new_villager]]
+            resource = self.initial_resource_to_collect
+            command = CollectResourceCmd(resource, [new_villager])
             if delta.magnitude <= 6:
                 insert_collect_resource_now_command(player, command)
             else:
