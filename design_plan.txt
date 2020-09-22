@@ -15,11 +15,11 @@
  - iron
 
 #### Sources of food
-Hunting, fruit trees, berry bushes,
-farms (possibly supplemented with cows and/or chickens)
+fruit trees
+farms
 
 ### Civilizations
- I think for now, there will only be one civilization.
+ There will only be one civilization.
 
 ### Units
  - villager
@@ -31,6 +31,12 @@ farms (possibly supplemented with cows and/or chickens)
  - catapult
  - trebuchet
  - merchant
+ At some point the following units will probably also be possible:
+ - champion swordsman
+ - champion archer
+ - paladin (basically a "champion knight")
+ These three would be significantly more expensive than their
+ counterparts but would be more effective in battle.
 
 ### Buildings
  - town center
@@ -182,22 +188,14 @@ each ls in map has len(ls) == n.
 
 Unless the map is very small, only a part of the map can be printed at once.
 
-IMPORTANT SIMPLIFICATION:
-Ideally, only one unit or building can occupy a given space in the map at
-the same time, but it would greatly simplify pathfinding if units can walk
-through everything except walls. Once I implement walls, it becomes harder.
-So in the first playable version of this game,
-units can walk through all buildings, and multiple units can occupy
-the same space at the same time. (I think I will even allow units to walk
-through their own walls too, just not enemy walls.) Also, if walls could be
-built in arbitrary shape, then pathfinding would still have difficult cases.
-But I am thinking that the only walls that can be built will have rectangular
-shape (which is convex!) and must surround a town (which by definition has a
-town center). Eh, I am thinking that "outposts" can be built too. Should they be
-allowed to have walls? If so, then isn't avoiding small outposts (with walls)
-just as difficult as avoiding buildings?
+IMPORTANT SIMPLIFICATION (to be partly abandoned later):
+While ideally, only one unit or building can occupy a given space in the map at
+the same time, it would greatly simplify pathfinding if units can walk
+through everything and if there is no limit on the number of units occupying
+the same space at one time. This is what I did. Hence there is no point to
+implement walls while this simplification is being used.
 
-Most buildings should take up more than one space of the map. Buildings cannot
+Most buildings take up more than one space of the map. Buildings cannot
 overlap, with the exception of wall fortifications, which must be built on top
 of stone walls.
 
@@ -218,14 +216,13 @@ For a possible later version of the game, when only one unit can occupy a space
 and also cannot occupy a space a building is in...
   - v: villager
   - p: pikeman
-  - s: swordsman
+  - s: swordsman (champion swordsman could be bolded)
   - a: archer
   - k: knight
   - r: battering ram (To not conflict with bronze.)
   - c: catapult
   - t: trebuchet
   - m: merchant
-(Should I also list deer as d, elk as e?)
 
 Buildings (with the space they take up:)
   - T: town center: 4 x 4 (conflicts with tower, but the size difference
@@ -351,13 +348,19 @@ and so also can't recover.)
 Another thought on a possible research item at the library is
 something that would improve villagers' construction speed.
 
+Another thought is researching "wheelbarrow" would allow villagers
+to collect resources farther away from the corresponding building
+(such as a lumbercamp or miningcamp).
+
 
             ------------------------------------------------------
             --------------- Major things left to do --------------
             ------------------------------------------------------
 
-- Decide if an unlimited number of military units can occupy the same space or not.
-  If not, then I have to completely reimplement how they move.
+- I can't continue to let an unlimited number of military units occupy the same
+  space. (If I instead continued to have no restriction on the number occupying the
+  same space, that would drastically change the strategy on how to effectively
+  attack.) Hence, I have to completely reimplement how they move.
 
 - Implement the ability for military units to attack:
   * They ought to be able to attack (and destroy) units.
@@ -365,14 +368,17 @@ something that would improve villagers' construction speed.
   * Have the research done by the blacksmith actually affect how well
     they can attack or handle other units attacking them.
 
-- Implement a random map generator.
+- Implement a random map generator. There should be options on what type of
+  of map to generate.
 
-- It might be worthwhile to completely change how commands are represented.
-  Right now, a command handled by command_handling.py is simply a list. But
-  actually creating an object that represents a command would probably be
+- (DONE! - September 22, 2020)
+  It might be worthwhile to completely change how commands are represented.
+  Right now (aka...formerly),
+  a command handled by command_handling.py is simply a list. But
+  actually creating an object that represents a command would be
   better. The following are the files that would need to be changed:
   * commands.py
-  * command_handling.py
+  * command_handling.py (This was split into four files.)
   * get_input.py
   * build.py
   * collect_resources.py
@@ -384,7 +390,8 @@ something that would improve villagers' construction speed.
   * other_bldngs.py
 
 
-- Be able to save a game and then restart where I left off. (Similar
+- (DONE! - mid September, 2020)
+  Be able to save a game and then restart where I left off. (Similar
   functionality might be really useful for testing purposes.)
 
 - Have even a rudimentary AI that can do very basic things:
@@ -396,20 +403,16 @@ something that would improve villagers' construction speed.
 
 - Perhaps enable people to play this game over some network.
 
-- Can I make it so that colors are printed? Perhaps all enemies'
-  units and buildings are one color, and all allies' units and buildings are a
-  different color? Also, units really ought to be printed on the map.
-  Another option would be to have each player have their own color.
+- (Started.) Can I make it so that colors are printed? Yes, each player
+  now has its own color, and their buildings are printed with this color.
+
+  Also, units really ought to be printed on the map too.
 
   How should I deal with villagers being in the same position as resources?
-  Can in that case, a background color be printed? Can resources normally
+  Can in that case, can a background color be printed? Can resources normally
   have some background color? Or maybe villagers can be underlined if
   they're in the same position as a resource.
-
-  For an idea on color, see the file some_color.py here:
-  /Users/andrew/Documents/prgms/age_of_kingdoms/some_color.py
 
   What I could do is add the appropriate escape sequences to a unit's or
   building's abbreviation, when they are first created (i.e. in their
   __init__ function).
-
