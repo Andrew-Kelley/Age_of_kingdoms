@@ -1,11 +1,9 @@
-# Right now, the commands handled by the module command_handling.py
-# are just lists. It would be better if they were instead their
-# own classes. Then instead of accessing a part of a command through
-# a quite arbitrary list index, you'd instead use an (informative)
-# attribute name.
+# When a user inputs a command, it gets translated into an
+# instance of a subclass of the Command class.
+# Formerly, they were just lists! (This was a mistake.)
 
-# Doing this change would probably be helpful for when I add more
-# commands such as follows:
+# The present representation will probably be helpful for when
+# I add more commands such as follows:
 # - attack a building or unit
 # - defend an area
 # - garrison units in buildings
@@ -14,7 +12,10 @@
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
 # - quit game
-# - save game
+
+# The present representation is better. One reason is that
+# different aspects of a command are now accessed through
+# meaningful names rather than arbitrary list indexes.
 
 # Also, having commands structured in this way will probably be
 # helpful when creating an AI.
