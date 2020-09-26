@@ -36,7 +36,7 @@ help_commands = {'help', 'commands'}
 # NOTE: If main_commands is changed, then so should the functions dictionary, defined
 # just before the input_next_command function.
 main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', 'mine',
-                 'research', 'help build', 'farm'}
+                 'quarry', 'research', 'help build', 'farm'}
 possible_first_words = main_commands.union(done_with_turn).union(help_commands)
 possible_first_words.add('save')
 
@@ -62,7 +62,7 @@ functions = {'build': build_something, 'help build': build_something,
              'print': print_something, 'research': research_something}
 
 # Intended use: 'collect <any resource>', 'chop wood', 'mine gold', 'mine bronze', 'mine iron'
-for word in ('collect', 'chop', 'mine'):
+for word in ('collect', 'quarry', 'chop', 'mine'):
     functions[word] = collect_resource
 
 assert set(functions) == main_commands

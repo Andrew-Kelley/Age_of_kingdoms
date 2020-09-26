@@ -41,9 +41,14 @@ def collect_resource(player, inpt_as_ls, selected_obj=None):
             print('Only wood can be chopped.')
             return
 
+    if command == 'quarry':
+        if not resource is Stone:
+            print('Only stone can be quarried.')
+            return
+
     if command == 'mine':
-        if not resource in {Stone, Gold, Bronze, Iron}:
-            print('Only stone, gold, bronze, and iron can be mined.')
+        if not resource in {Gold, Bronze, Iron}:
+            print('Only gold, bronze, and iron can be mined.')
             return
 
     if resource == Iron:
