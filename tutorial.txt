@@ -11,7 +11,7 @@ or "done"
 
 These are the possible first words in a command:
 'build', 'select', 'move', 'print', 'set', 'collect',
-'chop', 'mine', 'research', 'farm', 'save'
+'chop', 'mine', 'quarry', 'research', 'farm', 'save'
 'help', 'commands'
 
 Another command is 'help build'.
@@ -157,6 +157,10 @@ or "collect wood"
 or "collect stone"
 or "collect food"
 etc.
+"collect <some resource>" always works, but for metals, this
+also works "mine <some metal>", such as "mine gold" or
+"mine bronze". (Note that iron cannot be mined in the stone age.)
+For stone, "quarry stone" works.
 
 If the given resource is within 6 spots of the villager,
 then the villager is allowed to instantly move to such
