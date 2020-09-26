@@ -139,6 +139,21 @@ def building_already_in_progress(player, building_class, position):
     return False
 
 
+def collecting_resource_action(resource_kind):
+    current_action = ''
+    if resource_kind == "wood":
+        current_action = "chopping " + resource_kind
+    elif resource_kind in ("gold", "iron", "bronze"):
+        current_action = "mining " + resource_kind
+    elif resource_kind == "stone":
+        current_action = "quarrying " + resource_kind
+    elif resource_kind == "food":
+        current_action = "collecting " + resource_kind
+    else:
+        print("Error: collecting ", resource_kind)
+    return current_action
+
+
 def insert_collect_resource_now_command(player, command):
     if not is_initialized_instance(command, CollectResourceCmd):
         return
@@ -151,7 +166,7 @@ def insert_collect_resource_now_command(player, command):
     for villager in command.villagers():
         if villager.can_collect_resource_now(resource, player):
             player.commands['now']['collect resource'][villager] = resource
-            villager.current_action = 'collecting {}'.format(resource.kind)
+            villager.current_action = collecting_resource_action(resource.kind)
         else:
             villager.current_action = 'doing nothing'
             print(villager, ' cannot collect {} now.'.format(resource.kind))

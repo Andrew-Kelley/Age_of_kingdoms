@@ -1,5 +1,6 @@
 
 from insert_commands import number_of_units_can_build_in_one_turn
+from insert_commands import collecting_resource_action
 
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
@@ -50,7 +51,7 @@ def update_collect_resource_command(player):
             # In order for the following action to be correct, I think the present function
             # should come after update_move_commands in the
             # function update_now_and_later_commands
-            villager.current_action = 'collecting {}'.format(resource.kind)
+            villager.current_action = collecting_resource_action(resource.kind)
 
 
 # The following removes all the old commands in player.commands['now']['move'], and it updates
