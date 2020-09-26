@@ -246,6 +246,10 @@ for i in range(94, 97):
     for j in range(77, 79):
         game_map[i][j] = Stone(Position(i, j))
 
+for i in range(78, 79):
+    for j in range(85, 87):
+        game_map[i][j] = Stone(Position(i, j))
+
 # The following can be printed, even though it is in the far right column of the map:
 game_map[50][99] = Iron(Position(50, 99))
 
