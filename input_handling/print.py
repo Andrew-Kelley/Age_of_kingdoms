@@ -46,10 +46,19 @@ def print_something(player, inpt_as_ls, selected_obj=None):
     if len(inpt_as_ls) >= 4:
         if inpt_as_ls[1] == 'map':
             return print_part_of_map(player, inpt_as_ls)
+        if inpt_as_ls[-3:] == ['villagers', 'doing', 'nothing']:
+            print_villagers_doing_nothing(player)
+            return
 
     selected_obj = extract_selected_obj(inpt_as_ls, player)
 
     return print_selected_obj(player, selected_obj)
+
+
+def print_villagers_doing_nothing(player):
+    for villager in player.units['villagers'][1:]:
+        if villager.current_action == 'doing nothing':
+            print(villager)
 
 
 def print_part_of_map(player, inpt_as_ls):
