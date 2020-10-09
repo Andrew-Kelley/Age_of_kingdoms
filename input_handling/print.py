@@ -36,9 +36,10 @@ def print_something(player, inpt_as_ls, selected_obj=None):
         elif inpt_as_ls[1] == 'resources':
             print(player.resources)
             return
-        #TODO: add the following lines:
-        # elif inpt_as_ls[1] == 'population':
-        #     then print the current population and the current pop limit.
+        elif inpt_as_ls[1] == 'population':
+            print("Current population:", player.population)
+            print("Population cap:", player.population_cap)
+            return
         else:
             inpt_as_ls.append('1')
 
