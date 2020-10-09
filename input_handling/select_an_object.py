@@ -144,8 +144,7 @@ def extract_selected_obj(inpt_as_ls, player):
     not_units = kind not in unit_kinds_singular and \
                 kind not in unit_kinds and kind not in {'group', 'army'}
     not_building = kind not in buildings
-    not_town = (kind != 'town')
-    if not_units and not_building and not_town:
+    if not_units and not_building:
         if kind in building_first_words:
             kind = inpt_as_ls[1] + inpt_as_ls[2]
             if kind in buildings:
@@ -209,10 +208,6 @@ def extract_selected_obj(inpt_as_ls, player):
     elif kind in buildings:
         inpt = ['building', kind, num]
         selected_obj = formatted_input_to_SelectedBuilding_obj(inpt, player)
-    elif kind == 'town':
-        # selected_obj = ['town', num]
-        print("Selecting a town has not yet been implemented.")
-        selected_obj = nothing_obj
     else:
         # Due to the second conditional statement in this function, this code
         # should never be reached.
