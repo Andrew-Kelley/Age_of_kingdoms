@@ -22,23 +22,22 @@ class SelectedObject:
 
 
 class SelectedUnits(SelectedObject):
-
     def __init__(self):
-        self.__units = []
+        self._units = []
 
     def add_unit(self, unit):
         if not isinstance(unit, Unit):
             return
-        self.__units.append(unit)
+        self._units.append(unit)
 
     @property
     def units(self):
-        for u in self.__units:
+        for u in self._units:
             yield u
 
     @property
     def num_units_selected(self):
-        return len(self.__units)
+        return len(self._units)
 
     @property
     def is_empty(self):
@@ -46,20 +45,30 @@ class SelectedUnits(SelectedObject):
 
 
 class SelectedBuilding(SelectedObject):
-    __building = None
+    _building = None
 
     def __init__(self, building):
         if not isinstance(building, Building):
             return
-        self.__building = building
+        self._building = building
 
     @property
     def building(self):
-        return self.__building
+        return self._building
+
+
+class SelectedNothing(SelectedObject):
+    """The purpose of this is to return a "nothing" object
+    when a select something command fails to go through. This
+    prevents whatever was selected before to still be selected."""
+    pass
+
+
+nothing_obj = SelectedNothing()
 
 
 def formatted_input_to_SelectedBuilding_obj(formatted_input, player):
-    """Returns None or an instance of SelectedBuilding
+    """Returns nothing_obj or an instance of SelectedBuilding
 
     formatted_input should be of the following form:
     ['building', building_kind, building_num]
@@ -68,27 +77,27 @@ def formatted_input_to_SelectedBuilding_obj(formatted_input, player):
     extract_selected_obj
     """
     if not type(formatted_input) is list:
-        return
+        return nothing_obj
     if len(formatted_input) != 3:
-        return
+        return nothing_obj
     if formatted_input[0] != 'building':
-        return
+        return nothing_obj
     building_kind = formatted_input[1]
     if building_kind not in buildings:
-        return
+        return nothing_obj
     num = formatted_input[2]
     if not type(num) is int:
-        return
+        return nothing_obj
 
     if not 1 <= num < len(player.buildings[building_kind]):
         print('There is no {} with number {}'.format(building_kind, num))
-        return
+        return nothing_obj
 
     return SelectedBuilding(player.buildings[building_kind][num])
 
 
 def formatted_input_to_SelectedUnits_obj(formatted_input, player):
-    """Returns None or an instance of SelectedUnits
+    """Returns nothing_obj or an instance of SelectedUnits
 
     formatted_input should be of the following form:
     ['unit', unit_kind, [(start1, stop1), (start2, stop2),...]]
@@ -102,18 +111,18 @@ def formatted_input_to_SelectedUnits_obj(formatted_input, player):
     extract_selected_obj
     """
     if not type(formatted_input) is list:
-        return
+        return nothing_obj
     if len(formatted_input) != 3:
-        return
+        return nothing_obj
     unit_kind = formatted_input[1]
     if unit_kind not in unit_kinds:
-        return
+        return nothing_obj
     ranges = formatted_input[2]
     if not type(ranges) is list or len(ranges) == 0:
-        return
+        return nothing_obj
     for rng in ranges:
         if len(rng) != 2 or rng[0] > rng[1]:
-            return
+            return nothing_obj
 
     selected_units = SelectedUnits()
 
@@ -127,15 +136,15 @@ def formatted_input_to_SelectedUnits_obj(formatted_input, player):
 
 
 def extract_selected_obj(inpt_as_ls, player):
-    """Returns None or an instance of SelectedObject (or a subclass of it)"""
+    """Returns nothing_obj or an instance of SelectedObject (or a subclass of it)"""
     if len(inpt_as_ls) < 3:
-        return
+        return nothing_obj
 
     kind = inpt_as_ls[1]
     not_units = kind not in unit_kinds_singular and \
                 kind not in unit_kinds and kind not in {'group', 'army'}
     not_building = kind not in buildings
-    not_town = kind != 'town'
+    not_town = (kind != 'town')
     if not_units and not_building and not_town:
         if kind in building_first_words:
             kind = inpt_as_ls[1] + inpt_as_ls[2]
@@ -148,10 +157,10 @@ def extract_selected_obj(inpt_as_ls, player):
                     inpt_as_ls.append('1')
             else:
                 print("The second word in your command could not be understood.")
-                return
+                return nothing_obj
         else:
             print("The second word in your command could not be understood.")
-            return
+            return nothing_obj
 
     if kind in unit_kinds:
         # inpt_as_ls[2] should be of the form 'num1-num2'
@@ -161,17 +170,17 @@ def extract_selected_obj(inpt_as_ls, player):
         except ValueError:
             print('The third part of your command could not be understood.', end=' ')
             print("A number range (such as 1-4) was expected.")
-            return
+            return nothing_obj
 
         # In case num_range is a list of a single number...
         start = num_range[0]
         stop = num_range[-1]
         if start < 1 or stop < start:
             print('No units were selected. Try a different number range.')
-            return
+            return nothing_obj
 
         if not unit_exists(kind, start, player):
-            return
+            return nothing_obj
 
         inpt = ['unit', kind, [(start, stop)]]
         return formatted_input_to_SelectedUnits_obj(inpt, player)
@@ -180,35 +189,34 @@ def extract_selected_obj(inpt_as_ls, player):
         try:
             num = int(inpt_as_ls[2])
         except ValueError:
-            print("Nothing was selected.")
-            return
+            return nothing_obj
 
     if num < 1:
-        print('No unit selected since units are numbered beginning with 1.')
-        return
+        print('Units are numbered beginning with 1.')
+        return nothing_obj
 
     if kind in unit_kinds_singular:
         kind = unit_singular_to_plural[kind]
         if not unit_exists(kind, num, player):
-            return
+            return nothing_obj
         inpt = ['unit', kind, [(num, num)]]
         selected_obj = formatted_input_to_SelectedUnits_obj(inpt, player)
     elif kind in {'group', 'army'}:
         # selected_obj = [kind, num]
         # TODO: implement this once I implement the Army And Group classes
         print("The Army and Group classes have not yet been implemented.")
-        selected_obj = None
+        selected_obj = nothing_obj
     elif kind in buildings:
         inpt = ['building', kind, num]
         selected_obj = formatted_input_to_SelectedBuilding_obj(inpt, player)
     elif kind == 'town':
         # selected_obj = ['town', num]
         print("Selecting a town has not yet been implemented.")
-        selected_obj = None
+        selected_obj = nothing_obj
     else:
         # Due to the second conditional statement in this function, this code
         # should never be reached.
-        selected_obj = None
+        selected_obj = nothing_obj
 
     return selected_obj
 
@@ -236,7 +244,10 @@ def select_something(player, inpt_as_ls, selected_obj=None):
     """
     if len(inpt_as_ls) > 2:
         # Then the player has specified the building or unit number(s)
-        return extract_selected_obj(inpt_as_ls, player)
+        selected_obj = extract_selected_obj(inpt_as_ls, player)
+        if selected_obj == nothing_obj:
+            print("Nothing was selected.")
+        return selected_obj
     elif len(inpt_as_ls) < 2:
         return
     else:
@@ -245,7 +256,10 @@ def select_something(player, inpt_as_ls, selected_obj=None):
         # ['select', 'barracks'] is selecting the only barracks in the town
         # with the given selected_town_num.
         inpt_as_ls.append('1')
-        return extract_selected_obj(inpt_as_ls, player)
+        selected_obj = extract_selected_obj(inpt_as_ls, player)
+        if selected_obj == nothing_obj:
+            print("Nothing was selected.")
+        return selected_obj
 
 # This used to be the options for what select_something returns:
 # ['unit', unit.kind, starting_num, ending_num],  1 <= where starting_num <= ending_num

@@ -1,5 +1,7 @@
 import game_map as game_map_module
 from input_handling.select_an_object import SelectedBuilding
+from input_handling.select_an_object import SelectedUnits
+from input_handling.select_an_object import SelectedNothing
 from input_handling.select_an_object import extract_selected_obj
 from game_map import Position
 from input_handling.help import help_on
@@ -14,12 +16,14 @@ def print_something(player, inpt_as_ls, selected_obj=None):
         if isinstance(selected_obj, SelectedBuilding): #selected_obj[0] == 'building':
             building = selected_obj.building
             print(building)
-            return
-        else:
+        elif isinstance(selected_obj, SelectedUnits) :
             #Todo Check that this works for Army and Group
             for unit in selected_obj.units:
                 print(unit)
-            return
+        elif isinstance(selected_obj, SelectedNothing):
+            print("Nothing is selected.")
+        else:
+            print("Error: selected_obj has an unexpected value.")
 
     if len(inpt_as_ls) == 1:
         # The player is trying to print selected_obj and inpt_as_ls == ['print']
