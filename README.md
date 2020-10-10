@@ -3,7 +3,7 @@ This is a turn-based, text-based strategy game inspired by Age of Empires.
 
 ### Purpose
 Build a major project in Python, one that is significantly more
-substantial than anything I've done before. Also, I want practice
+substantial than anything I've done before. Also, I want to practice
 doing some object-oriented programming.
 
 ### Tutorial
