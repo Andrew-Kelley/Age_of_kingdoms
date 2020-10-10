@@ -87,6 +87,12 @@ you print the map between selecting the unit and printing the unit.
 To print what resources you currently have, type this:
 "print resources"
 
+To print the current population (that is, how many units are alive)
+and the current population cap, type "print population"
+
+To print all villagers doing nothing type
+"print villagers doing nothing"
+
 
 -------------------------------
 ---------TO MOVE UNITS---------
