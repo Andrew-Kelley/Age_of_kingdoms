@@ -184,6 +184,26 @@ class Building:
         return there_is_an_error
 
 
+class BuildingUnderConstruction:
+    """This is a placeholder to be used until a building is completely built."""
+
+    def __init__(self, bldng_class, number, position, player):
+        self.player = player
+        self.number = number
+        self.position = position
+        self.progress_to_construction = 0
+        self.time_to_build = bldng_class.time_to_build
+        self.kind = bldng_class.kind
+
+    def __str__(self):
+        kind = self.kind.capitalize()
+        message = '{} {} at position {}'.format(kind, self.number, self.position)
+        progress = self.progress_to_construction
+        total = self.time_to_build
+        message += " under construction with progress {}/{}".format(progress, total)
+        return message
+
+
 if __name__ == '__main__':
     from player import Player
     from game_map import Position
