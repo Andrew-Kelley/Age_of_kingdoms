@@ -8,6 +8,7 @@ from input_handling.select_an_object import SelectedObject
 from command_handling.insert_commands import insert_command
 from command_handling.update_now_and_later_cmds import update_now_and_later_commands
 from command_handling.implement_commands import implement_commands_if_possible
+from command_handling.commands import EndOfTurnCmd
 
 import game_map as gm_module
 
@@ -135,12 +136,11 @@ def re_enter_commands(file_name, players):
                         pass
                         # research_decision = get_decision(command_txt)
                     else:
-                        if command_txt == 'done':
-                            starting_new_turn = True
-                            implement_commands_if_possible(player)
-                            selected_obj = None
-                            resource = 'none'
-                            continue
+                        # if command_txt == 'done':
+                        #     starting_new_turn = True
+                        #     implement_commands_if_possible(player)
+                        #     selected_obj = None
+                        #     resource = 'none'
                         if command_txt[:3] == 'set':
                             # Then we need to get the resource from the next line
                             # before implementing this command
@@ -151,7 +151,12 @@ def re_enter_commands(file_name, players):
                         if isinstance(command_obj, SelectedObject):
                             selected_obj = command_obj
                             continue
-                        if command_obj == ['end of turn']:
+                        # if command_obj == ['end of turn']:
+                        if isinstance(command_obj, EndOfTurnCmd):
+                            starting_new_turn = True
+                            implement_commands_if_possible(player)
+                            selected_obj = None
+                            resource = 'none'
                             continue
                         insert_command(player, command_obj)
         print("Commands successfully re-entered.")

@@ -141,6 +141,7 @@ def get_next_command(player, inpt='', selected_obj=None,
     if first_arg not in possible_first_words:
         return
     if first_arg in done_with_turn:
+        player.log_command(first_arg)
         return EndOfTurnCmd()
     elif first_arg == 'help' and len(inpt_as_ls) == 1:
         return

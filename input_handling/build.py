@@ -203,6 +203,7 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None,
         if loading_game:
             if resource in resource_kind_to_class:
                 building.initial_resource_to_collect = resource_kind_to_class[resource]
+                player.log_command("Resource=" + resource)
             return
         # The following of course runs if not loading_game
         while True:
