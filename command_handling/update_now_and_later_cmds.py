@@ -1,6 +1,6 @@
 
-from insert_commands import number_of_units_can_build_in_one_turn
-from insert_commands import collecting_resource_action
+from .insert_commands import number_of_units_can_build_in_one_turn
+from .insert_commands import collecting_resource_action
 
 # The following is called at the beginning of each player's turn.
 def update_now_and_later_commands(player):
