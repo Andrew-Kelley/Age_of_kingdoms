@@ -27,6 +27,9 @@ class Building:
     letter_abbreviation = '?'
     cost = Resources({Wood: 1000, Stone: 1000, Bronze: 1000})
     time_to_build = 1000
+    # When a building is being built, it links to a BuildingUnderConstruction
+    # instance.
+    construction_alias = None
     currently_researching_something = False
 
     def __init__(self, number, position, player):
@@ -163,9 +166,19 @@ class Building:
             # Then another villager already finished building this building.
             return
         villager = villager_who_is_building
-        self.progress_to_construction += villager.build_amount_per_turn
+        amount = villager.build_amount_per_turn
+        self.progress_to_construction += amount
+        alias = self.construction_alias
+        if isinstance(alias, BuildingUnderConstruction):
+            alias.progress_to_construction += amount
+        else:
+            print("Error! This building under construction has no alias.")
+            print("Building:", self)
+
         if self.progress_to_construction >= self.time_to_build:
-            player.buildings[self.kind].append(self)
+            player.buildings[self.kind][self.number] = self
+            self.construction_alias = None
+            # player.buildings[self.kind].append(self)
             player.messages += 'New building: {}\n'.format(self)
 
     def compare_to(self, other):
@@ -184,7 +197,7 @@ class Building:
         return there_is_an_error
 
 
-class BuildingUnderConstruction:
+class BuildingUnderConstruction(Building):
     """This is a placeholder to be used until a building is completely built."""
 
     def __init__(self, bldng_class, number, position, player):

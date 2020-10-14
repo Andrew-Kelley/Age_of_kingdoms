@@ -4,6 +4,7 @@ from collections import deque
 from game_map import Position, game_map
 from units import Villager
 from buildings.resource_bldngs import Farm
+from buildings.bldng_class import BuildingUnderConstruction
 
 from command_handling.commands import Command, BuildUnitCmd, BuildBuildingCmd
 from command_handling.commands import CollectResourceCmd, ResearchCmd, FarmCmd
@@ -111,6 +112,11 @@ def insert_build_building_command(player, command):
         building = building_class(building_number, building_position, player)
         player.resources -= building.cost
         building.build_on_map(building_position, game_map)
+        # The following is a placeholder until the building is completely built.
+        temp_building = BuildingUnderConstruction(building_class, building_number,
+                                                          building_position, player)
+        player.buildings[building_class.kind].append(temp_building)
+        building.construction_alias = temp_building
 
     for i, villager in enumerate(villagers):
         if isinstance(building, Farm):
