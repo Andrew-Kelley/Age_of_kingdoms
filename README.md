@@ -6,8 +6,8 @@ Build a major project in Python, one that is significantly more
 substantial than anything I've done before. Also, I want to practice
 doing some object-oriented programming.
 
-### Tutorial
-For a description of how to use this program, read tutorial.txt
+### Game manual
+For a description of how to use this program, read manual.txt
 
 ### Dependency
 This game uses the Python package colorama. If you don't want to install that
