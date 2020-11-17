@@ -1,5 +1,7 @@
 # The design plan
 
+Stages of development and things left do do are listed at the end of this file.
+
 ### Ages
  - Stone Age
  - Bronze Age (700 wood, 300 stone)
@@ -328,17 +330,26 @@ researched.
 Maybe when a unit-producing building is printed, the current default
 build position should also be printed.
 
-Be able to print the current population.
-
 Be able to garrison units in buildings. (If a building is defensible,
 then they should be able to shoot arrows from it. Otherwise, they
 should be immune (or close to immune) from attacks by enemy units,
 and garrisoned units ought to recover health.)
 
+----------
+(Done.) Be able to print the current population.
+----------
+
+ 	---Five research ideas---
+
 Maybe be able to research 'trained doulas' at the library (or
 the university, if I change it to that). One thought on what
 this could do is allow towncenters to build 2 villagers per
-turn instead of just 1.
+turn instead of just 1. If this isn't appropriate for a
+library or university, maybe be able to research it at the 
+town center. 
+
+(Perhaps instead of a library or university call the building that 
+fills that role a "research center".)
 
 Another thought on a possible research item at the library is
 'basic medicine', which would make units garrisoned in buildings
@@ -351,6 +362,9 @@ something that would improve villagers' construction speed.
 Another thought is researching "wheelbarrow" would allow villagers
 to collect resources farther away from the corresponding building
 (such as a lumbercamp or miningcamp).
+
+If towers initially can't shoot arrows at units too close, then
+be able to research something that removes that restriction.
 
 
             ------------------------------------------------------
@@ -398,6 +412,7 @@ to collect resources farther away from the corresponding building
   * Build units
   * Build buildings
   * Collect resources
+  * Research things
   * Attack other players (once I implement attacking)
 
 
@@ -409,7 +424,7 @@ to collect resources farther away from the corresponding building
   Also, units really ought to be printed on the map too.
 
   How should I deal with villagers being in the same position as resources?
-  Can in that case, can a background color be printed? Can resources normally
+  In that case, can a background color be printed? Can resources normally
   have some background color? Or maybe villagers can be underlined if
   they're in the same position as a resource.
 
