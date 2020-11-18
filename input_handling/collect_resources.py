@@ -1,5 +1,5 @@
 from input_handling.select_an_object import SelectedUnits
-from input_handling.print import str_to_int
+from input_handling.from_ls_get_position import get_position_from_inpt_as_ls
 from resources import resource_kind_to_class, Wood, Stone, Gold, Bronze, Iron
 from buildings.resource_bldngs import Farm
 from command_handling.commands import CollectResourceCmd, FarmCmd
@@ -80,14 +80,11 @@ def farm(player, inpt_as_ls, selected_obj=None):
         print('Command to farm was rejected since no villagers were selected.')
         return
 
-    i = str_to_int(inpt_as_ls[-2])
-    j = str_to_int(inpt_as_ls[-1])
-
-    if i is None or j is None:
+    position = get_position_from_inpt_as_ls(inpt_as_ls)
+    if not position:
         print('The position of the farm was not understood. Command rejected.')
         return
 
-    position = Position(i, j)
     if position in player.building_position_pairs:
         farm = player.building_position_pairs[position]
         if not isinstance(farm, Farm):

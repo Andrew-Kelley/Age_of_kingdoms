@@ -3,7 +3,7 @@ from input_handling.select_an_object import SelectedBuilding
 from input_handling.select_an_object import SelectedUnits
 from input_handling.select_an_object import SelectedNothing
 from input_handling.select_an_object import extract_selected_obj
-from game_map import Position
+from input_handling.from_ls_get_position import get_position_from_inpt_as_ls
 from input_handling.help import help_on
 
 
@@ -72,25 +72,17 @@ def print_part_of_map(player, inpt_as_ls):
     # I may eventually change this function so that each player has their own copy of the map,
     # and this would then print their copy. In this case, the variable player would be used.
 
-    i = str_to_int(inpt_as_ls[-2])
-    j = str_to_int(inpt_as_ls[-1])
-
-    if i is None or j is None:
+    position = get_position_from_inpt_as_ls(inpt_as_ls)
+    if not position:
         return
 
-    game_map_module.game_map.print_centered_at(Position(i, j))
+    game_map_module.game_map.print_centered_at(position)
     return
-
-
-def str_to_int(s):
-    try:
-        return int(s)
-    except ValueError:
-        return None
 
 
 if __name__ == '__main__':
     from player import Player
+    from game_map import Position
 
     p1 = Player(1, Position(80, 80), is_human=True)
 

@@ -1,11 +1,11 @@
 from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
 from units import Group, Army
-from game_map import Position, game_map
+from game_map import game_map
 from resources import resource_kind_to_class
 from input_handling.select_an_object import SelectedObject, SelectedBuilding
 from input_handling.select_an_object import SelectedUnits
 from input_handling.select_an_object import building_first_words
-from input_handling.print import str_to_int
+from input_handling.from_ls_get_position import get_position_from_inpt_as_ls
 from buildings.bldng_class import stone_age_buildings, bronze_age_buildings, buildings
 from buildings.other_bldngs import building_kind_to_class
 from command_handling.commands import BuildUnitCmd, BuildBuildingCmd
@@ -152,11 +152,9 @@ def build_building(player, inpt_as_ls, selected_obj):
 
     building_class = building_kind_to_class[building_kind]
 
-    x = str_to_int(inpt_as_ls[-2])
-    y = str_to_int(inpt_as_ls[-1])
-    if x is None or y is None:
+    position = get_position_from_inpt_as_ls(inpt_as_ls)
+    if not position:
         return
-    position = Position(x, y)
 
     if not this_is_a_help_build_command:
         if not building_class.can_build_on_map(building_class, position, game_map):
@@ -191,12 +189,9 @@ def set_default_build_position(player, inpt_as_ls, selected_obj=None,
     if not building:
         return
 
-    i = str_to_int(inpt_as_ls[-2])
-    j = str_to_int(inpt_as_ls[-1])
-    if i is None or j is None:
+    position = get_position_from_inpt_as_ls(inpt_as_ls)
+    if not position:
         return
-
-    position = Position(i, j)
     building.change_build_position_to(position, game_map)
 
     if building.kind == 'towncenter':
