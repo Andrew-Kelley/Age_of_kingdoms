@@ -76,7 +76,7 @@ class Unit:
             there_is_an_error = True
 
         delta = self.position - other.position
-        error_margin = 5 # Somewhat arbitrary
+        error_margin = 5  # Somewhat arbitrary
         # Recall that when villagers collect resources, which resource
         # they go to next uses randomness. When military units attack,
         # I might also use randomness to which unit they choose to attack.
@@ -95,7 +95,6 @@ class Unit:
             print(self)
             print(other)
         return there_is_an_error
-
 
 
 # Should I inherit from SelectedUnits?
@@ -147,7 +146,6 @@ class Villager(Unit):
             building = resource_to_building[resource]
             buildings_ls.extend(copy(player.buildings[building.kind][1:]))
 
-        resource_ls = []
         for obj in everything_within_given_distance_on(game_map, distance, self.position):
             if isinstance(obj, resource):
                 for building in buildings_ls:
@@ -165,7 +163,7 @@ class Villager(Unit):
         then the villager is allowed to instantly move to a nearby
         resource instance and collect
         that resource this turn."""
-        for obj in self.resource_iter_within_given_distance_of_me(6, resource, player):
+        for _ in self.resource_iter_within_given_distance_of_me(6, resource, player):
             return True
         return False
 
@@ -174,7 +172,7 @@ class Villager(Unit):
         if not isinstance(resource_instance, resource):
             # This should never happen.
             print('ERROR! The function collect_resource_here was called '
-                  'when with the argument resource {},'.format(resource),
+                  'with the argument resource {},'.format(resource),
                   "but the object at the villager's "
                   "position was {}".format(resource_instance))
             return
@@ -185,8 +183,8 @@ class Villager(Unit):
         player.resources[resource] += amount_to_collect
         if resource_instance.amount_left <= 0:
             # Then delete resource_instance on the map
-            i, j = self.position.value
-            game_map[i][j] = ' '
+            x, y = self.position.value
+            game_map[y][x] = ' '
 
     def collect_resource(self, resource, player):
         ls = list(self.resource_iter_within_given_distance_of_me(0, resource, player))

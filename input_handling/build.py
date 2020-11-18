@@ -152,11 +152,11 @@ def build_building(player, inpt_as_ls, selected_obj):
 
     building_class = building_kind_to_class[building_kind]
 
-    i = str_to_int(inpt_as_ls[-2])
-    j = str_to_int(inpt_as_ls[-1])
-    if i is None or j is None:
+    x = str_to_int(inpt_as_ls[-2])
+    y = str_to_int(inpt_as_ls[-1])
+    if x is None or y is None:
         return
-    position = Position(i, j)
+    position = Position(x, y)
 
     if not this_is_a_help_build_command:
         if not building_class.can_build_on_map(building_class, position, game_map):

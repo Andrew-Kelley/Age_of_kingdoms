@@ -26,8 +26,8 @@ smaller value of i meaning it is further up (i.e. north) on the map, and j
 represents how far left or right it is, with a smaller value of j
 meaning it is further to the left (i.e. further west).
 
-The position of a building is the position of its lower left
-(i.e. south west) corner.
+The position of a building is the position of its lower right
+(i.e. south east) corner.
 
 -------------------------
 ---------THE MAP---------
@@ -105,7 +105,7 @@ or
 "move e2 n6" (meaning: move east 2 and north 6, i.e. move left 2 and up 6)
 
 If a unit is at position (i, j), then (if it is selected) the command
-"move n3 e2" changes its position to (i-3, j+2).
+"move n3 e2" changes its position to (i+2, j+3).
 
 In one turn, units can move through a distance of 15. So for example, they
 can move north 10 and east 5 (via the command "move n10 e5") or they could

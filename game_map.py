@@ -28,9 +28,10 @@ class Position:
         return str(self.value)
 
     def is_on_the_map(self, the_map):
-        if self.value[0] < 0 or self.value[1] < 0:
+        x, y = self.value
+        if x < 0 or y < 0:
             return False
-        if self.value[0] >= len(the_map) or self.value[1] >= len(the_map[0]):
+        if y >= len(the_map) or x >= len(the_map[0]):
             return False
         return True
 
@@ -86,13 +87,10 @@ class Vector(Position):
         return (beginning, the_rest)
 
 
-# One reason I see now for why I want this class for representing the map
-# is that given a position object, I can use it directly to find what is at
-# that position, rather than re-implementing the code in __call__ every time.
 class GameMap(list):
     def __call__(self, position):
-        i, j = position.value
-        return self[i][j]
+        x, y = position.value
+        return self[y][x]
 
     def __str__(self):
         rows = [''.join(map(str, ls)) for ls in self]
@@ -119,31 +117,30 @@ class GameMap(list):
         horizontal_delta = width // 2
         vertical_delta = height // 2
 
-        i0, j0 = position.value
+        x0, y0 = position.value
 
-        i_start = max(0, i0 - vertical_delta)
-        i_stop = min(len(self), i0 + vertical_delta)
+        y_min = max(0, y0 - vertical_delta)
+        y_max = min(len(self) - 1, y0 + vertical_delta)
 
-        j_start = max(0, j0 - horizontal_delta)
-        j_stop = min(len(self[0]), j0 + horizontal_delta)
+        x_start = max(0, x0 - horizontal_delta)
+        x_stop = min(len(self[0]), x0 + horizontal_delta)
 
         def print_column_numbers():
             for digit in range(num_digits):
                 # The following line is to print an offset for the margin, which
                 # (in the main part) is used to print the row numbers.
                 print(' ' * num_digits, end='')
-                for j in range(j_start, j_stop):
-                    end = '' if j < j_stop - 1 else '\n'
-                    print(int_to_str(j)[digit], end=end)
-
+                for x in range(x_start, x_stop):
+                    end = '' if x < x_stop - 1 else '\n'
+                    print(int_to_str(x)[digit], end=end)
 
         def print_row(i):
             margin = int_to_str(i)
-            row_content = ''.join(map(str, self[i][j_start:j_stop]))
+            row_content = ''.join(map(str, self[i][x_start:x_stop]))
             print(margin + row_content + margin)
 
         print_column_numbers()
-        for i in range(i_start, i_stop):
+        for i in range(y_max, y_min - 1, -1):
             print_row(i)
         print_column_numbers()
 
@@ -163,21 +160,21 @@ def everything_within_given_distance_on(the_map, distance, position):
         print('distance must not be negative')
         return
 
-    i0, j0 = position.value
+    # The following is the center of the diamond-shaped portion of the map.
+    x0, y0 = position.value
 
     # The following iterates through the diamond shaped portion of the_map
-    # from left to right, bottom to top.
-    for j_delta in range(-1 * distance, distance + 1):
-        sign = 1 if j_delta <= 0 else -1
-        height = distance + j_delta * sign
+    # from bottom to top, left to right.
+    for y_delta in range(-1 * distance, distance + 1):
+        sign_to_mult_by = 1 if y_delta <= 0 else -1
+        horizontal_radius = distance + y_delta * sign_to_mult_by
         # height is how far up or down the map, we need to go
-        for i_delta in range(-1 * height, height + 1):
-            i = i0 + i_delta
-            j = j0 + j_delta
-            this_position = Position(i, j)
+        for x_delta in range(-1 * horizontal_radius, horizontal_radius + 1):
+            x = x0 + x_delta
+            y = y0 + y_delta
+            this_position = Position(x, y)
             if this_position.is_on_the_map(the_map):
-                # the_map[i][j] = '*'  # This was used for testing purposes only.
-                yield the_map[i][j]
+                yield the_map[y][x]
 
 
 def within_given_distance(obj1, obj2, distance):
@@ -185,78 +182,78 @@ def within_given_distance(obj1, obj2, distance):
     return vector.magnitude <= distance
 
 
-# Eventually, I should create a function that makes a random map
+# Eventually, I should create a function or class that makes a random map
 game_map = GameMap([[' '] * 100 for i in range(100)])
 for i in range(60, 66):
     for j in range(75, 85):
-        game_map[i][j] = Wood(Position(i, j))
+        game_map[i][j] = Wood(Position(j, i))
 
 # Eh, I feel like adding more wood:
 for i in range(66, 72):
     for j in range(80, 90):
-        game_map[i][j] = Wood(Position(i, j))
-
-# Filling the top left corner with wood:
-for i in range(30):
-    for j in range(30 - i):
-        game_map[i][j] = Wood(Position(i, j))
+        game_map[i][j] = Wood(Position(j, i))
 
 # Filling the bottom left corner with wood:
+for i in range(30):
+    for j in range(30 - i):
+        game_map[i][j] = Wood(Position(j, i))
+
+# Filling the top left corner with wood:
 for i in range(80, 100):
     for j in range(i - 80):
-        game_map[i][j] = Wood(Position(i, j))
-
-# Filling the top right corner with wood:
-for i in range(30):
-    for j in range(70 + i, 100):
-        game_map[i][j] = Wood(Position(i, j))
+        game_map[i][j] = Wood(Position(j, i))
 
 # Filling the bottom right corner with wood:
+for i in range(30):
+    for j in range(70 + i, 100):
+        game_map[i][j] = Wood(Position(j, i))
+
+# Filling the top right corner with wood:
 for i in range(80, 100):
     for j in range(179 - i, 100):
-        game_map[i][j] = Wood(Position(i, j))
+        game_map[i][j] = Wood(Position(j, i))
 
 # Fill the middle with stone:
 for i in range(40, 60):
     for j in range(40, 60):
-        game_map[i][j] = Stone(Position(i, j))
+        game_map[i][j] = Stone(Position(j, i))
 
 # Put gold around the corners of the large stone deposit:
 for i_offset, j_offset in ((-15, -15), (-15, 10), (10, -15), (10, 10)):
     for i in range(50 + i_offset, 50 + i_offset + 5):
         for j in range(50 + j_offset, 50 + j_offset + 5):
-            game_map[i][j] = Gold(Position(i, j))
+            game_map[i][j] = Gold(Position(j, i))
 
 # Adding Food:
 for i_start, j_start in ((80, 80), (80, 20), (20, 80), (20, 20)):
     for i in range(i_start, i_start + 4):
         for j in range(j_start - 7, j_start - 4):
-            game_map[i][j] = Food(Position(i, j))
+            game_map[i][j] = Food(Position(j, i))
 
 
 for i_start, j_start in ((85, 70), (85, 10), (5, 70), (15, 25)):
     for i in range(i_start, i_start + 2):
         for j in range(j_start, j_start + 2):
-            game_map[i][j] = Bronze(Position(i, j))
+            game_map[i][j] = Bronze(Position(j, i))
 
 for i in range(90, 92):
-    game_map[i][87] = Gold(Position(i, 87))
+    game_map[i][87] = Gold(Position(87, i))
 
 for i in range(94, 97):
     for j in range(77, 79):
-        game_map[i][j] = Stone(Position(i, j))
+        game_map[i][j] = Stone(Position(j, i))
 
 for i in range(78, 79):
     for j in range(85, 87):
-        game_map[i][j] = Stone(Position(i, j))
+        game_map[i][j] = Stone(Position(j, i))
 
 # The following can be printed, even though it is in the far right column of the map:
-game_map[50][99] = Iron(Position(50, 99))
+game_map[50][99] = Iron(Position(99, 50))
 
-# Adding some Iron at the bottom of the map (which now can be printed):
+# Adding some Iron at the top of the map (which now can be printed):
 for i in range(97, 100):
     for j in range(60, 61):
-        game_map[i][j] = Iron(Position(i, j))
+        game_map[i][j] = Iron(Position(j, i))
 
 
 

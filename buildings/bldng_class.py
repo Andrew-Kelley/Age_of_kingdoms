@@ -113,32 +113,36 @@ class Building:
         self.build_position = new_position
 
     def can_build_on_map(self, position, game_map):
-        """Returns True if the building can be built at stated position."""
-        i_init, j_init = position.value
-        height, length = self.size
+        """Returns True if the building can be built at stated position.
+
+        Recall this from manual.txt: The position of a building is the position
+        of its lower right (i.e. south east) corner."""
+        x_init, y_init = position.value
+        length, height = self.size
+
         # First check if the building will be placed within the boundaries of the  map:
-        if i_init - (height - 1) < 0:
-            print('Sorry, building placement too far north.')
-            return False
-        if i_init >= len(game_map):
-            print('Sorry, building placement too far south.')
-            return False
-        if j_init < 0:
+        if x_init - (length - 1) < 0:
             print('Sorry, building placement too far west.')
             return False
-        if j_init + (length - 1) >= len(game_map[0]):
+        if x_init  >= len(game_map[0]):
             print('Sorry, building placement too far east.')
+            return False
+        if y_init < 0:
+            print('Sorry, building placement too far south.')
+            return False
+        if y_init + (height - 1) >= len(game_map):
+            print('Sorry, building placement too far north.')
             return False
 
         # Next, check that there are no obstructions. Buildings are allowed to be built
         # only where there are blank spaces or wood or food sources.
-        i_final = i_init - self.size[0]
-        j_final = j_init + self.size[1]
-        for i in range(i_init, i_final, -1):
-            for j in range(j_init, j_final):
-                if game_map[i][j] not in (' ', 'w', 'f'):
+        x_final = x_init - length
+        y_final = y_init + height
+        for x in range(x_init, x_final, -1):
+            for y in range(y_init, y_final):
+                if game_map[y][x] not in (' ', 'w', 'f'):
                     print('Sorry, there is {} occupying part of '
-                          'that space.'.format(game_map[i][j]))
+                          'that space.'.format(game_map[x][y]))
                     return False
 
         return True
@@ -146,17 +150,17 @@ class Building:
     def build_on_map(self, position, game_map):
         """This function is called when construction starts
         (so before construction is complete)."""
-        i_init, j_init = position.value
-        i_final = i_init - self.size[0]
-        j_final = j_init + self.size[1]
+        x_init, y_init = position.value
+        x_final = x_init - self.size[0]
+        y_final = y_init + self.size[1]
 
         # The Color.ENDC is so that the rest of the map isn't also printed in
         # the color player.color
         player = self.player
         letter_in_color = player.color + self.letter_abbreviation + Color.ENDC
-        for i in range(i_init, i_final, -1):
-            for j in range(j_init, j_final):
-                game_map[i][j] = letter_in_color
+        for x in range(x_init, x_final, -1):
+            for y in range(y_init, y_final):
+                game_map[y][x] = letter_in_color
                 # player.map[i][j] = self.letter_in_color
 
     def build_by(self, villager_who_is_building):

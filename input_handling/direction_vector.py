@@ -20,14 +20,18 @@ def direction_inpt_to_vector(direction_str):
         return None
 
     if direction == 'n':
-        return Vector(-1 * distance, 0)
-    elif direction == 's':
-        return Vector(distance, 0)
-    elif direction == 'e':
         return Vector(0, distance)
-    else:
-        # assert direction == 'w'
+    elif direction == 's':
         return Vector(0, -1 * distance)
+    elif direction == 'e':
+        return Vector(distance, 0)
+    elif direction == 'w':
+        return Vector(-1 * distance, 0)
+    else:
+        # I think it is impossible for this code to run, due to one of the if
+        # statements at the beginning of this function.
+        print("Error. direction_inpt_to_vector was called and the")
+        print("direction string was not understood.")
 
 
 def get_direction_vector(inpt_as_ls):
