@@ -1,0 +1,20 @@
+Here are the lessons I've learned while working on this project.
+
+(As should be evident, there are things I learned that I haven't yet
+added to this document.)
+
+------------------------------------------------------------------------------
+------  Sacrificing usability to make programming slightly easier is NOT
+------  worth it
+
+At the beginning of this project, I made a design decision on how the
+game_map indexing works. I'm pretty sure I knew it would make playing the
+game slightly more difficult. However, it also made programming it slightly
+easier. Making the game fun to play wasn't high on my priority list, and so
+I decided to take the route that was easier in the short term.
+
+After playing the game a decent amount, I realized that the confusion my
+design decision causes wasn't worth making the programming slightly simpler,
+and so I decided to change the game_map indexing to make it how it ought to be.
+This change took a few hours to implement. Doing it right the first time
+would have only cost me perhaps an extra 15 or 20 minutes.
