@@ -4,6 +4,24 @@ Here are the lessons I've learned while working on this project.
 added to this document.)
 
 ------------------------------------------------------------------------------
+------ It is useful to create objects representing abstract things
+
+When a user inputs a command, I originally translated it into a Python list
+of one of several various formats. This was a bad idea. Later on, I decided
+that it would be better to have a class called Command with various subclasses
+such as MoveCmd, BuildBuildingCmd, and CollectResourceCmd etc.
+
+What I did at first made encapsulation impossible. Also, accessing various
+parts of a command via list indexing gave no hint on what was being accessed.
+(And it was hard to keep track of it all, even without having implemented
+all possible command types.) When I created instances of Command objects, I
+could name the various parts with useful names.
+
+I already noticed the benefits when I added a new way to command units to
+move. If I was still stuck only using Python lists, then the change would
+have been harder to make.
+
+------------------------------------------------------------------------------
 ------  Sacrificing usability to make programming slightly easier is NOT
 ------  worth it
 
