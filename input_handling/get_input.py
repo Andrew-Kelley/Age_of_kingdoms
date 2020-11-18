@@ -71,9 +71,9 @@ assert set(functions) == main_commands
 def input_next_command(player, selected_obj=None):
     while True:
         inpt = input('Enter a command: ').lower()
-        if inpt == '':
-            continue
         inpt_as_ls = inpt.split()
+        if len(inpt_as_ls) == 0:
+            continue
 
         if inpt_as_ls[0] not in possible_first_words:
             print('The first word of your command did not make perfect sense.')
