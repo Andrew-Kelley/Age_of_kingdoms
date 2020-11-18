@@ -1,7 +1,5 @@
-Here are the lessons I've learned while working on this project.
+Here are some lessons I've learned while working on this project.
 
-(As should be evident, there are things I learned that I haven't yet
-added to this document.)
 
 ------------------------------------------------------------------------------
 ------  It is useful to create objects representing abstract things
@@ -11,15 +9,28 @@ of one of several various formats. This was a bad idea. Later on, I decided
 that it would be better to have a class called Command with various subclasses
 such as MoveCmd, BuildBuildingCmd, and CollectResourceCmd etc.
 
-What I did at first made encapsulation impossible. Also, accessing various
-parts of a command via list indexing gave no hint on what was being accessed.
-(And it was hard to keep track of it all, even without having implemented
-all possible command types.) When I created instances of Command objects, I
-could name the various parts with useful names.
+Accessing various parts of a command via list indexing gave no hint on
+what was being accessed. (And it was hard to keep track of it all, even without
+having implemented all possible command types.) When I created instances of the
+Command class, I could access the data with useful names.
 
-I already noticed the benefits when I added a new way to command units to
-move. If I was still stuck only using Python lists, then the change would
-have been harder to make.
+Also, what I did at first made encapsulation impossible.
+
+------------------------------------------------------------------------------
+------  Encapsulation is good
+
+Working with a simple interface to a class is easier than working with
+different types of data arbitrarily put together in a Python list. Not only
+is it easier to work with such classes, but later modifications are also
+then easier to make. For example, I noticed this when I added a new way to
+command units to move. If I was still stuck only using Python lists to
+represent user commands, then the change would have been harder to make.
+
+When I started this project in 2018, I had never heard of encapsulation
+or information hiding. I hadn't yet heard about the idea of separating the
+implementation from the interface. (I first read about it this year, in 2020,
+from the book "Code Complete 2" by Steve McConnell.)
+
 
 ------------------------------------------------------------------------------
 ------  Sacrificing usability to make programming slightly easier is NOT
