@@ -31,6 +31,7 @@ or information hiding. I hadn't yet heard about the idea of separating the
 implementation from the interface. (I first read about it this year, in 2020,
 from the book "Code Complete 2" by Steve McConnell.)
 
+Disclaimer: I have not yet refactored player.commands with encapsulation in mind.
 
 ------------------------------------------------------------------------------
 ------  Sacrificing usability to make programming slightly easier is NOT
@@ -47,7 +48,6 @@ design decision causes wasn't worth making the programming slightly simpler,
 and so I decided to change the game_map indexing to make it how it ought to be.
 This change took a few hours to implement. Doing it right the first time
 would have only cost me perhaps an extra 15 or 20 minutes.
-
 
 ------------------------------------------------------------------------------
 ------  Having no documentation at all can be a problem
