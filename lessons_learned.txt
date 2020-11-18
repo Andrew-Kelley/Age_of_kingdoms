@@ -4,7 +4,7 @@ Here are the lessons I've learned while working on this project.
 added to this document.)
 
 ------------------------------------------------------------------------------
------- It is useful to create objects representing abstract things
+------  It is useful to create objects representing abstract things
 
 When a user inputs a command, I originally translated it into a Python list
 of one of several various formats. This was a bad idea. Later on, I decided
@@ -36,3 +36,16 @@ design decision causes wasn't worth making the programming slightly simpler,
 and so I decided to change the game_map indexing to make it how it ought to be.
 This change took a few hours to implement. Doing it right the first time
 would have only cost me perhaps an extra 15 or 20 minutes.
+
+
+------------------------------------------------------------------------------
+------  Having no documentation at all can be a problem
+
+While I've heard that too much documentation is a problem, I had too little.
+
+I started working on this game in 2018. For two years, I had other priorities
+and so did practically nothing on the game. When I decided to continue this
+project, it had been long enough that I forgot how a user is supposed to enter
+commands. Hence, I had to figure it out by reverse engineering the code that
+I had written and by experimenting. This took longer than the time it would
+have taken to write a simple manual/user guide.
