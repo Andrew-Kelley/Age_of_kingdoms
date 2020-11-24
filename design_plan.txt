@@ -390,19 +390,7 @@ be able to research something that removes that restriction.
   Right now (aka...formerly),
   a command handled by command_handling.py is simply a list. But
   actually creating an object that represents a command would be
-  better. The following are the files that would need to be changed:
-  * commands.py
-  * command_handling.py (This was split into four files.)
-  * get_input.py
-  * build.py
-  * collect_resources.py
-  * move_units.py
-  * print.py (very minor changes here)
-  * research.py
-  * main.py  (very minor changes here)
-  * military_bldngs.py
-  * other_bldngs.py
-
+  better.
 
 - (DONE! - mid September, 2020)
   Be able to save a game and then restart where I left off. (Similar
@@ -415,6 +403,12 @@ be able to research something that removes that restriction.
   * Research things
   * Attack other players (once I implement attacking)
 
+- Implement fog of war. Hence, each player gets its own copy of the map.
+  (This might be an annoyance to use without some "scout" command, where
+  a unit can be commanded to scout, and it automatically moves around,
+  exploring the map. Hence, if I do this, I should also implement a
+  "scout" command. Should I also give each player a scout to start out
+  each game with?)
 
 - Perhaps enable people to play this game over some network.
 
