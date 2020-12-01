@@ -9,7 +9,6 @@
 # - create a named "group" of villagers
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
-# - quit game
 
 from units import Unit, unit_kinds, Villager
 from buildings.bldng_class import Building
@@ -292,6 +291,10 @@ class EndOfTurnCmd(Command):
     _kind = 'end of turn'
 
 
+class QuitGameCmd(Command):
+    _kind = 'quit game'
+
+
 class SaveGameCmd(Command):
     # Prior format: ['save game']
     _kind = 'save game'
@@ -301,3 +304,6 @@ if __name__ == '__main__':
     obj = BuildUnitCmd(1, 2, 3)
     print(obj.building)
     print(obj.kind)
+
+    cmd = QuitGameCmd()
+    assert isinstance(cmd, Command)

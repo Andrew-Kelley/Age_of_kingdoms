@@ -5,6 +5,7 @@ from input_handling.move_units import move_unit_or_units
 from input_handling.print import print_something
 from input_handling.collect_resources import collect_resource, farm
 from input_handling.research import research_something
+from input_handling.quit_game import quit_game
 
 from command_handling.commands import SaveGameCmd, EndOfTurnCmd
 
@@ -32,6 +33,7 @@ def input_number_of_players(human=True):
 
 
 done_with_turn = {'finished', 'done'}
+quit_game_cmds = {'quit', 'exit'}
 help_commands = {'help', 'commands'}
 # NOTE: If main_commands is changed, then so should the functions dictionary, defined
 # just before the input_next_command function.
@@ -39,6 +41,8 @@ main_commands = {'build', 'select', 'move', 'print', 'set', 'collect', 'chop', '
                  'quarry', 'research', 'help build', 'farm'}
 possible_first_words = main_commands.union(done_with_turn).union(help_commands)
 possible_first_words.add('save')
+for word in quit_game_cmds:
+    possible_first_words.add(word)
 
 def closest_word_to(word, some_words):
     """This function is not perfect, but it should work well enough."""
@@ -98,6 +102,9 @@ def input_next_command(player, selected_obj=None):
         if first_argument_of_command in done_with_turn:
             player.log_command('done')
             return EndOfTurnCmd()
+        elif first_argument_of_command in quit_game_cmds:
+            if inpt_as_ls[-1] == 'game':
+                return quit_game()
         elif first_argument_of_command == 'save':
             if inpt_as_ls[-1] == 'game':
                 return SaveGameCmd()
