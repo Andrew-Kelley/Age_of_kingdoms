@@ -282,6 +282,11 @@ Python pickle module to save and load games, and so
 arbitrary Python code can be run when a pickle file is
 loaded.
 
+---------------------------------------
+-------------TO QUIT A GAME------------
+
+type "quit game" or "exit game"
+
 ----------------------------------------------------------
 ---------DIFFERENCES FROM THE GAME AGE OF EMPIRES---------
 
