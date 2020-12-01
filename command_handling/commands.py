@@ -1,9 +1,7 @@
 # When a user inputs a command, it gets translated into an
 # instance of a subclass of the Command class.
-# Formerly, they were just lists! (This was a mistake.)
 
-# The present representation will probably be helpful for when
-# I add more commands such as follows:
+# Commands to add:
 # - attack a building or unit
 # - defend an area
 # - garrison units in buildings
@@ -12,13 +10,6 @@
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
 # - quit game
-
-# The present representation is better. One reason is that
-# different aspects of a command are now accessed through
-# meaningful names rather than arbitrary list indexes.
-
-# Also, having commands structured in this way will probably be
-# helpful when creating an AI.
 
 from units import Unit, unit_kinds, Villager
 from buildings.bldng_class import Building
@@ -47,7 +38,7 @@ class Command:
 class MoveCmd(Command):
     # Prior format: ['move', ls_of_units, delta]
     # But I want to eventually allow multiple units to be commanded to move
-    # to a given position (instead of saying all should move by te same
+    # to a given position (instead of saying all should move by the same
     # delta). Hence each unit should have its own delta.
 
     _kind = 'move'
