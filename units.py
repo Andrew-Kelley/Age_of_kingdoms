@@ -222,14 +222,14 @@ class Villager(Unit):
         player.resources[Food] += self.food_from_farming_per_turn
 
 
-# Unless pikemen are vastly weaker than Swordsman, I think that the cost
+# Unless pikemen are significantly weaker than Swordsman, I think that the cost
 # difference between Pikeman and Swordsman will result in many more
 # Pikeman being built at the beginning of the game.
 # I think that this is OK.
 # I intend Pikeman to only be somewhat weaker than Swordsman
 class Pikeman(Unit):
     """A man with a spear and a shield"""
-    cost = Resources({Food: 40, Wood: 15})
+    cost = Resources({Food: 40, Wood: 20})
     kind = 'pikemen'
 
 
@@ -239,12 +239,12 @@ class Swordsman(Unit):
     # (a) bronze shields, and (b) bronze swords.
     # The first of these also benefits Pikeman (by upgrading their
     # armor to bronze).
-    cost = Resources({Food: 40, Gold: 25, Bronze: 30})
+    cost = Resources({Food: 40, Gold: 25, Bronze: 15})
     kind = 'swordsmen'
 
 
 class Archer(Unit):
-    cost = Resources({Wood: 40, Gold: 25, Bronze: 15})
+    cost = Resources({Wood: 40, Gold: 20, Bronze: 10})
     kind = 'archers'
 
 
