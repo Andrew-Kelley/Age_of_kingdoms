@@ -243,13 +243,28 @@ class Swordsman(Unit):
     kind = 'swordsmen'
 
 
+class ChampionSwordsman(Swordsman):
+    # Can only be built after researching level 3 swordsman
+    pass
+
+
 class Archer(Unit):
     cost = Resources({Wood: 40, Gold: 20, Bronze: 10})
     kind = 'archers'
 
 
+class ChampionArcher(Archer):
+    # Can only be built after researching level 3 archers
+    pass
+
+
 class Knight(Unit):
     kind = 'knights'
+
+
+class ChampionKnight(Knight):
+    # Can only be built after researching level 3 knight
+    pass
 
 
 class BatteringRam(Unit):
