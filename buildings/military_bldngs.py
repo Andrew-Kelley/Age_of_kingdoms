@@ -36,20 +36,16 @@ class Barracks(Building):
         if unit_type == Pikeman.kind:
             # The unit's initial position may be changed later in this function
             new_unit = Pikeman(self.build_position, player)
-            player.resources -= Pikeman.cost
         else:
             # The unit's initial position may be changed later in this function
             new_unit = Swordsman(self.build_position, player)
-            player.resources -= Swordsman.cost
 
         # If self.build_position is too far away, then the unit will not start
         # its existence that far away.
-        set_position_of_unit_and_command_to_move_if_far(self, new_unit, player, distance=6)
-
-        player.messages += 'New unit: {}\n'.format(new_unit)
+        set_unit_position_and_movement(self, new_unit, player, distance=6)
 
 
-def set_position_of_unit_and_command_to_move_if_far(building, new_unit, player, distance):
+def set_unit_position_and_movement(building, new_unit, player, distance):
     """If the new_unit also requires to be initialized with a move command, then
     this function handles that too."""
     delta = building.build_position - building.position
@@ -79,9 +75,7 @@ class ArcheryRange(Building):
             return
 
         new_archer = Archer(self.build_position, player)
-        set_position_of_unit_and_command_to_move_if_far(self, new_archer, player, distance=6)
-        player.resources -= Archer.cost
-        player.messages += 'New unit: {}\n'.format(new_archer)
+        set_unit_position_and_movement(self, new_archer, player, distance=6)
 
 
 class Stable(Building):

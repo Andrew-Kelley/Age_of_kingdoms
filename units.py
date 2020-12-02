@@ -37,6 +37,7 @@ class Unit:
         self.position = position
         self.is_alive = True
         self.current_action = 'doing nothing'
+        player.messages += 'New unit: {}\n'.format(self)
         player.units[self.kind].append(self)
 
     def __str__(self):

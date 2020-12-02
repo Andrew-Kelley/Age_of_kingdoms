@@ -2,7 +2,7 @@
 from collections import deque
 
 from game_map import Position, game_map
-from units import Villager
+from units import Villager, unit_kind_to_class
 from buildings.resource_bldngs import Farm
 from buildings.bldng_class import BuildingUnderConstruction
 
@@ -267,6 +267,13 @@ def insert_build_unit_command(player, command):
         print('The selected building cannot build that unit.')
         print(cannot_build_unit_yet_error_message(player, building, unit_kind))
         return
+
+    unit_class = unit_kind_to_class[unit_kind]
+    the_cost = unit_class.cost * num_to_be_built
+    if not player.resources >= the_cost:
+        print("You do not have enough resources. Command rejected.")
+        return
+    player.resources -= the_cost
 
     num_can_build = number_of_units_can_build_in_one_turn(player, building, unit_kind)
 

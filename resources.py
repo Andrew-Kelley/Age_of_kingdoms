@@ -103,6 +103,12 @@ class Resources(dict):
             updated_resources[resource] -= other[resource]
         return updated_resources
 
+    def __mul__(self, n):
+        updated_resources = copy(self)
+        for resource in self:
+            updated_resources[resource] *= n
+        return updated_resources
+
     def __repr__(self):
         global resource_ls
         ls_of_what_to_print = []

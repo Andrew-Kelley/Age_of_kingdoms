@@ -73,9 +73,6 @@ class TownCenter(Building):
             else:
                 insert_collect_resource_later_command(player, command)
 
-        # player.units[Villager.kind].append(new_villager)
-        player.messages += 'New unit: {}\n'.format(new_villager)
-        player.resources -= Villager.cost
 
     def num_villagers_can_build_in_turn(self, player):
         # At one point, I thought a towncenter should be able to
