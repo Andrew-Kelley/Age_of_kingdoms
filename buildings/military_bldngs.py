@@ -29,8 +29,8 @@ class Barracks(Building):
         player = self.player
         if unit_type not in self.units_which_can_be_built():
             # This should never happen because the function units_which_can_be_built
-            # is called in in the command_handling.py module (in the function
-            # insert_build_unit_command)
+            # is called in in the command_handling/insert_commands.py (in the
+            # function insert_build_unit_command)
             return
 
         if unit_type == Pikeman.kind:
