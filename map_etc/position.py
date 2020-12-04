@@ -1,5 +1,6 @@
 # Instances of Position are supposed to be positions on the map
 
+
 class Position:
     """The i and j coordinates of a position on the map"""
 
@@ -89,6 +90,11 @@ class Vector(Position):
         the_rest -= Vector(i, j)
 
         return (beginning, the_rest)
+
+
+def distance(position1, position2):
+    difference = position1 - position2
+    return difference.magnitude
 
 
 if __name__ == '__main__':

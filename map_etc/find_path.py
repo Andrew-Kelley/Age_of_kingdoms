@@ -1,9 +1,6 @@
 from heapq import heappush, heappop
 
-
-def distance(position1, position2):
-    difference = position1 - position2
-    return difference.magnitude
+from map_etc.position import distance
 
 
 def diagonal_weight(position1, position2):
