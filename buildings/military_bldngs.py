@@ -41,7 +41,7 @@ class Barracks(Building):
 
         # If self.build_position is too far away, then the unit will not start
         # its existence that far away.
-        set_unit_position_and_movement(self, new_unit, player, distance=6)
+        set_unit_position_and_movement(self, new_unit, player)
 
 
 class ArcheryRange(Building):
@@ -61,7 +61,7 @@ class ArcheryRange(Building):
             return
 
         new_archer = Archer(self.build_position, player)
-        set_unit_position_and_movement(self, new_archer, player, distance=6)
+        set_unit_position_and_movement(self, new_archer, player)
 
 
 class Stable(Building):

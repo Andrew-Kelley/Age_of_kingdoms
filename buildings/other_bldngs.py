@@ -13,6 +13,8 @@ from command_handling.insert_commands import insert_collect_resource_later_comma
 from command_handling.insert_commands import insert_collect_resource_now_command
 from command_handling.commands import MoveCmd, CollectResourceCmd
 
+from map_etc.initialize_position import set_unit_position_and_movement
+
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
@@ -53,18 +55,12 @@ class TownCenter(Building):
         if unit_type != 'villagers':
             print('Error! A TownCenter can only build Villagers.')
             return
-        # villager_number = len(player.units[Villager.kind])
         delta = self.build_position - self.position
 
-        if delta.magnitude > 6:
-            delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=6)
-            build_position = self.position + delta1
-            new_villager = Villager(build_position, player)
-            command = MoveCmd()
-            command.add_unit_with_delta(new_villager, delta2)
-            insert_move_later_command(player, command)
-        else:
-            new_villager = Villager(self.build_position, player)
+        new_villager = Villager(self.build_position, player)
+        # If build_position is too far, it needs to be reset.
+        set_unit_position_and_movement(self, new_villager, player)
+
         if self.initial_resource_to_collect:
             resource = self.initial_resource_to_collect
             command = CollectResourceCmd(resource, [new_villager])
