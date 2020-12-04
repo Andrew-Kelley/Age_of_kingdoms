@@ -46,6 +46,12 @@ def positions_around(center, radius):
     and around going further and further out.
 
     center must be an instance of Position"""
+    if not type(radius) is int:
+        print('radius must be an int')
+        return
+    if radius < 0:
+        print('radius must not be negative')
+        return
     if not center.is_on_the_map(game_map):
         return
 
