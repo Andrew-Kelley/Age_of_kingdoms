@@ -106,7 +106,7 @@ def insert_build_building_command(player, command):
             print('You must use the exact position it was built at.')
             return
     else:
-        if not player.can_build(building_class):
+        if not player.has_resources_to_build(building_class):
             print('You do not have enough resources to build that building.')
             return
         building_number = len(player.buildings[building_class.kind])

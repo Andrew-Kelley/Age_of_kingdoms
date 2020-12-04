@@ -49,13 +49,7 @@ def implement_build_unit_commands(player):
             if player.population < player.population_cap:
                 if unit_type not in unit_kind_to_class:
                     continue
-                unit = unit_kind_to_class[unit_type]
-                if player.can_build(unit):
-                    building.build_unit(unit_type)
-                else:
-                    unit_type = unit_kind_to_singular[unit.kind].capitalize()
-                    print('You do not have enough resources to build a ', unit_type)
-                    continue
+                building.build_unit(unit_type)
             else:
                 print('Population cap reached. You cannot build more units.')
                 return

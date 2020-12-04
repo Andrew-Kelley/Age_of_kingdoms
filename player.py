@@ -112,13 +112,16 @@ class Player:
             pop += len(self.units[unit.kind]) - num_units_killed - 1
         return pop
 
-    def can_build(self, thing, number=1):
+    def has_room_in_population_to_build(self, thing, number=1):
         """If thing is a Unit, number is how many of that Unit that is desired
         to be built PLUS the number of other units already OK'd to be built during
         the next turn."""
         if issubclass(thing, Unit) or isinstance(thing, Unit):
             if self.population > self.population_cap - number:
                 return False
+        return True
+
+    def has_resources_to_build(self, thing):
         return self.resources >= thing.cost
 
     def has_resources_to_research(self, thing):
@@ -250,7 +253,7 @@ if __name__ == '__main__':
     t = p1.buildings[TownCenter.kind][1]
 
     for j in range(4, 22):
-        if p1.can_build(Villager):
+        if p1.has_room_in_population_to_build(Villager):
             t.build_unit(Villager.kind)
 
     print(p1.population)
