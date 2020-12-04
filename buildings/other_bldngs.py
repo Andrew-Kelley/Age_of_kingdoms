@@ -159,7 +159,7 @@ building_kind_to_class =  {'house':House, 'lumbercamp':LumberCamp,
 
 
 if __name__ == '__main__':
-    from game_map import Position
+    from map_etc.position import Position
     from player import Player
 
     p1 = Player(1, Position(80, 80), is_human=True)

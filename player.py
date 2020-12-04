@@ -9,7 +9,8 @@ from units import BatteringRam, Catapult, Trebuchet, Merchant
 
 from colors import Color
 from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
-from game_map import game_map, Position
+from map_etc.make_map import game_map
+from map_etc.position import Position
 from research_classes import ResearchObject
 
 from copy import deepcopy

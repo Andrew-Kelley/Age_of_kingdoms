@@ -1,5 +1,7 @@
 from resources import Resources, Wood, Food, Stone, Gold, Bronze, Iron
-from game_map import game_map, everything_within_given_distance_on, within_given_distance
+from map_etc.make_map import game_map
+from map_etc.iterate_around import everything_within_given_distance_on
+from map_etc.iterate_around import within_given_distance
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from random import choice
 from copy import copy

@@ -1,6 +1,6 @@
 from input_handling.get_input import input_number_of_players
 from player import Player, initial_position_of_player
-from game_map import game_map
+from map_etc.make_map import game_map
 
 # Only from index 1 and on will players contain the actual players
 players = [None]

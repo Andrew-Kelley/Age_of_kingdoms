@@ -1,4 +1,4 @@
-from game_map import Vector
+from map_etc.position import Vector
 
 
 def direction_inpt_to_vector(direction_str):

@@ -1,8 +1,8 @@
 #Here are some tests for the Building class (and subclasses)
 
 from player import Player
-from game_map import Position, game_map
-from buildings.bldng_class import Building
+from map_etc.position import Position
+from map_etc.make_map import game_map
 from buildings.other_bldngs import TownCenter, House
 
 

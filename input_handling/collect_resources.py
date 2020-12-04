@@ -3,7 +3,7 @@ from input_handling.from_ls_get_position import get_position_from_inpt_as_ls
 from resources import resource_kind_to_class, Wood, Stone, Gold, Bronze, Iron
 from buildings.resource_bldngs import Farm
 from command_handling.commands import CollectResourceCmd, FarmCmd
-from game_map import Position
+from map_etc.position import Position
 
 
 def collect_resource(player, inpt_as_ls, selected_obj=None):

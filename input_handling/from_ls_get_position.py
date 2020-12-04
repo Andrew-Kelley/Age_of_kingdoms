@@ -1,5 +1,4 @@
-from game_map import Position
-
+from map_etc.position import Position
 
 def str_to_int(s):
     try:

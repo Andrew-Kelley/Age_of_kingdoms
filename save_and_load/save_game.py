@@ -2,7 +2,7 @@
 # - the set_default_build_position fn in input_handling/build.py
 # - the research_something fn in input_handling/research.py
 
-import game_map as gm_module
+import map_etc.make_map as make_map_module
 
 from datetime import datetime
 import pickle
@@ -97,6 +97,6 @@ def get_pickle_file_name(the_txt_file):
 
 def save_game_state(players, the_txt_file):
     file_name = get_pickle_file_name(the_txt_file)
-    players_and_map = [players, gm_module.game_map]
+    players_and_map = [players, make_map_module.game_map]
     with open(file_name, 'wb') as f:
         pickle.dump(players_and_map, f)

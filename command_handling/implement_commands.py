@@ -1,5 +1,6 @@
 
-from game_map import Vector, game_map
+from map_etc.position import Vector
+from map_etc.make_map import game_map
 from units import unit_kind_to_class, unit_kind_to_singular
 
 

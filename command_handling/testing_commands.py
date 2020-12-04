@@ -1,6 +1,6 @@
 
 from player import Player
-from game_map import Position, Vector
+from map_etc.position import Position, Vector
 from input_handling.get_input import get_next_command
 from buildings.resource_bldngs import Farm
 

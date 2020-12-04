@@ -13,7 +13,7 @@
 from units import Unit, unit_kinds, Villager
 from buildings.bldng_class import Building
 from buildings.resource_bldngs import Farm
-from game_map import Vector, Position
+from map_etc.position import Vector, Position
 from research_classes import ResearchObject
 from resources import Resource
 

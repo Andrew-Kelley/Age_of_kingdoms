@@ -1,6 +1,6 @@
 from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
 from units import Group, Army
-from game_map import game_map
+from map_etc.make_map import game_map
 from resources import resource_kind_to_class
 from input_handling.select_an_object import SelectedObject, SelectedBuilding
 from input_handling.select_an_object import SelectedUnits

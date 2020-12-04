@@ -1,4 +1,4 @@
-import game_map as game_map_module
+import map_etc.make_map as make_map_module
 from input_handling.select_an_object import SelectedBuilding
 from input_handling.select_an_object import SelectedUnits
 from input_handling.select_an_object import SelectedNothing
@@ -76,13 +76,13 @@ def print_part_of_map(player, inpt_as_ls):
     if not position:
         return
 
-    game_map_module.game_map.print_centered_at(position)
+    make_map_module.game_map.print_centered_at(position)
     return
 
 
 if __name__ == '__main__':
     from player import Player
-    from game_map import Position
+    from map_etc.position import Position
 
     p1 = Player(1, Position(80, 80), is_human=True)
 

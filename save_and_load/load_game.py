@@ -10,7 +10,8 @@ from command_handling.update_now_and_later_cmds import update_now_and_later_comm
 from command_handling.implement_commands import implement_commands_if_possible
 from command_handling.commands import EndOfTurnCmd
 
-import game_map as gm_module
+import map_etc.make_map as make_map_module
+
 
 import pickle
 from copy import deepcopy
@@ -91,7 +92,7 @@ def load_pickled_file(file_name):
         with open(file_name, "rb") as f:
             players_and_map = pickle.load(f)
             plyrs.players = players_and_map[0]
-            gm_module.game_map = players_and_map[1]
+            make_map_module.game_map = players_and_map[1]
             print("Pickled file successfully loaded.")
     except IOError:
         print("The .p file was not found. Loading failed.")

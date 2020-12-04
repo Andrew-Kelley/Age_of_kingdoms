@@ -223,7 +223,7 @@ class BuildingUnderConstruction(Building):
 
 if __name__ == '__main__':
     from player import Player
-    from game_map import Position
+    from map_etc.position import Position
 
 
     p1 = Player(1, Position(80, 80), is_human=True)

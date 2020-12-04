@@ -1,7 +1,8 @@
-
 from collections import deque
 
-from game_map import Position, game_map
+from map_etc.position import Position
+from map_etc.make_map import game_map
+
 from units import Villager, unit_kind_to_class
 from buildings.resource_bldngs import Farm
 from buildings.bldng_class import BuildingUnderConstruction
