@@ -105,6 +105,9 @@ def input_next_command(player, selected_obj=None):
         elif first_argument_of_command in quit_game_cmds:
             if inpt_as_ls[-1] == 'game':
                 return quit_game()
+            else:
+                print("Command not understood.")
+                return
         elif first_argument_of_command == 'save':
             if inpt_as_ls[-1] == 'game':
                 return SaveGameCmd()
