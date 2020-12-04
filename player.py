@@ -7,7 +7,7 @@ from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
 from units import BatteringRam, Catapult, Trebuchet, Merchant
 
-from colors import Color
+from map_etc.colors import Color
 from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
 from map_etc.make_map import game_map
 from map_etc.position import Position

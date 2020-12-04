@@ -2,7 +2,7 @@
 
 from resources import Resources, Wood, Stone, Bronze
 from research_classes import BronzeAge, IronAge
-from colors import Color
+from map_etc.colors import Color
 
 stone_age_buildings = {'house', 'lumbercamp', 'stonequarry', 'miningcamp',
                        'woodwall', 'barracks'}
