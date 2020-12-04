@@ -302,9 +302,8 @@ unit_kind_to_class = dict((k, c) for k, c in zip(unit_kinds, unit_classes))
 unit_singular_to_plural = dict((s, p) for s, p in zip(unit_kinds_singular, unit_kinds))
 
 if __name__ == '__main__':
-    from game_map import Position, Vector
+    from map_etc.position import Position, Vector
     from player import Player
-    from buildings.bldng_class import Building
 
     p1 = Player(1, Position(80, 80), is_human=True)
 
