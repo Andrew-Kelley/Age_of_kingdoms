@@ -42,6 +42,10 @@ class Vector(Position):
         j = self.value[1] + other.value[1]
         return Vector(i, j)
 
+    def __mul__(self, n):
+        x, y = self.value
+        return Vector(x * n, y * n)
+
     @property
     def magnitude(self):
         return abs(self.value[0]) + abs(self.value[1])
