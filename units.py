@@ -64,7 +64,11 @@ class Unit:
         if not new_position.is_on_the_map(game_map):
             return False
 
-        # TODO eventually: add a check to keep the unit from moving across enemy walls
+        if game_map.has_building_at(new_position):
+            return False
+
+        # TODO---Address this issue: There are other reasons a unit cannot move
+        # to a position.
         return True
 
     def move_by(self, delta, game_map):
