@@ -5,15 +5,22 @@ class GameMap(list):
         x, y = position.value
         return self[y][x]
 
-    def __str__(self):
-        rows = [''.join(map(str, ls)) for ls in self]
-        return '\n'.join(rows)
+    def has_building_at(self, position):
+        thing_on_map = self(position)
+        # Many spots on map are empty. They are represented by a single space.
+        if thing_on_map == ' ':
+            return False
+        # The only things not strings on the map are resources.
+        if not isinstance(thing_on_map, str):
+            return False
+        return True
 
     def print_centered_at(self, position, width=100, height=24):
 
         # The following is used to print the same number of digits when
         # printing row or column numbers:
         num_digits = 2 if len(self) <= 100 else 3
+
         def int_to_str(i):
             """Returns the i as a string with num_digits digits if i % 5 == 0.
 
