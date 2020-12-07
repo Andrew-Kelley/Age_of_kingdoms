@@ -7,7 +7,7 @@ from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
 from units import BatteringRam, Catapult, Trebuchet, Merchant
 
-from map_etc.colors import Color
+from map_etc.colors import colors_ls
 from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
 from map_etc.make_map import game_map
 from map_etc.position import Position
@@ -22,10 +22,6 @@ buildings_ls = [TownCenter, House, Blacksmith, Library, Market,
                 Castle, Farm, LumberCamp, StoneQuarry, MiningCamp,
                 Wonder]
 
-# Eventually, maybe I ought to let the players choose their colors.
-
-colors = ['', Color.DARK_BLUE, Color.GREEN, Color.MAGENTA,
-          Color.RED, Color.LIGHT_BLUE]
 
 class Player:
     def __init__(self, number, position, is_human):
@@ -33,7 +29,7 @@ class Player:
 
         position is where to place a player's beginning TownCenter."""
         self.number = number
-        self.color = colors[self.number % len(colors)]
+        self.color = colors_ls[self.number % len(colors_ls)]
         self.is_human = is_human
         self.resources = Resources({Food: 300, Wood: 300, Stone: 200,
                                     Gold: 0, Bronze: 0, Iron: 0})

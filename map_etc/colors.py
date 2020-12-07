@@ -29,6 +29,9 @@ class Color:
         return '\033[' + str(num) + 'm'
 
 
+colors_ls = ['', Color.DARK_BLUE, Color.GREEN, Color.MAGENTA,
+          Color.RED, Color.LIGHT_BLUE]
+
 
 if __name__ == '__main__':
     print(Color.DARK_BLUE + "dark blue" + Color.ENDC)
