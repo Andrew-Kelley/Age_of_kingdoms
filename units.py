@@ -25,6 +25,7 @@ unit_kinds_singular = ['villager', 'pikeman', 'swordsman',
 class Unit:
     """e.g. villager, swordsman, knight, catapult"""
     kind = 'units'
+    letter_abbreviation = 'u'  # should always be overridden
     # The following should never be accessed. It will always be
     # overridden by the subclasses.
     cost = Resources({Food: 1000, Wood: 1000, Gold: 1000})
@@ -36,6 +37,7 @@ class Unit:
         The position attribute is where on the map the unit starts."""
         number = len(player.units[self.kind])
         self.number = number
+        self.player_number = player.number
         self.position = position
         self.is_alive = True
         self.current_action = 'doing nothing'
@@ -169,6 +171,7 @@ class Group:
 class Villager(Unit):
     cost = Resources({Food: 50})
     kind = 'villagers'
+    letter_abbreviation = 'v'
 
     def __init__(self, position, player):
         Unit.__init__(self, position, player)
@@ -282,7 +285,7 @@ class Pikeman(Unit):
     """A man with a spear and a shield"""
     cost = Resources({Food: 40, Wood: 20})
     kind = 'pikemen'
-
+    letter_abbreviation = 'p'
 
 class Swordsman(Unit):
     # After reaching the Bronze Age, before being able to train Swordsman,
@@ -292,6 +295,7 @@ class Swordsman(Unit):
     # armor to bronze).
     cost = Resources({Food: 40, Gold: 25, Bronze: 15})
     kind = 'swordsmen'
+    letter_abbreviation = 's'
 
 
 class ChampionSwordsman(Swordsman):
@@ -302,6 +306,7 @@ class ChampionSwordsman(Swordsman):
 class Archer(Unit):
     cost = Resources({Wood: 40, Gold: 20, Bronze: 10})
     kind = 'archers'
+    letter_abbreviation = 'a'
 
 
 class ChampionArcher(Archer):
@@ -311,6 +316,7 @@ class ChampionArcher(Archer):
 
 class Knight(Unit):
     kind = 'knights'
+    letter_abbreviation = 'k'
 
 
 class ChampionKnight(Knight):
@@ -320,18 +326,22 @@ class ChampionKnight(Knight):
 
 class BatteringRam(Unit):
     kind = 'batteringrams'
+    letter_abbreviation = 'r'
 
 
 class Catapult(Unit):
     kind = 'catapults'
+    letter_abbreviation = 'c'
 
 
 class Trebuchet(Unit):
     kind = 'trebuchets'
+    letter_abbreviation = 't'
 
 
 class Merchant(Unit):
     kind = 'merchants'
+    letter_abbreviation = 'm'
 
 
 unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights',
