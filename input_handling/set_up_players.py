@@ -24,3 +24,27 @@ def initialize_players():
 
     for player in players[1:]:
         print("Is player number {} human? {}".format(player.number, player.is_human))
+
+
+if __name__ == '__main__':
+    # Testing the neighbors method of the Position class
+    from map_etc.position import Position
+
+    def print_neighbors_of(position):
+        for neighbor in position.neighbors(game_map):
+            print(neighbor)
+
+    position = Position(80, 79)
+    print("Before any buildings are built, here are neighbors of")
+    print("position ", position)
+    print_neighbors_of(position)
+
+    initialize_players()
+    print("After initializing the players, here are the neighbors:")
+    print_neighbors_of(position)
+
+    P = Position
+    for position in (P(76, 79), P(77,79), P(76, 84), P(81, 82), P(78, 84)):
+        print("The neighbors of ", position, " are ")
+        print_neighbors_of(position)
+        print()
