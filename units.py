@@ -76,7 +76,7 @@ class Unit:
             print("Unit trying to move: ", self)
 
         # First remove it from game_map.units
-        at_this_location = game_map.units(self.position, units=True)
+        at_this_location = game_map(self.position, units=True)
         if isinstance(at_this_location, Unit):
             if at_this_location == self:
                 x, y = self.position.value
@@ -96,7 +96,7 @@ class Unit:
 
         new_position = self.position + delta
         x, y = new_position.value
-        at_this_location = game_map.units(new_position, units=True)
+        at_this_location = game_map(new_position, units=True)
         if isinstance(self, Villager):
             if isinstance(at_this_location, set):
                 at_this_location.add(self)
