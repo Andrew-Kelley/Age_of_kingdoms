@@ -77,6 +77,9 @@ class Player:
         self.building_position_pairs = dict()
         self.units = dict((unit.kind, [0]) for unit in units_ls)
 
+        self.initialize_towncenter_and_villagers(position)
+
+    def initialize_towncenter_and_villagers(self, position):
         towncenter = TownCenter(1, position, self)
         towncenter.build_on_map(position, game_map)
         self.buildings[TownCenter.kind].append(towncenter)
