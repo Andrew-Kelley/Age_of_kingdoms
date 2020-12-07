@@ -1,9 +1,21 @@
 
 
-class GameMap(list):
-    def __call__(self, position):
+class GameMap():
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+        # The following stores buildings and resources
+        self.bldngs_n_rsrcs = [[' '] * width for _ in range(height)]
+
+        self.units = [[None] * width for _ in range(height)]
+
+    def __call__(self, position, units=False):
         x, y = position.value
-        return self[y][x]
+        if units:
+            return self.units[y][x]
+        else:
+            return self.bldngs_n_rsrcs[y][x]
 
     def has_building_at(self, position):
         thing_on_map = self(position)
@@ -19,7 +31,7 @@ class GameMap(list):
 
         # The following is used to print the same number of digits when
         # printing row or column numbers:
-        num_digits = 2 if len(self) <= 100 else 3
+        num_digits = 2 if self.height <= 100 else 3
 
         def int_to_str(i):
             """Returns the i as a string with num_digits digits if i % 5 == 0.
@@ -40,10 +52,10 @@ class GameMap(list):
         x0, y0 = position.value
 
         y_min = max(0, y0 - vertical_delta)
-        y_max = min(len(self) - 1, y0 + vertical_delta)
+        y_max = min(self.height - 1, y0 + vertical_delta)
 
         x_start = max(0, x0 - horizontal_delta)
-        x_stop = min(len(self[0]), x0 + horizontal_delta)
+        x_stop = min(self.width, x0 + horizontal_delta)
 
         def print_column_numbers():
             for digit in range(num_digits):
@@ -56,7 +68,7 @@ class GameMap(list):
 
         def print_row(i):
             margin = int_to_str(i)
-            row_content = ''.join(map(str, self[i][x_start:x_stop]))
+            row_content = ''.join(map(str, self.bldngs_n_rsrcs[i][x_start:x_stop]))
             print(margin + row_content + margin)
 
         print_column_numbers()

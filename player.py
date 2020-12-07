@@ -221,8 +221,9 @@ def compare_research(player_a, player_b):
 def initial_position_of_player(player_number, game_map):
     """returns the initial position of the player's TownCenter"""
     assert player_number >= 1
-    # TODO: write this function properly. For now, it works if player_number <= 4
-    length = len(game_map)
+    assert player_number <= 4
+    # TODO: write this function properly. I should allow up to 6 players
+    length = game_map.height
     small = length // 5
     large = length - small
     # Placing the players clockwise around the map...
@@ -237,8 +238,6 @@ def initial_position_of_player(player_number, game_map):
 
 
 if __name__ == '__main__':
-    from input_handling.get_input import input_next_command
-
     p1 = Player(1, Position(80, 80), is_human=True)
     for villager in p1.units['villagers'][1:]:
         print(villager.number, villager.position)
@@ -259,4 +258,3 @@ if __name__ == '__main__':
     print(p1.population)
     print(p1.resources)
     print('ok')
-    print(game_map)

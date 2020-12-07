@@ -8,8 +8,8 @@ def within_given_distance(obj1, obj2, distance):
 
 
 def everything_within_given_distance_on(the_map, distance, position):
-    """Iterates through everything on the_map that is within the given distance
-    of position.
+    """Iterates through everything on the_map.bldngs_n_rsrcs that is
+    within the given distance of position.
 
     This portion of the_map is in the shape of a diamond.
 
@@ -36,7 +36,7 @@ def everything_within_given_distance_on(the_map, distance, position):
             y = y0 + y_delta
             this_position = Position(x, y)
             if this_position.is_on_the_map(the_map):
-                yield the_map[y][x]
+                yield the_map.bldngs_n_rsrcs[y][x]
 
 
 def positions_around(center, radius):
@@ -135,10 +135,11 @@ up_left = traverse_side(Vector(1, 0), Vector(-1, 1))
 
 
 if __name__ == '__main__':
+    # Testing the function positions_around
     from time import sleep
     center = Position(70, 70)
     for position in positions_around(center, radius = 4):
         x, y = position.value
-        game_map[y][x] = '*'
+        game_map.bldngs_n_rsrcs[y][x] = '*'
         game_map.print_centered_at(center, width = 20, height = 20 )
         sleep(.2)

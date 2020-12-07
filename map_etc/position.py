@@ -31,7 +31,7 @@ class Position:
         x, y = self.value
         if x < 0 or y < 0:
             return False
-        if y >= len(the_map) or x >= len(the_map[0]):
+        if y >= the_map.height or x >= the_map.width:
             return False
         return True
 

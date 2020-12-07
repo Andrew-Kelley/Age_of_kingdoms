@@ -187,7 +187,7 @@ class Villager(Unit):
         if resource_instance.amount_left <= 0:
             # Then delete resource_instance on the map
             x, y = self.position.value
-            game_map[y][x] = ' '
+            game_map.bldngs_n_rsrcs[y][x] = ' '
 
     def collect_resource(self, resource, player):
         ls = list(self.resource_iter_within_given_distance_of_me(0, resource, player))
@@ -370,4 +370,3 @@ if __name__ == '__main__':
         v8.collect_resource(Wood, p1)
     assert game_map(position) == ' '
     print(p1.resources)
-    print(game_map)

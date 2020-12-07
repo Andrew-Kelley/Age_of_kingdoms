@@ -124,27 +124,27 @@ class Building:
         if x_init - (length - 1) < 0:
             print('Sorry, building placement too far west.')
             return False
-        if x_init  >= len(game_map[0]):
+        if x_init  >= game_map.width:
             print('Sorry, building placement too far east.')
             return False
         if y_init < 0:
             print('Sorry, building placement too far south.')
             return False
-        if y_init + (height - 1) >= len(game_map):
+        if y_init + (height - 1) >= game_map.height:
             print('Sorry, building placement too far north.')
             return False
 
         # Next, check that there are no obstructions. Buildings are allowed to be built
-        # only where there are blank spaces or wood or food sources.
+        # only where there are blank spaces or wood.
         x_final = x_init - length
         y_final = y_init + height
         for x in range(x_init, x_final, -1):
             for y in range(y_init, y_final):
-                if game_map[y][x] not in (' ', 'w', 'f'):
+                thing_on_map = game_map.bldngs_n_rsrcs[y][x]
+                if thing_on_map != ' ' and not isinstance(thing_on_map, Wood):
                     print('Sorry, there is {} occupying part of '
-                          'that space.'.format(game_map[x][y]))
+                          'that space.'.format(thing_on_map))
                     return False
-
         return True
 
     def build_on_map(self, position, game_map):
@@ -160,8 +160,7 @@ class Building:
         letter_in_color = player.color + self.letter_abbreviation + Color.ENDC
         for x in range(x_init, x_final, -1):
             for y in range(y_init, y_final):
-                game_map[y][x] = letter_in_color
-                # player.map[i][j] = self.letter_in_color
+                game_map.bldngs_n_rsrcs[y][x] = letter_in_color
 
     def build_by(self, villager_who_is_building):
         """This function is called multiple times to construct the building."""
