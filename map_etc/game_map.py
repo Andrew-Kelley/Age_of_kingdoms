@@ -8,6 +8,9 @@ class GameMap():
         # The following stores buildings and resources
         self.bldngs_n_rsrcs = [[' '] * width for _ in range(height)]
 
+        # If some_unit is a villager, then self.units at position some_unit.position
+        # is a set containing some_unit. If some_unit is not a villager, then
+        # self.units at position some_unit is just some_unit
         self.units = [[None] * width for _ in range(height)]
 
     def __call__(self, position, units=False):
