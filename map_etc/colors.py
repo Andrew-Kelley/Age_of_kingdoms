@@ -33,6 +33,10 @@ colors_ls = ['', Color.DARK_BLUE, Color.GREEN, Color.MAGENTA,
           Color.RED, Color.LIGHT_BLUE]
 
 
+def get_color_from_player_num(number):
+    return colors_ls[number % len(colors_ls)]
+
+
 if __name__ == '__main__':
     print(Color.DARK_BLUE + "dark blue" + Color.ENDC)
     print(Color.GREEN + "green" + Color.ENDC)
