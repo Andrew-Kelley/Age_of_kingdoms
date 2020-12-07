@@ -1,4 +1,6 @@
-
+from map_etc.position import Position
+from map_etc.colors import Color, get_color_from_player_num
+from resources import Resource
 
 class GameMap():
     def __init__(self, width, height):
@@ -29,6 +31,16 @@ class GameMap():
         if not isinstance(thing_on_map, str):
             return False
         return True
+
+    def num_villagers_at(self, position):
+        units_on_map = self(position, units=True)
+        if isinstance(units_on_map, set):
+            return len(units_on_map)
+        else:
+            return 0
+
+    def has_unit_at(self, position):
+        return self(position, units=True) is not None
 
     def print_centered_at(self, position, width=100, height=24):
 
@@ -71,10 +83,25 @@ class GameMap():
 
         def print_row(i):
             margin = int_to_str(i)
-            row_content = ''.join(map(str, self.bldngs_n_rsrcs[i][x_start:x_stop]))
+            row_content = ''.join(self.str_char_at(x, i) for x in range(x_start, x_stop))
             print(margin + row_content + margin)
 
         print_column_numbers()
         for i in range(y_max, y_min - 1, -1):
             print_row(i)
         print_column_numbers()
+
+
+    # TODO: this is not finished!
+    def str_char_at(self, x, y):
+        """return the string character to be printed
+
+        This for what is at Position(x,y) on the map."""
+        output = ' '
+        position = Position(x, y)
+        if self.has_unit_at(position):
+            num_villagers = self.num_villagers_at(position)
+            if num_villagers == 1:
+                return 'v' # TODO: get the color and add it
+        else:
+            return str(self.bldngs_n_rsrcs[y][x])
