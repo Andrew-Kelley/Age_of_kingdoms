@@ -20,6 +20,7 @@ class Resource:
 class Wood(Resource):
     """Also called trees."""
     kind = 'wood'
+    letter_abbreviation = 'w'
 
     def __init__(self, position):
         self.position = position
@@ -33,6 +34,7 @@ class Wood(Resource):
 # inherit from Food. Also, deer might also inherit from Unit.
 class Food(Resource):
     kind = 'food'
+    letter_abbreviation = 'f'
 
     def __init__(self, position):
         self.position = position
@@ -45,6 +47,7 @@ class Food(Resource):
 
 class Stone(Resource):
     kind = 'stone'
+    letter_abbreviation = 's'
 
     def __init__(self, position):
         self.position = position
@@ -56,6 +59,7 @@ class Stone(Resource):
 
 class Gold(Resource):
     kind = 'gold'
+    letter_abbreviation = 'g'
 
     def __init__(self, position):
         self.position = position
@@ -67,6 +71,7 @@ class Gold(Resource):
 
 class Bronze(Resource):
     kind = 'bronze'
+    letter_abbreviation = 'b'
 
     def __init__(self, position):
         self.position = position
@@ -78,6 +83,7 @@ class Bronze(Resource):
 
 class Iron(Resource):
     kind = 'iron'
+    letter_abbreviation = 'i'
 
     def __init__(self, position):
         self.position = position
