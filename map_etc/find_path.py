@@ -1,6 +1,7 @@
 from heapq import heappush, heappop
 
 from map_etc.position import distance
+from map_etc.make_map import game_map
 
 
 def diagonal_weight(position1, position2):
@@ -21,7 +22,7 @@ def is_empty(heap):
 
 
 class FindPath:
-    def __init__(self, start, goal):
+    def __init__(self, start, goal, player):
         self.frontier = []  # a heap implementation of a min priority queue
         self.start = start
         self.goal = goal
@@ -51,7 +52,7 @@ class FindPath:
             if self.found_goal():
                 return
 
-            # TODO: FIX REFERENCE TO NEIGHBORS!!!
+            # TODO: Prevent units from walking through other players' units
             for next_position in current.neighbors():
                 if next_position not in self.came_from:
                     self.push(next_position)

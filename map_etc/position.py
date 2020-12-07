@@ -35,6 +35,16 @@ class Position:
             return False
         return True
 
+    def neighbors(self, the_map):
+        """all adjacent positions on map that are not buildings"""
+        Vec = Vector
+        for delta in (Vec(0,1), Vec(0,-1), Vec(1, 0), Vec(-1,0)):
+            position = self + delta
+            if position.is_on_the_map(the_map):
+                if not the_map.has_building_at(position):
+                    yield position
+
+
 # A vector is something you can add to a position to get another position
 
 class Vector(Position):
