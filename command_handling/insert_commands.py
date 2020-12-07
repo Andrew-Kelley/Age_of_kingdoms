@@ -344,7 +344,7 @@ def insert_farm_command(player, command):
         delta = farm.position - villager.position
         if delta.magnitude <= 6:
             if delta.magnitude >= 2:
-                villager.move_by(delta)
+                villager.move_by(delta, game_map)
             if farm.number_of_farmers < 2:
                 player.commands['now']['farm'][villager] = farm
                 farm.add_farmer(villager)

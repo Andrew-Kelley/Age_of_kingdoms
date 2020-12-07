@@ -67,9 +67,53 @@ class Unit:
         # TODO eventually: add a check to keep the unit from moving across enemy walls
         return True
 
-    def move_by(self, delta):
+    def move_by(self, delta, game_map):
         """delta must of of type Vector (or Position)"""
-        self.position += delta
+        def print_error_moving_from_message():
+            print("Error! A unit is trying to move from ", self.position)
+            print("But the unit wasn't really in game_map.units there.")
+            print("This is what was where it 'was' instead: ", at_this_location)
+            print("Unit trying to move: ", self)
+
+        # First remove it from game_map.units
+        at_this_location = game_map.units(self.position, units=True)
+        if isinstance(at_this_location, Unit):
+            if at_this_location == self:
+                x, y = self.position.value
+                game_map.units[y][x] = None
+            else:
+                print_error_moving_from_message()
+        elif isinstance(at_this_location, set):
+            if self in at_this_location:
+                at_this_location.remove(self)
+            else:
+                print_error_moving_from_message()
+
+        def print_error_moving_to_message():
+            print("Error!! A unit is trying to move to ", self.position)
+            print("This is there already: ", at_this_location)
+            print("Unit trying to move: ", self)
+
+        new_position = self.position + delta
+        x, y = new_position.value
+        at_this_location = game_map.units(new_position, units=True)
+        if isinstance(self, Villager):
+            if isinstance(at_this_location, set):
+                at_this_location.add(self)
+            elif at_this_location is None:
+                game_map.units[y][x] = {self}
+            else:
+                print_error_moving_to_message()
+                return
+        else:
+            if at_this_location is None:
+                game_map.units[y][x] = self
+            else:
+                print_error_moving_to_message()
+                return
+
+        self.position = new_position
+
 
     def compare_to(self, other):
         there_is_an_error = False
@@ -201,7 +245,7 @@ class Villager(Unit):
             if len(ls) > 0:
                 resource_instance = choice(ls)
                 delta = resource_instance.position - self.position
-                self.move_by(delta)
+                self.move_by(delta, game_map)
                 self.collect_resource_here(resource, player)
                 return
 
@@ -309,7 +353,7 @@ if __name__ == '__main__':
 
     v1 = Villager(Position(50, 50), p1)
     print(v1.number, v1.position)
-    v1.move_by(Vector(5, 8))
+    v1.move_by(Vector(5, 8), game_map)
     print(v1.number, v1.position)
 
     v2 = Villager(Position(5, 5), p1)
@@ -323,9 +367,9 @@ if __name__ == '__main__':
         assert not v2.can_move(delta, game_map)
 
     v3 = Villager(Position(80, 80), p1)
-    v3.move_by(Vector(10, 5))
+    v3.move_by(Vector(10, 5), game_map)
     # print('Now, v3 is at position ', v3.position)
-    v3.move_by(Vector(5, 10))
+    v3.move_by(Vector(5, 10), game_map)
     assert v3.position.value == (95, 95)
 
     for tpl in ((4, 4), (4, -10), (2, 3), (4, 0), (0, 4)):

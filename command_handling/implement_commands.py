@@ -24,7 +24,7 @@ def implement_build_building_command(player):
         if delta == Vector(0, 0):
             pass
         else:
-            villager.move_by(delta)
+            villager.move_by(delta, game_map)
         building.build_by(villager)
 
 
@@ -39,7 +39,7 @@ def implement_move_commands(player):
     for unit in player.commands['now']['move']:
         delta = player.commands['now']['move'][unit]
         if unit.can_move(delta, game_map):
-            unit.move_by(delta)
+            unit.move_by(delta, game_map)
 
 
 def implement_build_unit_commands(player):
