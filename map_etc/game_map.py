@@ -42,6 +42,10 @@ class GameMap():
     def has_unit_at(self, position):
         return self(position, units=True) is not None
 
+    def has_resource_at(self, position):
+        possible_resource = self(position)
+        return isinstance(possible_resource, Resource)
+
     def print_centered_at(self, position, width=100, height=24):
 
         # The following is used to print the same number of digits when
@@ -91,17 +95,48 @@ class GameMap():
             print_row(i)
         print_column_numbers()
 
-
-    # TODO: this is not finished!
     def str_char_at(self, x, y):
         """return the string character to be printed
 
-        This for what is at Position(x,y) on the map."""
-        output = ' '
+        This is for what is at Position(x,y) on the map."""
         position = Position(x, y)
         if self.has_unit_at(position):
+            player_num = self.get_player_num_for_unit_at(position)
+            color = get_color_from_player_num(player_num)
             num_villagers = self.num_villagers_at(position)
-            if num_villagers == 1:
-                return 'v' # TODO: get the color and add it
+            if num_villagers >= 1:
+                to_print = color + 'v' + Color.ENDC
+                if num_villagers >= 2:
+                    to_print = Color.BOLD + to_print
+                if num_villagers >= 4:
+                    to_print = Color.UNDERLINE + to_print
+            else:
+                unit = self(position, units=True)
+                if isinstance(unit, set):
+                    # This should never happen
+                    print("Error! The supposed unit was a set instead.")
+                    to_print =  'u' + Color.ENDC
+                else:
+                    to_print = color + unit.letter_abbreviation + Color.ENDC
+            if self.has_resource_at(position):
+                to_print = Color.BACK_GRAY + to_print
         else:
-            return str(self.bldngs_n_rsrcs[y][x])
+            if self.has_resource_at(position):
+                to_print = Color.BACK_GRAY + str(self.bldngs_n_rsrcs[y][x]) + Color.ENDC
+            else:
+                to_print = str(self.bldngs_n_rsrcs[y][x])
+
+        return to_print
+
+    def get_player_num_for_unit_at(self, position):
+        unit_or_units = self(position, units=True)
+        if isinstance(unit_or_units, set):
+            # Get any arbitrary element of the set:
+            if len(unit_or_units) == 0:
+                print("Error! The set unit_or_units was empty.")
+                return 0
+            for unit in unit_or_units:
+                break
+            return unit.player_number
+        # If this point is reached, then unit_or_units is itself a unit
+        return unit_or_units.player_number
