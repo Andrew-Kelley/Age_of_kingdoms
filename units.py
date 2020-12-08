@@ -92,6 +92,9 @@ class Unit:
         elif isinstance(at_this_location, set):
             if self in at_this_location:
                 at_this_location.remove(self)
+                if len(at_this_location) == 0:
+                    x, y = self.position.value
+                    game_map.units[y][x] = None
             else:
                 print_error_moving_from_message()
 
