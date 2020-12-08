@@ -66,7 +66,7 @@ class Unit:
         if not new_position.is_on_the_map(game_map):
             return False
 
-        if game_map.has_building_at(new_position):
+        if game_map.has_building_at(new_position) and not isinstance(self, Villager):
             return False
 
         # TODO---Address this issue: There are other reasons a unit cannot move
