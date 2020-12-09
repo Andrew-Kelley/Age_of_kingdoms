@@ -40,11 +40,10 @@ class FindPath:
     def find_path(self):
         """A greedy best-first search."""
         counter = 0
+        max_num_steps = self.max_num_steps_to_search
         while not is_empty(self.frontier):
             counter += 1
-            if counter > 10**5:
-                print("OOPS!")
-                print("This was probably an infinite loop.")
+            if counter > max_num_steps:
                 return
 
             current = heappop(self.frontier)[2]
@@ -67,3 +66,17 @@ class FindPath:
             path.append(self.came_from[current])
             current = self.came_from[current]
         return list(reversed(path))
+
+    @property
+    def max_num_steps_to_search(self):
+        """return a limit on how many steps find_path should take"""
+        # Right now, this function is largely a hunch on how many steps
+        # might be needed. If it takes longer than this, then self.goal
+        # likely is not reachable.
+        delta = self.goal - self.start
+        distance = delta.magnitude
+        if distance < 5:
+            return 10 + 4 * distance
+        if distance < 10:
+            return 12 + 3 * distance
+        return 22 + 2 * distance
