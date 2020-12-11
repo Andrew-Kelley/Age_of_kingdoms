@@ -2,7 +2,7 @@ from input_handling.direction_vector import get_direction_vector
 from input_handling.select_an_object import SelectedUnits, extract_selected_obj
 from input_handling.from_ls_get_position import get_position_from_inpt_as_ls
 from command_handling.commands import MoveCmd
-
+from map_etc.make_map import game_map
 
 def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
     """Returns None or an instance of MoveCmd
@@ -35,6 +35,10 @@ def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
             print("command was not understood.")
             return
 
+        if not position_to_move_to.is_on_the_map(game_map):
+            print_not_on_map_error_message(position_to_move_to)
+            return
+
         if nothing_is_selected(selected_obj):
             return
 
@@ -58,6 +62,10 @@ def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
 
         command = MoveCmd()
         for unit in selected_obj.units:
+            position = unit.position + delta
+            if not position.is_on_the_map(game_map):
+                print_not_on_map_error_message(position)
+                return
             command.add_unit_with_delta(unit, delta)
         return command
     else:  # len(inpt_as_ls) > 3
@@ -67,6 +75,10 @@ def move_unit_or_units(player, inpt_as_ls, selected_obj=None):
 
         command = MoveCmd()
         for unit in selected_obj.units:
+            position = unit.position + delta
+            if not position.is_on_the_map(game_map):
+                print_not_on_map_error_message(position)
+                return
             command.add_unit_with_delta(unit, delta)
         return command
 
@@ -79,3 +91,8 @@ def nothing_is_selected(selected_obj):
         return True
 
     return False
+
+
+def print_not_on_map_error_message(position):
+    print("Command rejected.")
+    print("Position ", position, " is not on the map.")
