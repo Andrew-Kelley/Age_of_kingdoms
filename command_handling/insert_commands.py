@@ -204,6 +204,8 @@ def insert_move_command(player, command):
         for command_type in ('build building', 'collect resource', 'farm'):
             remove_unit_from_command_if_there(player, unit, command_type)
 
+        unit.remove_from_map()
+
         unit.current_action = 'moving to {}'.format(unit.position + delta)
 
         if delta.magnitude > 15:

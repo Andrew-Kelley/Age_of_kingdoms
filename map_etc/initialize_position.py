@@ -9,7 +9,9 @@ def set_unit_position_and_movement(building, new_unit, player, distance=6):
     if delta.magnitude > distance:
         delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=distance)
         build_position = building.position + delta1
+        new_unit.remove_from_map()
         new_unit.position = build_position
+        new_unit.place_on_map(new_unit.position)
         command = MoveCmd()
         command.add_unit_with_delta(new_unit, delta2)
         insert_move_later_command(player, command)
