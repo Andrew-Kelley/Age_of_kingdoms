@@ -77,8 +77,9 @@ def move_unit_if_possible(player, unit, delta, end_goal):
     """Return True iff unit was successfully moved."""
     if unit.can_move(delta, game_map):
         unit.move_by(delta, game_map)
-        new_delta = end_goal - unit.position
-        player.commands['later']['move'][unit] = new_delta
+        if end_goal is not None:
+            new_delta = end_goal - unit.position
+            player.commands['later']['move'][unit] = new_delta
         return True
     return False
 
