@@ -1,7 +1,10 @@
 
 from map_etc.position import Vector
 from map_etc.make_map import game_map
-from units import unit_kind_to_class, unit_kind_to_singular
+from map_etc.iterate_around import positions_around
+from map_etc.find_path import FindPath
+from map_etc.search_for_open_position import bfs_for_open_spot
+from units import unit_kind_to_class, Villager
 
 
 def implement_commands_if_possible(player):
@@ -38,8 +41,49 @@ def implement_collect_resource_command(player):
 def implement_move_commands(player):
     for unit in player.commands['now']['move']:
         delta = player.commands['now']['move'][unit]
-        if unit.can_move(delta, game_map):
-            unit.move_by(delta, game_map)
+        # end_goal is either None or the position unit is eventually trying
+        # to get to
+        end_goal = None
+        if unit in player.commands['later']['move']:
+            delta_2 = player.commands['later']['move'][unit]
+            end_goal = unit.position + delta + delta_2
+        if isinstance(unit, Villager):
+            move_unit_if_possible(player, unit, delta, end_goal)
+        else:
+            start = unit.position
+            goal = unit.position + delta
+            path = FindPath(start, goal, player)
+            # The argument threshold in the following is somewhat arbitrary. It
+            # does make sense to at least make it no more than 15, since that is
+            # the maximum amount most (or all?) units can move in one turn.
+            if path.end_is_within(threshold=13):
+                delta = path.end - unit.position
+                move_unit_if_possible(player, unit, delta, end_goal)
+            else:
+                # This is a backup, in case the if section failed to run
+                delta = bfs_for_open_spot(unit, game_map)
+                if delta is not None:
+                    # If the next line runs, it should successfully move unit
+                    move_unit_if_possible(player, unit, delta, end_goal)
+                else:
+                    # This is the backup to the backup
+                    for position in positions_around(unit.position, radius=100):
+                        delta = unit.position - position
+                        if move_unit_if_possible(player, unit, delta, end_goal):
+                            break
+
+
+def move_unit_if_possible(player, unit, delta, end_goal):
+    """Return True iff unit was successfully moved."""
+    if unit.can_move(delta, game_map):
+        unit.move_by(delta, game_map)
+        new_delta = end_goal - unit.position
+        player.commands['later']['move'][unit] = new_delta
+        return True
+    return False
+
+def update_move_later_cmd_if_necessary(unit, end_goal_position):
+    pass
 
 
 def implement_build_unit_commands(player):

@@ -34,6 +34,8 @@ class FindPath:
         self.came_from = dict()
         self.came_from[start] = None
 
+        self.find_path()
+
     def push(self, position):
         heappush(self.frontier, (distance(position, self.goal),
                 diagonal_weight(position, self.goal), position))
@@ -91,3 +93,6 @@ class FindPath:
         if distance < 10:
             return 12 + 3 * distance
         return 22 + 2 * distance
+
+    def end_is_within(self, threshold):
+        return distance(self.start, self.end) <= threshold
