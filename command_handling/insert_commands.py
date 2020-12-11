@@ -11,6 +11,7 @@ from command_handling.commands import Command, BuildUnitCmd, BuildBuildingCmd
 from command_handling.commands import CollectResourceCmd, ResearchCmd, FarmCmd
 from command_handling.commands import MoveCmd
 
+
 def insert_command(player, command):
     if command is None:
         return
@@ -213,34 +214,6 @@ def insert_move_command(player, command):
             player.commands['now']['move'][unit] = delta
             if unit in player.commands['later']['move']:
                 del player.commands['later']['move'][unit]
-
-    # TODO: delete the following commented code if this function works.
-    # if delta.magnitude > 15:
-    #     beginning, the_rest = delta.beginning_plus_the_rest()
-    #     move_now = dict((unit, beginning) for unit in ls_of_units)
-    #     move_later = dict((unit, the_rest) for unit in ls_of_units)
-    # else:
-    #     move_now = dict((unit, delta) for unit in ls_of_units)
-    #     move_later = dict()
-    #
-    # # NOTE: THE FOLLOWING TWO COMMENTED LINES DO NOT WORK! The reason is that
-    # # the player might make multiple move commands during a turn (each of which
-    # # might move different units).
-    # # What the following two lines would do would be to erase all previous
-    # # move commands and replace them with the most current one.
-    # # player.commands['now']['move'] = move_now
-    # # player.commands['later']['move'] = move_later
-    #
-    # # The following only replaces old move commands with new ones if they are about the
-    # # same unit.
-    # for unit in move_now:
-    #     player.commands['now']['move'][unit] = move_now[unit]
-    #     unit.current_action = 'moving to {}'.format(unit.position + delta)
-    #     if unit in player.commands['later']['move']:
-    #         del player.commands['later']['move'][unit]
-    # for unit in move_later:
-    #     player.commands['later']['move'][unit] = move_later[unit]
-    # return
 
 
 def insert_move_later_command(player, command):
