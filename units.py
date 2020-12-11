@@ -58,9 +58,14 @@ class Unit:
 
         Right now, every unit can move the same distance, but that may change.
         delta must be of type Vector"""
-        if delta.magnitude > 15:
-            # Then delta is too big
-            return False
+
+        # The following check is not needed because the insert_move_command function
+        # already checks that delta is not too big. Also, I want to be able
+        # to use this method in the implement_move_commands function, and I
+        # want to intentionally not check for the size of delta.
+        # if delta.magnitude > 15:
+        #     # Then delta is too big
+        #     return False
         # Next, check if the proposed movement moves the unit outside the map
         new_position = self.position + delta
         if not new_position.is_on_the_map(game_map):
@@ -69,8 +74,14 @@ class Unit:
         if game_map.has_building_at(new_position) and not isinstance(self, Villager):
             return False
 
-        # TODO---Address this issue: There are other reasons a unit cannot move
-        # to a position.
+        if game_map.has_unit_at(new_position):
+            player_num = game_map.get_player_num_for_unit_at(new_position)
+            if self.player_number != player_num:
+                return False
+            if isinstance(self, Villager) and game_map.has_villager_at(new_position):
+                return True
+            return False
+
         return True
 
     def move_by(self, delta, game_map):

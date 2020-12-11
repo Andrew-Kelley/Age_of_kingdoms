@@ -2,7 +2,8 @@ from map_etc.position import Position
 from map_etc.colors import Color, get_color_from_player_num
 from resources import Resource
 
-class GameMap():
+
+class GameMap:
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -41,6 +42,9 @@ class GameMap():
 
     def has_unit_at(self, position):
         return self(position, units=True) is not None
+
+    def has_villager_at(self, position):
+        return self.num_villagers_at(position) > 0
 
     def has_resource_at(self, position):
         possible_resource = self(position)
@@ -115,7 +119,7 @@ class GameMap():
                 if isinstance(unit, set):
                     # This should never happen
                     print("Error! The supposed unit was a set instead.")
-                    to_print =  'u' + Color.ENDC
+                    to_print = 'u' + Color.ENDC
                 else:
                     to_print = color + unit.letter_abbreviation + Color.ENDC
             if self.has_resource_at(position):
@@ -134,6 +138,7 @@ class GameMap():
             # Get any arbitrary element of the set:
             if len(unit_or_units) == 0:
                 print("Error! The set unit_or_units was empty.")
+                print("Position of error: ", position)
                 return 0
             for unit in unit_or_units:
                 break
