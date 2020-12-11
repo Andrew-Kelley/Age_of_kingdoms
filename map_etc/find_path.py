@@ -21,8 +21,12 @@ def is_empty(heap):
     return len(heap) == 0
 
 
+# A player's unit can walk through positions where the player's
+# own units are already.
 class FindPath:
+    """Used for all units except villagers."""
     def __init__(self, start, goal, player):
+        self.player_num = player.number
         self.frontier = []  # a heap implementation of a min priority queue
         self.start = start
         self.goal = goal
@@ -51,13 +55,20 @@ class FindPath:
             if self.found_goal():
                 return
 
-            # TODO: Prevent units from walking through other players' units
             for next_position in current.neighbors():
+                available = True
+                if game_map.has_unit_at(next_position):
+                    available = False
+                    player_num = self.player_num
+                    if player_num != game_map.get_player_num_for_unit_at(next_position):
+                        # Then units cannot walk through them
+                        continue
                 if next_position not in self.came_from:
                     self.push(next_position)
                     self.came_from[next_position] = current
                     if distance(next_position, self.goal) < distance(self.end, self.goal):
-                        self.end = next_position
+                        if available:
+                            self.end = next_position
 
     def return_path(self):
         path = [self.end]
