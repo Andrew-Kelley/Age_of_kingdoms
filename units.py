@@ -43,6 +43,7 @@ class Unit:
         self.current_action = 'doing nothing'
         player.messages += 'New unit: {}\n'.format(self)
         player.units[self.kind].append(self)
+        self.place_on_map(self.position)
 
     def __str__(self):
         kind_singular = unit_kind_to_singular[self.kind].capitalize()
@@ -86,35 +87,17 @@ class Unit:
 
     def move_by(self, delta, game_map):
         """delta must of of type Vector (or Position)"""
-        def print_error_moving_from_message():
-            print("Error! A unit is trying to move from ", self.position)
-            print("But the unit wasn't really in game_map.units there.")
-            print("This is what was where it 'was' instead: ", at_this_location)
-            print("Unit trying to move: ", self)
+        new_position = self.position + delta
+        self.place_on_map(new_position)
 
-        # First remove it from game_map.units
-        at_this_location = game_map(self.position, units=True)
-        if isinstance(at_this_location, Unit):
-            if at_this_location == self:
-                x, y = self.position.value
-                game_map.units[y][x] = None
-            else:
-                print_error_moving_from_message()
-        elif isinstance(at_this_location, set):
-            if self in at_this_location:
-                at_this_location.remove(self)
-                if len(at_this_location) == 0:
-                    x, y = self.position.value
-                    game_map.units[y][x] = None
-            else:
-                print_error_moving_from_message()
+        self.position = new_position
 
+    def place_on_map(self, new_position):
         def print_error_moving_to_message():
             print("Error!! A unit is trying to move to ", self.position)
             print("This is there already: ", at_this_location)
             print("Unit trying to move: ", self)
 
-        new_position = self.position + delta
         x, y = new_position.value
         at_this_location = game_map(new_position, units=True)
         if isinstance(self, Villager):
@@ -132,8 +115,29 @@ class Unit:
                 print_error_moving_to_message()
                 return
 
-        self.position = new_position
+    def remove_from_map(self):
+        """This happens any time a unit is moved."""
+        def print_error_moving_from_message():
+            print("Error! A unit is trying to move from ", self.position)
+            print("But the unit wasn't really in game_map.units there.")
+            print("This is what was where it 'was' instead: ", at_this_location)
+            print("Unit trying to move: ", self)
 
+        at_this_location = game_map(self.position, units=True)
+        if isinstance(at_this_location, Unit):
+            if at_this_location == self:
+                x, y = self.position.value
+                game_map.units[y][x] = None
+            else:
+                print_error_moving_from_message()
+        elif isinstance(at_this_location, set):
+            if self in at_this_location:
+                at_this_location.remove(self)
+                if len(at_this_location) == 0:
+                    x, y = self.position.value
+                    game_map.units[y][x] = None
+            else:
+                print_error_moving_from_message()
 
     def compare_to(self, other):
         there_is_an_error = False
