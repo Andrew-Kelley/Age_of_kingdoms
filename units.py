@@ -87,6 +87,8 @@ class Unit:
 
     def move_by(self, delta, game_map):
         """delta must of of type Vector (or Position)"""
+        self.remove_from_map()
+
         new_position = self.position + delta
         self.place_on_map(new_position)
 
