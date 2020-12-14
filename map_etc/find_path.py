@@ -12,8 +12,8 @@ def diagonal_weight(position1, position2):
     zig zags as it goes from the start to the goal. Without this
     weighted diagonal, the path stays completely vertical as far as
     it can and then stays completely horizontal as far as it can."""
-    x = abs(position1[0] - position2[0])
-    y = abs(position1[1] - position2[1])
+    x = abs(position1.value[0] - position2.value[0])
+    y = abs(position1.value[1] - position2.value[1])
     return max(x, y) - min(x,y)
 
 
@@ -45,6 +45,7 @@ class FindPath:
 
     def find_path(self):
         """A greedy best-first search."""
+        self.push(self.start)
         counter = 0
         max_num_steps = self.max_num_steps_to_search
         while not is_empty(self.frontier):
@@ -53,11 +54,14 @@ class FindPath:
                 return
 
             current = heappop(self.frontier)[2]
+            # print("counter: ", counter)
+            # print("current: ", current)
 
             if self.found_goal():
+                # print("goal found!")
                 return
 
-            for next_position in current.neighbors():
+            for next_position in current.neighbors(game_map):
                 available = True
                 if game_map.has_unit_at(next_position):
                     available = False
@@ -96,3 +100,7 @@ class FindPath:
 
     def end_is_within(self, threshold):
         return distance(self.start, self.end) <= threshold
+
+    def __repr__(self):
+        the_path = self.return_path()
+        return ' '.join(map(str, the_path))
