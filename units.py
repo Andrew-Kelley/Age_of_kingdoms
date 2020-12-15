@@ -36,7 +36,11 @@ class Unit:
 
         The position attribute is where on the map the unit starts."""
         number = len(player.units[self.kind])
+        # self.number might be changeable by a command to be implemented later
         self.number = number
+        # self._build_number is never to be changed and is used for testing
+        # equality of instances via the method __hash__.
+        self._build_number = number
         self.player_number = player.number
         self.position = position
         self.is_alive = True
@@ -44,6 +48,12 @@ class Unit:
         player.messages += 'New unit: {}\n'.format(self)
         player.units[self.kind].append(self)
         self.place_on_map(self.position)
+
+    def __hash__(self):
+        return hash((self.kind, self._build_number, self.player_number))
+
+    def __eq__(self, other):
+        return self.__hash__() == other.__hash__()
 
     def __str__(self):
         kind_singular = unit_kind_to_singular[self.kind].capitalize()
@@ -82,7 +92,6 @@ class Unit:
             if isinstance(self, Villager) and game_map.has_villager_at(new_position):
                 return True
             return False
-
         return True
 
     def move_by(self, delta, game_map):
