@@ -13,9 +13,19 @@ def set_unit_position_and_movement(building, new_unit, player, distance=6):
     if delta.magnitude > distance:
         delta1, delta2 = delta.beginning_plus_the_rest(distance_in_one_turn=distance)
         build_position = building.position + delta1
-        # The following line might be a small bug. The issue would be if there
-        # already is a unit or building at build_position
+
+        # The line "new_unit.position = build_position" is not sufficient.
+        # The issue would be if there already is a unit or building at
+        # build_position, which is why reset_initial_position... is called later
         new_unit.position = build_position
+
+        # resetting the initial position doesn't affect new_unit.position if
+        # that position didn't already have something else there.
+        # The value of radius is somewhat arbitrary. The larger it is, the
+        # greater the likelihood that some position will be open.
+        reset_initial_position_to_first_open_spot(new_unit, radius=12)
+        delta2 = building.build_position - new_unit.position
+
         command = MoveCmd()
         command.add_unit_with_delta(new_unit, delta2)
         insert_move_later_command(player, command)
@@ -32,11 +42,19 @@ def set_unit_position_and_movement(building, new_unit, player, distance=6):
         else:
             # This "else" section is necessary in the case that a building's
             # build_position is some position that the building occupies.
-            
+
             # The 40 is just any large number to practically guarantee that the
             # search will be successful
-            for position in positions_around(new_unit.position, radius=40):
-                delta = position - new_unit.position
-                if new_unit.can_move(delta, game_map):
-                    new_unit.position += delta
-                    break
+            reset_initial_position_to_first_open_spot(new_unit, radius=40)
+
+
+def reset_initial_position_to_first_open_spot(new_unit, radius):
+    """Set the position of new_unit to be any open spot around it.
+
+    This is used in case the initial position of new_unit is already
+    taken by something else."""
+    for position in positions_around(new_unit.position, radius):
+        delta = position - new_unit.position
+        if new_unit.can_move(delta, game_map):
+            new_unit.position += delta
+            return
