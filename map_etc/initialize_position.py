@@ -3,6 +3,7 @@ from command_handling.commands import MoveCmd
 
 from map_etc.search_for_open_position import bfs_for_open_spot
 from map_etc.make_map import game_map
+from map_etc.iterate_around import positions_around
 
 # This is to be used only for newly built units, in their __init__ method
 def set_unit_position_and_movement(building, new_unit, player, distance=6):
@@ -23,7 +24,19 @@ def set_unit_position_and_movement(building, new_unit, player, distance=6):
         build_position = building.position + delta
         new_unit.position = build_position
         # The 50 is just any large number to practically guarantee that the
-        # search will be successful
+        # search will be successful (assuming build_position isn't in the
+        # middle of a building)
         delta = bfs_for_open_spot(new_unit, game_map, bound_on_search_distance=50)
         if delta is not None:
             new_unit.position += delta
+        else:
+            # This "else" section is necessary in the case that a building's
+            # build_position is some position that the building occupies.
+            
+            # The 40 is just any large number to practically guarantee that the
+            # search will be successful
+            for position in positions_around(new_unit.position, radius=40):
+                delta = position - new_unit.position
+                if new_unit.can_move(delta, game_map):
+                    new_unit.position += delta
+                    break
