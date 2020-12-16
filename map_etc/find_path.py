@@ -99,7 +99,7 @@ class FindPath:
         return 22 + 2 * distance
 
     def end_is_within(self, threshold):
-        return distance(self.start, self.end) <= threshold
+        return distance(self.goal, self.end) <= threshold
 
     def __repr__(self):
         the_path = self.return_path()
