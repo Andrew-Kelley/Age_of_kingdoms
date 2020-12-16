@@ -132,22 +132,22 @@ class Resources(dict):
 
 
 if __name__ == '__main__':
-    from units import Villager, Pikeman
+    from unit_costs import unit_costs
 
     my_resources = Resources({Food: 300, Wood: 300, Stone: 200,
                               Gold: 0, Bronze: 0, Iron: 0})
     some_cost = Resources({Food: 300, Wood: 300, Stone: 200})
 
+    print("I think these tests fail because the imported Resources subclasses")
+    print("are different in memory than the classes here.")
     assert my_resources >= some_cost
-    assert my_resources >= Villager.cost
-    assert my_resources >= Pikeman.cost
+    assert my_resources >= unit_costs['villagers']
+    assert my_resources >= unit_costs['pikemen']
 
     print(my_resources)
-    Villager.cost = Resources(Villager.cost)
-    Pikeman.cost = Resources(Pikeman.cost)
-    my_resources -= Villager.cost
+    my_resources -= unit_costs['villagers']
     print(my_resources)
-    my_resources -= Villager.cost
+    my_resources -= unit_costs['villagers']
     print(my_resources)
-    my_resources -= Pikeman.cost
+    my_resources -= unit_costs['pikemen']
     print(my_resources)
