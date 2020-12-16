@@ -5,11 +5,9 @@
 from collections import deque
 from map_etc.position import distance
 
-bound_on_search_distance = 12
-
 
 # breadth first search
-def bfs_for_open_spot(unit, game_map):
+def bfs_for_open_spot(unit, game_map, bound_on_search_distance=12):
     """Return Vector or None
 
     If returning a Vector, this is the smallest vector that unit
