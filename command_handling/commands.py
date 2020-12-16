@@ -10,7 +10,7 @@
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
 
-from units import Unit, unit_kinds, Villager
+from unit_kinds import unit_kinds
 from buildings.bldng_class import Building
 from buildings.resource_bldngs import Farm
 from map_etc.position import Vector, Position
@@ -50,7 +50,11 @@ class MoveCmd(Command):
 
     def add_unit_with_delta(self, unit, delta):
         message = "Error. Developer message: MoveCmd.__init__ was called,"
-        if not isinstance(unit, Unit):
+        # The following line is what I mean in the first if statement.
+        # if not isinstance(unit, Unit):
+        # I cannot do this because importing from units.py would give a
+        # circular import.
+        if unit.__class__.__bases__[0].kind != 'units':
             print(message)
             print("but unit was not an instance of Unit.")
             return
@@ -134,7 +138,8 @@ class BuildBuildingCmd(Command):
         message = "Error. Developer message: BuildBuildingCmd.__init__ was called,"
         villagers = list(villagers)
         for v in villagers:
-            if not isinstance(v, Villager):
+            # if not isinstance(v, Villager):
+            if v.kind != 'villagers':
                 print(message)
                 print("and some element of villagers was not a villager.")
                 return
@@ -226,7 +231,8 @@ class CollectResourceCmd(Command):
         message = "Error. Developer message: CollectResourceCmd.__init__ was called,"
         villagers = list(villagers)
         for v in villagers:
-            if not isinstance(v, Villager):
+            # if not isinstance(v, Villager):
+            if v.kind != 'villagers':
                 print(message)
                 print("and some element of villagers was not a villager.")
                 return
@@ -269,7 +275,8 @@ class FarmCmd(Command):
             print("and farm was not an instance of Farm.")
             return
         for v in villagers:
-            if not isinstance(v, Villager):
+            # if not isinstance(v, Villager):
+            if v.kind != 'villagers':
                 print(message)
                 print("and some element of villagers was not a villager.")
                 return
