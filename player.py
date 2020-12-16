@@ -83,7 +83,7 @@ class Player:
         # Each player begins with 3 villagers
         for i, delta in enumerate([(-2, -2), (2, -2), (2, 2)], start=1):
             new_position = position + Position(*delta)
-            Villager(new_position, self)
+            Villager(towncenter, self, new_position)
 
     def log_command(self, cmd_as_inpt_string):
         """Temporarily save the command entered by adding it to
@@ -183,13 +183,13 @@ def compare_buildings(player_a, player_b):
         kind = building_type.kind
         bldngs_a = player_a.buildings[kind][1:]
         bldngs_b = player_b.buildings[kind][1:]
-    if len(bldngs_a) != len(bldngs_b):
-        print(kind, "Unequal number of buildings!!")
-        there_is_an_error = True
-    for bldng_a, bldng_b in zip(bldngs_a, bldngs_b):
-        status = bldng_a.compare_to(bldng_b)
-        if status:
+        if len(bldngs_a) != len(bldngs_b):
+            print(kind, "Unequal number of buildings!!")
             there_is_an_error = True
+        for bldng_a, bldng_b in zip(bldngs_a, bldngs_b):
+            status = bldng_a.compare_to(bldng_b)
+            if status:
+                there_is_an_error = True
     if not there_is_an_error:
         print("a success: all buildings match")
     return there_is_an_error
