@@ -2,7 +2,12 @@ from resources import Resources, Wood, Food, Stone, Gold, Bronze, Iron
 from map_etc.make_map import game_map
 from map_etc.iterate_around import everything_within_given_distance_on
 from map_etc.iterate_around import within_given_distance
+from map_etc.initialize_position import set_unit_position_and_movement
+
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
+
+from unit_kinds import unit_kinds
+
 from random import choice
 from copy import copy
 
@@ -26,11 +31,8 @@ class Unit:
     """e.g. villager, swordsman, knight, catapult"""
     kind = 'units'
     letter_abbreviation = 'u'  # should always be overridden
-    # The following should never be accessed. It will always be
-    # overridden by the subclasses.
-    cost = Resources({Food: 1000, Wood: 1000, Gold: 1000})
 
-    def __init__(self, position, player):
+    def __init__(self, building, player, position=None):
         """For each player, the first of each unit is numbered 1.
         Further units built (of the same type) are consecutively numbered.
 
@@ -42,9 +44,13 @@ class Unit:
         # equality of instances via the method __hash__.
         self._build_number = number
         self.player_number = player.number
-        self.position = position
         self.is_alive = True
         self.current_action = 'doing nothing'
+        if position is not None:
+            # This is used for units that a player begins the game with
+            self.position = position
+        else:
+            set_unit_position_and_movement(building, self, player)
         player.messages += 'New unit: {}\n'.format(self)
         player.units[self.kind].append(self)
         self.place_on_map(self.position)
@@ -198,12 +204,11 @@ class Group:
 
 
 class Villager(Unit):
-    cost = Resources({Food: 50})
     kind = 'villagers'
     letter_abbreviation = 'v'
 
-    def __init__(self, position, player):
-        Unit.__init__(self, position, player)
+    def __init__(self, building, player, position=None):
+        Unit.__init__(self, building, player, position)
         # The following gives how fast a villager can build a building.
         self.build_amount_per_turn = 10
         self.farm_currently_farming = None
@@ -312,7 +317,6 @@ class Villager(Unit):
 # I intend Pikeman to only be somewhat weaker than Swordsman
 class Pikeman(Unit):
     """A man with a spear and a shield"""
-    cost = Resources({Food: 40, Wood: 20})
     kind = 'pikemen'
     letter_abbreviation = 'p'
 
@@ -322,7 +326,6 @@ class Swordsman(Unit):
     # (a) bronze shields, and (b) bronze swords.
     # The first of these also benefits Pikeman (by upgrading their
     # armor to bronze).
-    cost = Resources({Food: 40, Gold: 25, Bronze: 15})
     kind = 'swordsmen'
     letter_abbreviation = 's'
 
@@ -333,7 +336,6 @@ class ChampionSwordsman(Swordsman):
 
 
 class Archer(Unit):
-    cost = Resources({Wood: 40, Gold: 20, Bronze: 10})
     kind = 'archers'
     letter_abbreviation = 'a'
 
@@ -373,9 +375,6 @@ class Merchant(Unit):
     letter_abbreviation = 'm'
 
 
-unit_kinds = ['villagers', 'pikemen', 'swordsmen', 'archers', 'knights',
-              'batteringrams', 'catapults', 'trebuchets', 'merchants']
-
 # In case I change units or unit_kinds and forget to change the other:
 assert len(unit_kinds_singular) == len(unit_kinds)
 
@@ -393,13 +392,17 @@ if __name__ == '__main__':
     from player import Player
 
     p1 = Player(1, Position(80, 80), is_human=True)
+    towncenter = p1.buildings['towncenter'][1]
 
-    v1 = Villager(Position(50, 50), p1)
+    print("WARNING!!!! These tests will currently fail.")
+    print("New units are now created with one argument being the building")
+    print("that builds them.")
+    v1 = Villager(towncenter, p1)
     print(v1.number, v1.position)
     v1.move_by(Vector(5, 8), game_map)
     print(v1.number, v1.position)
 
-    v2 = Villager(Position(5, 5), p1)
+    v2 = Villager(towncenter, p1)
     for tpl in ((-5, -5), (7, 8), (-4, 11), (3, 6)):
         delta = Vector(*tpl)
         assert v2.can_move(delta, game_map)
@@ -409,7 +412,7 @@ if __name__ == '__main__':
         delta = Vector(*tpl)
         assert not v2.can_move(delta, game_map)
 
-    v3 = Villager(Position(80, 80), p1)
+    v3 = Villager(towncenter, p1)
     v3.move_by(Vector(10, 5), game_map)
     # print('Now, v3 is at position ', v3.position)
     v3.move_by(Vector(5, 10), game_map)
@@ -424,7 +427,7 @@ if __name__ == '__main__':
         assert not v3.can_move(delta, game_map)
 
     # NOTE: The following four blocks of code may break if I change game_map
-    v4 = Villager(Position(70, 85), p1)
+    v4 = Villager(towncenter, p1)
     ls = list(v4.resource_iter_within_given_distance_of_me(0, Wood, p1))
     assert len(ls) == 1
     assert isinstance(ls[0], Wood)
@@ -433,27 +436,28 @@ if __name__ == '__main__':
     lumber_camp.build_on_map(Position(67, 92), game_map)
     p1.buildings[LumberCamp.kind].append(lumber_camp)
     # print(game_map)
-    v5 = Villager(Position(67, 90), p1)
+    v5 = Villager(towncenter, p1)
     assert v5.can_collect_resource_now(Wood, p1)
     v5.collect_resource(Wood, p1)
     assert v5.position == Position(67, 89)
 
-    v6 = Villager(Position(54, 77), p1)
+    v6 = Villager(towncenter, p1)
     assert not v6.can_collect_resource_now(Wood, p1)
     v6.collect_resource(Wood, p1)
     assert v6.position == Position(54, 77)
     # assert v6.position == Position(60, 77)
 
-    v7 = Villager(Position(66, 79), p1)
+    v7 = Villager(towncenter, p1)
     v7.collect_resource(Wood, p1)
     assert v7.position in (Position(66, 80), Position(65, 79))
 
     print(p1.resources)
     position = Position(70, 80)
-    v8 = Villager(position, p1)
+    v8 = Villager(towncenter, p1)
     assert v8.can_collect_resource_now(Wood, p1)
     assert isinstance(game_map(position), Wood)
     for i in range(30):
         v8.collect_resource(Wood, p1)
     assert game_map(position) == ' '
     print(p1.resources)
+

@@ -12,8 +12,6 @@ from command_handling.insert_commands import insert_collect_resource_later_comma
 from command_handling.insert_commands import insert_collect_resource_now_command
 from command_handling.commands import CollectResourceCmd
 
-from map_etc.initialize_position import set_unit_position_and_movement
-
 
 class TownCenter(Building):
     """Every player begins with one TownCenter.
@@ -56,9 +54,7 @@ class TownCenter(Building):
             return
         delta = self.build_position - self.position
 
-        new_villager = Villager(self.build_position, player)
-        # If build_position is too far, it needs to be reset.
-        set_unit_position_and_movement(self, new_villager, player)
+        new_villager = Villager(self, player)
 
         if self.initial_resource_to_collect:
             resource = self.initial_resource_to_collect

@@ -4,7 +4,6 @@ from buildings.bldng_class import Building
 from resources import Resources, Wood
 from units import Pikeman, Swordsman, Archer
 from research_classes import BronzeShields, BronzeSwords
-from map_etc.initialize_position import set_unit_position_and_movement
 
 class Barracks(Building):
     cost = Resources({Wood: 150})
@@ -30,18 +29,13 @@ class Barracks(Building):
             # This should never happen because the function units_which_can_be_built
             # is called in in the command_handling/insert_commands.py (in the
             # function insert_build_unit_command)
+            print("Error! unit_type is not in self.units_which_can_be_built()")
             return
 
         if unit_type == Pikeman.kind:
-            # The unit's initial position may be changed later in this function
-            new_unit = Pikeman(self.build_position, player)
+            Pikeman(self, player)
         else:
-            # The unit's initial position may be changed later in this function
-            new_unit = Swordsman(self.build_position, player)
-
-        # If self.build_position is too far away, then the unit will not start
-        # its existence that far away.
-        set_unit_position_and_movement(self, new_unit, player)
+            Swordsman(self, player)
 
 
 class ArcheryRange(Building):
@@ -58,10 +52,10 @@ class ArcheryRange(Building):
         player = self.player
         if unit_type != 'archers':
             # This should never happen.
+            print("Error! An ArcheryRange is trying to build a non-archer.")
             return
 
-        new_archer = Archer(self.build_position, player)
-        set_unit_position_and_movement(self, new_archer, player)
+        Archer(self.build_position, player)
 
 
 class Stable(Building):
