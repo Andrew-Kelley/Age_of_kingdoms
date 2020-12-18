@@ -18,11 +18,10 @@ open the file colors.py (in a text editor) and delete these two lines:
 - init()
 
 ### Initially limiting the scope
-I intend to implement the most essential features first, leaving the other
+I intend to implement the most essential features first, leaving some of the other
 features for later, in case I have the time at some point. Here are some major
 features not yet implemented that I intend to get to:
  - the ability to attack other players (This feature is absolutely essential.)
- - prevent units from walking through buildings
  - a random map generator
  - an AI
  - the ability to play over a network
