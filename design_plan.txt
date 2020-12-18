@@ -345,10 +345,10 @@ Maybe be able to research 'trained doulas' at the library (or
 the university, if I change it to that). One thought on what
 this could do is allow towncenters to build 2 villagers per
 turn instead of just 1. If this isn't appropriate for a
-library or university, maybe be able to research it at the 
-town center. 
+library or university, maybe be able to research it at the
+town center.
 
-(Perhaps instead of a library or university call the building that 
+(Perhaps instead of a library or university call the building that
 fills that role a "research center".)
 
 Another thought on a possible research item at the library is
@@ -371,11 +371,6 @@ be able to research something that removes that restriction.
             --------------- Major things left to do --------------
             ------------------------------------------------------
 
-- I can't continue to let an unlimited number of military units occupy the same
-  space. (If I instead continued to have no restriction on the number occupying the
-  same space, that would drastically change the strategy on how to effectively
-  attack.) Hence, I have to completely reimplement how they move.
-
 - Implement the ability for military units to attack:
   * They ought to be able to attack (and destroy) units.
   * They also ought to be able to attack (and destroy) buildings.
@@ -384,6 +379,34 @@ be able to research something that removes that restriction.
 
 - Implement a random map generator. There should be options on what type of
   of map to generate.
+
+- Have even a rudimentary AI that can do very basic things:
+  * Build units
+  * Build buildings
+  * Collect resources
+  * Research things
+  * Attack other players (once I implement attacking)
+
+- Would be very nice: enable people to play this game over some network.
+
+- Maybe:
+  Implement fog of war. Hence, each player gets its own copy of the map.
+  (This might be an annoyance to use without some "scout" command, where
+  a unit can be commanded to scout, and it automatically moves around,
+  exploring the map. Hence, if I do this, I should also implement a
+  "scout" command. Should I also give each player a scout to start out
+  each game with?)
+
+
+         ------------------------------------------------------
+         --------------- Major things finished ----------------
+         ------------------------------------------------------
+
+- (DONE! - December 16, 2020)
+  I can't continue to let an unlimited number of military units occupy the same
+  space. (If I instead continued to have no restriction on the number occupying the
+  same space, that would drastically change the strategy on how to effectively
+  attack.) Hence, I have to completely reimplement how they move.
 
 - (DONE! - September 22, 2020)
   It might be worthwhile to completely change how commands are represented.
@@ -396,23 +419,7 @@ be able to research something that removes that restriction.
   Be able to save a game and then restart where I left off. (Similar
   functionality might be really useful for testing purposes.)
 
-- Have even a rudimentary AI that can do very basic things:
-  * Build units
-  * Build buildings
-  * Collect resources
-  * Research things
-  * Attack other players (once I implement attacking)
-
-- Implement fog of war. Hence, each player gets its own copy of the map.
-  (This might be an annoyance to use without some "scout" command, where
-  a unit can be commanded to scout, and it automatically moves around,
-  exploring the map. Hence, if I do this, I should also implement a
-  "scout" command. Should I also give each player a scout to start out
-  each game with?)
-
-- Perhaps enable people to play this game over some network.
-
-- (Started.) Can I make it so that colors are printed? Yes, each player
+- (DONE!  - mid December, 2020) Can I make it so that colors are printed? Yes, each player
   now has its own color, and their buildings are printed with this color.
 
   Also, units really ought to be printed on the map too.
