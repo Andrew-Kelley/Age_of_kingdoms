@@ -7,6 +7,7 @@ from map_etc.initialize_position import set_unit_position_and_movement
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
 from units.unit_kinds import unit_kind_to_singular
+from units.aggression_level import FLEE
 
 from random import choice
 from copy import copy
@@ -176,6 +177,7 @@ class Villager(Unit):
 
     def __init__(self, building, player, position=None):
         Unit.__init__(self, building, player, position)
+        self.aggression_lvl = FLEE
         # The following gives how fast a villager can build a building.
         self.build_amount_per_turn = 10
         self.farm_currently_farming = None

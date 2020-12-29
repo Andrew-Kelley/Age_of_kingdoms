@@ -1,7 +1,7 @@
-from units.unit_and_villager import Unit
+from units.mltry_unit_clss import MilitaryUnit
 
 
-class Knight(Unit):
+class Knight(MilitaryUnit):
     kind = 'knights'
     letter_abbreviation = 'k'
 

@@ -1,16 +1,20 @@
-from units.unit_and_villager import Unit
+from units.mltry_unit_clss import MilitaryUnit
 
 
-class BatteringRam(Unit):
+class SiegeUnit(MilitaryUnit):
+    pass
+
+
+class BatteringRam(SiegeUnit):
     kind = 'batteringrams'
     letter_abbreviation = 'r'
 
 
-class Catapult(Unit):
+class Catapult(SiegeUnit):
     kind = 'catapults'
     letter_abbreviation = 'c'
 
 
-class Trebuchet(Unit):
+class Trebuchet(SiegeUnit):
     kind = 'trebuchets'
     letter_abbreviation = 't'

@@ -1,4 +1,4 @@
-from units.unit_and_villager import Unit
+from units.mltry_unit_clss import MilitaryUnit
 
 
 # Unless pikemen are significantly weaker than Swordsman, I think that the cost
@@ -6,13 +6,13 @@ from units.unit_and_villager import Unit
 # Pikeman being built at the beginning of the game.
 # I think that this is OK.
 # I intend Pikeman to only be somewhat weaker than Swordsman
-class Pikeman(Unit):
+class Pikeman(MilitaryUnit):
     """A man with a spear and a shield"""
     kind = 'pikemen'
     letter_abbreviation = 'p'
 
 
-class Swordsman(Unit):
+class Swordsman(MilitaryUnit):
     # After reaching the Bronze Age, before being able to train Swordsman,
     # two things must first be researched at the Blacksmith:
     # (a) bronze shields, and (b) bronze swords.
