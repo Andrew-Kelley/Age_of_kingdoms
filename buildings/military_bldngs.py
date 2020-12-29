@@ -2,7 +2,8 @@
 
 from buildings.bldng_class import Building
 from resources import Resources, Wood
-from units import Pikeman, Swordsman, Archer
+from units.barracks_units import Pikeman, Swordsman
+from units.archers import Archer
 from research_classes import BronzeShields, BronzeSwords
 
 class Barracks(Building):

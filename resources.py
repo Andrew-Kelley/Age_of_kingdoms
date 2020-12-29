@@ -132,7 +132,7 @@ class Resources(dict):
 
 
 if __name__ == '__main__':
-    from unit_costs import unit_costs
+    from units.unit_costs import unit_costs
 
     my_resources = Resources({Food: 300, Wood: 300, Stone: 200,
                               Gold: 0, Bronze: 0, Iron: 0})

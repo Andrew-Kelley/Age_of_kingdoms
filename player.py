@@ -4,8 +4,8 @@ from buildings.military_bldngs import Barracks, ArcheryRange, Stable, SiegeWorks
 from buildings.defense_bldngs import Tower, Castle
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
-from units import Unit, Villager, Pikeman, Swordsman, Archer, Knight
-from units import BatteringRam, Catapult, Trebuchet, Merchant
+from units.unit_and_villager import Unit, Villager
+from units.all_classes import unit_classes
 
 from map_etc.colors import colors_ls
 from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
@@ -15,8 +15,6 @@ from research_classes import ResearchObject
 
 from copy import deepcopy
 
-units_ls = [Villager, Pikeman, Swordsman, Archer, Knight,
-            BatteringRam, Catapult, Trebuchet, Merchant]
 buildings_ls = [TownCenter, House, Blacksmith, Library, Market,
                 Barracks, ArcheryRange, Stable, SiegeWorks, Tower,
                 Castle, Farm, LumberCamp, StoneQuarry, MiningCamp,
@@ -71,7 +69,7 @@ class Player:
         # contain a key: value pair as follows:
         #  position: building_instance
         self.building_position_pairs = dict()
-        self.units = dict((unit.kind, [0]) for unit in units_ls)
+        self.units = dict((unit.kind, [0]) for unit in unit_classes)
 
         self.initialize_towncenter_and_villagers(position)
 
@@ -104,7 +102,7 @@ class Player:
     @property
     def population(self):
         pop = 0
-        for unit in units_ls:
+        for unit in unit_classes:
             # Recall that self.units[unit.kind][0] is the number of that unit
             # kind that have been killed.
             num_units_killed = self.units[unit.kind][0]
@@ -160,7 +158,7 @@ def compare_resources(player_a, player_b):
 def compare_units(player_a, player_b):
     """For use in testing only."""
     there_is_an_error = False
-    for unit_type in units_ls:
+    for unit_type in unit_classes:
         kind = unit_type.kind
         units_a = player_a.units[kind][1:]
         units_b = player_b.units[kind][1:]

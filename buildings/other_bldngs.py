@@ -1,5 +1,5 @@
 from buildings.bldng_class import Building
-from units import Villager
+from units.unit_and_villager import Villager
 from resources import Resources, Wood, Stone, Gold, Iron
 from research_classes import blacksmith_bronze_age_research
 from research_classes import bronze_to_iron_research_str

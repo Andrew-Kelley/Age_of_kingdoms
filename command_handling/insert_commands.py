@@ -3,7 +3,7 @@ from collections import deque
 from map_etc.position import Position
 from map_etc.make_map import game_map
 
-from unit_costs import unit_costs
+from units.unit_costs import unit_costs
 from buildings.resource_bldngs import Farm
 from buildings.bldng_class import BuildingUnderConstruction
 

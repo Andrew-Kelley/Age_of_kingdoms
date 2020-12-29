@@ -1,5 +1,7 @@
-from units import Unit, Villager
-from units import unit_kinds, unit_kinds_singular, unit_singular_to_plural
+from units.unit_and_villager import Unit, Villager
+from units.unit_kinds import unit_kinds
+from units.unit_kinds import unit_kinds_singular, unit_singular_to_plural
+
 from buildings.bldng_class import Building, buildings
 
 # For building names that really are two words, I would like to be able to

@@ -1,13 +1,18 @@
-from units import unit_kinds_singular, unit_kinds, unit_singular_to_plural
-from units import Group, Army
+from units.unit_kinds import unit_kinds_singular, unit_kinds, unit_singular_to_plural
+from units.group_and_army import Group, Army
+
 from map_etc.make_map import game_map
+
 from resources import resource_kind_to_class
+
 from input_handling.select_an_object import SelectedObject, SelectedBuilding
 from input_handling.select_an_object import SelectedUnits
 from input_handling.select_an_object import building_first_words
 from input_handling.from_ls_get_position import get_position_from_inpt_as_ls
+
 from buildings.bldng_class import stone_age_buildings, bronze_age_buildings, buildings
 from buildings.other_bldngs import building_kind_to_class
+
 from command_handling.commands import BuildUnitCmd, BuildBuildingCmd
 
 unit_kinds_singular = set(unit_kinds_singular)

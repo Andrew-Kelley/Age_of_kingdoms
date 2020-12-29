@@ -10,7 +10,7 @@
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
 
-from unit_kinds import unit_kinds
+from units.unit_kinds import unit_kinds
 from buildings.bldng_class import Building
 from buildings.resource_bldngs import Farm
 from map_etc.position import Vector, Position

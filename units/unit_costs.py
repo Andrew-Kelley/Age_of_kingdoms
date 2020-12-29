@@ -1,5 +1,5 @@
-from resources import Resources, Food, Wood, Gold, Bronze, Iron
-from unit_kinds import unit_kinds
+from resources import Resources, Food, Wood, Gold, Bronze
+from units.unit_kinds import unit_kinds
 
 unit_costs = dict()
 

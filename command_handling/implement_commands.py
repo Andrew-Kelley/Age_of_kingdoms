@@ -1,10 +1,10 @@
-
 from map_etc.position import Vector
 from map_etc.make_map import game_map
 from map_etc.iterate_around import positions_around
 from map_etc.find_path import FindPath
 from map_etc.search_for_open_position import bfs_for_open_spot
-from units import unit_kind_to_class, Villager
+from units.unit_and_villager import Villager
+from units.all_classes import unit_kind_to_class
 
 
 def implement_commands_if_possible(player):

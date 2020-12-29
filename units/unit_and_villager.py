@@ -1,4 +1,4 @@
-from resources import Resources, Wood, Food, Stone, Gold, Bronze, Iron
+from resources import Wood, Food, Stone, Gold, Bronze, Iron
 from map_etc.make_map import game_map
 from map_etc.iterate_around import everything_within_given_distance_on
 from map_etc.iterate_around import within_given_distance
@@ -6,25 +6,10 @@ from map_etc.initialize_position import set_unit_position_and_movement
 
 from buildings.resource_bldngs import Farm, LumberCamp, StoneQuarry, MiningCamp
 
-from unit_kinds import unit_kinds
+from units.unit_kinds import unit_kind_to_singular
 
 from random import choice
 from copy import copy
-
-unit_kind_to_singular = {'villagers': 'villager',
-                         'pikemen': 'pikeman',
-                         'swordsmen': 'swordsman',
-                         'archers': 'archer',
-                         'knights': 'knight',
-                         'batteringrams': 'batteringram',
-                         'catapults': 'catapult',
-                         'trebuchets': 'trebuchet',
-                         'units': 'unit',
-                         'merchants': 'merchant'}
-
-unit_kinds_singular = ['villager', 'pikeman', 'swordsman',
-                       'archer', 'knight', 'batteringram',
-                       'catapult', 'trebuchet', 'merchant']
 
 
 class Unit:
@@ -185,24 +170,6 @@ class Unit:
         return there_is_an_error
 
 
-# Should I inherit from SelectedUnits?
-# But being an army doesn't mean it is selected, so I don't think so.
-class Army:
-    """A collection of some units for military purposes."""
-    # Needs to implement the method units (which is all units in this army)
-    # and that method, called units, needs to be a property
-    pass
-
-
-# Should Group inherit from Army? Or should Group be more general than its
-# docstring states and then have Army inherit from Group?
-class Group:
-    """A collection of villagers."""
-    # Needs to implement the method units (which is all units in this army)
-    # and that method, called units, needs to be a property
-    pass
-
-
 class Villager(Unit):
     kind = 'villagers'
     letter_abbreviation = 'v'
@@ -310,83 +277,6 @@ class Villager(Unit):
         player.resources[Food] += self.food_from_farming_per_turn
 
 
-# Unless pikemen are significantly weaker than Swordsman, I think that the cost
-# difference between Pikeman and Swordsman will result in many more
-# Pikeman being built at the beginning of the game.
-# I think that this is OK.
-# I intend Pikeman to only be somewhat weaker than Swordsman
-class Pikeman(Unit):
-    """A man with a spear and a shield"""
-    kind = 'pikemen'
-    letter_abbreviation = 'p'
-
-class Swordsman(Unit):
-    # After reaching the Bronze Age, before being able to train Swordsman,
-    # two things must first be researched at the Blacksmith:
-    # (a) bronze shields, and (b) bronze swords.
-    # The first of these also benefits Pikeman (by upgrading their
-    # armor to bronze).
-    kind = 'swordsmen'
-    letter_abbreviation = 's'
-
-
-class ChampionSwordsman(Swordsman):
-    # Can only be built after researching level 3 swordsman
-    pass
-
-
-class Archer(Unit):
-    kind = 'archers'
-    letter_abbreviation = 'a'
-
-
-class ChampionArcher(Archer):
-    # Can only be built after researching level 3 archers
-    pass
-
-
-class Knight(Unit):
-    kind = 'knights'
-    letter_abbreviation = 'k'
-
-
-class ChampionKnight(Knight):
-    # Can only be built after researching level 3 knight
-    pass
-
-
-class BatteringRam(Unit):
-    kind = 'batteringrams'
-    letter_abbreviation = 'r'
-
-
-class Catapult(Unit):
-    kind = 'catapults'
-    letter_abbreviation = 'c'
-
-
-class Trebuchet(Unit):
-    kind = 'trebuchets'
-    letter_abbreviation = 't'
-
-
-class Merchant(Unit):
-    kind = 'merchants'
-    letter_abbreviation = 'm'
-
-
-# In case I change units or unit_kinds and forget to change the other:
-assert len(unit_kinds_singular) == len(unit_kinds)
-
-unit_classes = [Villager, Pikeman, Swordsman, Archer, Knight, BatteringRam,
-                Catapult, Trebuchet, Merchant]
-
-assert len(unit_kinds) == len(unit_classes)
-
-unit_kind_to_class = dict((k, c) for k, c in zip(unit_kinds, unit_classes))
-
-unit_singular_to_plural = dict((s, p) for s, p in zip(unit_kinds_singular, unit_kinds))
-
 if __name__ == '__main__':
     from map_etc.position import Position, Vector
     from player import Player
@@ -465,4 +355,3 @@ if __name__ == '__main__':
     #     v8.collect_resource(Wood, p1)
     # assert game_map(position) == ' '
     print(p1.resources)
-

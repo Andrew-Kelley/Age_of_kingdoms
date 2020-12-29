@@ -182,7 +182,7 @@ def get_next_command(player, inpt='', selected_obj=None,
 
 
 if __name__ == '__main__':
-    from units import unit_kinds
+    from units.unit_kinds import unit_kinds
 
     assert closest_word_to('fnished', possible_first_words) == 'finished'
     assert closest_word_to('hlp', possible_first_words) == 'help'
