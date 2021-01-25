@@ -3,7 +3,7 @@ venv/
 *.idea
 __pycache__
 
-# I want to ignore complied Java progams:
+# I want to ignore compiled Java progams:
 *.class
 
 # Why was this file added by my mac?
