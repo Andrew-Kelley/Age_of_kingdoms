@@ -12,6 +12,8 @@ from resources import Resources, Food, Wood, Stone, Gold, Bronze, Iron
 from map_etc.make_map import game_map
 from map_etc.position import Position
 from research_classes import ResearchObject
+from command_handling.strings import NOW, LATER, BUILD_BUILDING, BUILD_UNIT
+from command_handling.strings import COLLECT_RESOURCE, MOVE, RESEARCH, FARM
 
 from copy import deepcopy
 
@@ -39,12 +41,12 @@ class Player:
                                     Gold: 6, Bronze: 6, Iron: 2}
 
         # self.commands contains the commands entered by the player:
-        commands_dict = {'move': dict(), 'build unit': dict(),
-                         'build building': dict(),
-                         'collect resource': dict(),
-                         'farm': dict(), 'research': dict()}
+        commands_dict = {MOVE: dict(), BUILD_UNIT: dict(),
+                         BUILD_BUILDING: dict(),
+                         COLLECT_RESOURCE: dict(),
+                         FARM: dict(), RESEARCH: dict()}
         # commands_dict will need to be lengthened
-        self.commands = {'now': commands_dict, 'later': deepcopy(commands_dict)}
+        self.commands = {NOW: commands_dict, LATER: deepcopy(commands_dict)}
         # 'now' means at the end of the turn, when all players' commands are run.
         # 'later' means at some later turn.
 

@@ -16,6 +16,9 @@ from buildings.resource_bldngs import Farm
 from map_etc.position import Vector, Position
 from research_classes import ResearchObject
 from resources import Resource
+from command_handling.strings import BUILD_BUILDING, BUILD_UNIT
+from command_handling.strings import COLLECT_RESOURCE, MOVE, RESEARCH, FARM
+from command_handling.strings import END_OF_TURN, QUIT_GAME, SAVE_GAME
 
 from inspect import isclass
 
@@ -40,7 +43,7 @@ class MoveCmd(Command):
     # to a given position (instead of saying all should move by the same
     # delta). Hence each unit should have its own delta.
 
-    _kind = 'move'
+    _kind = MOVE
 
     def __init__(self):
         self._unit_delta_pairs = []
@@ -79,7 +82,7 @@ class BuildUnitCmd(Command):
     # building was an instance of Building
     # unit_type was a string in unit_kinds from units.py
 
-    _kind = 'build unit'
+    _kind = BUILD_UNIT
     _building = None
     _unit_kind = None
     _num_to_build = None
@@ -127,7 +130,7 @@ class BuildBuildingCmd(Command):
     # position was an instance of Position
     # this_is_a_help_build_command was a bool
 
-    _kind = 'build building'
+    _kind = BUILD_BUILDING
     _villagers = tuple()
     _building_class = None
     _position = None
@@ -191,7 +194,7 @@ class ResearchCmd(Command):
     # building was an instance of Building
     # thing_to_be_researched was an instance of a subclass of ResearchObject
 
-    _kind = 'research'
+    _kind = RESEARCH
     _building = None
     _thing_to_be_researched = None
 
@@ -223,7 +226,7 @@ class CollectResourceCmd(Command):
     # Prior format: ['collect resource', resource, ls_of_villagers]
     # resource was one of the classes Food, Gold, Stone, etc.
 
-    _kind = 'collect resource'
+    _kind = COLLECT_RESOURCE
     _resource = None
     _villagers = tuple()
 
@@ -264,7 +267,7 @@ class FarmCmd(Command):
     # Prior format: ['farm', farm, ls_of_villagers]
     # farm was an instance of Farm
 
-    _kind = 'farm'
+    _kind = FARM
     _farm = None
     _villagers = None
 
@@ -295,16 +298,16 @@ class FarmCmd(Command):
 
 class EndOfTurnCmd(Command):
     # Prior format: ['end of turn']
-    _kind = 'end of turn'
+    _kind = END_OF_TURN
 
 
 class QuitGameCmd(Command):
-    _kind = 'quit game'
+    _kind = QUIT_GAME
 
 
 class SaveGameCmd(Command):
     # Prior format: ['save game']
-    _kind = 'save game'
+    _kind = SAVE_GAME
 
 
 if __name__ == '__main__':

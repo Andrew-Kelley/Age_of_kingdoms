@@ -10,6 +10,8 @@ from buildings.bldng_class import BuildingUnderConstruction
 from command_handling.commands import Command, BuildUnitCmd, BuildBuildingCmd
 from command_handling.commands import CollectResourceCmd, ResearchCmd, FarmCmd
 from command_handling.commands import MoveCmd
+from command_handling.strings import NOW, LATER, BUILD_BUILDING, BUILD_UNIT
+from command_handling.strings import COLLECT_RESOURCE, MOVE, RESEARCH, FARM
 
 
 def insert_command(player, command):
@@ -49,17 +51,17 @@ def insert_command(player, command):
 
 
 def remove_unit_from_command_if_there(player, unit, command_type):
-    """If unit is in player.commands['now'][command_type], then this function removes
-    the unit from that command. If unit is not in player.commands['now'][command_type],
+    """If unit is in player.commands[NOW][command_type], then this function removes
+    the unit from that command. If unit is not in player.commands[NOW][command_type],
     this function does nothing.
 
     command_type should be one of the following:
-    'move', 'build building', 'collect resource', 'farm' """
-    if command_type not in ('move', 'build building', 'collect resource', 'farm'):
+    MOVE, BUILD_BUILDING, COLLECT_RESOURCE, FARM """
+    if command_type not in (MOVE, BUILD_BUILDING, COLLECT_RESOURCE, FARM):
         return
-    if unit in list(player.commands['now'][command_type]):
-        del player.commands['now'][command_type][unit]
-    if command_type == 'farm':
+    if unit in list(player.commands[NOW][command_type]):
+        del player.commands[NOW][command_type][unit]
+    if command_type == FARM:
         # if isinstance(unit, Villager):
         if unit.kind == 'villagers':
             farm = unit.farm_currently_farming
@@ -94,7 +96,7 @@ def insert_build_building_command(player, command):
         return
 
     for villager in villagers:
-        for command_type in ('move', 'collect resource', 'farm'):
+        for command_type in (MOVE, COLLECT_RESOURCE, FARM):
             remove_unit_from_command_if_there(player, villager, command_type)
 
     # The following few lines are to handle the situation that other villagers are already
@@ -124,24 +126,24 @@ def insert_build_building_command(player, command):
     for i, villager in enumerate(villagers):
         if isinstance(building, Farm):
             if i < 2:
-                player.commands['later']['farm'][villager] = building
+                player.commands[LATER][FARM][villager] = building
         delta = building_position - villager.position
         if delta.magnitude <= 6:
-            player.commands['now']['build building'][villager] = [building, building_position]
+            player.commands[NOW][BUILD_BUILDING][villager] = [building, building_position]
             villager.current_action = 'building {}'.format(building)
         else:
             new_command = MoveCmd()
             new_command.add_unit_with_delta(villager, delta)
             insert_move_command(player, new_command)
-            player.commands['later']['build building'][villager] = [building, building_position]
+            player.commands[LATER][BUILD_BUILDING][villager] = [building, building_position]
 
 
 def building_already_in_progress(player, building_class, position):
     """Returns the building instance if the player is already building an instance of
     building_class at position. Otherwise, this returns False."""
-    for time in ('now', 'later'):
-        for villager in player.commands[time]['build building']:
-            ls = player.commands[time]['build building'][villager]
+    for time in (NOW, LATER):
+        for villager in player.commands[time][BUILD_BUILDING]:
+            ls = player.commands[time][BUILD_BUILDING][villager]
             if ls[1] == position and \
                     ls[0].letter_abbreviation == building_class.letter_abbreviation:
                 return ls[0]
@@ -169,12 +171,12 @@ def insert_collect_resource_now_command(player, command):
     resource = command.resource
 
     for unit in command.villagers():
-        for command_type in ('move', 'build building', 'farm'):
+        for command_type in (MOVE, BUILD_BUILDING, FARM):
             remove_unit_from_command_if_there(player, unit, command_type)
 
     for villager in command.villagers():
         if villager.can_collect_resource_now(resource, player):
-            player.commands['now']['collect resource'][villager] = resource
+            player.commands[NOW][COLLECT_RESOURCE][villager] = resource
             villager.current_action = collecting_resource_action(resource.kind)
         else:
             villager.current_action = 'doing nothing'
@@ -193,7 +195,7 @@ def insert_collect_resource_later_command(player, command):
     villagers = command.villagers()
 
     for villager in villagers:
-        player.commands['later']['collect resource'][villager] = resource
+        player.commands[LATER][COLLECT_RESOURCE][villager] = resource
 
 
 # The following function could instead be named insert_a_command_of_type_move
@@ -202,19 +204,19 @@ def insert_move_command(player, command):
         return
 
     for unit, delta in command.units_and_deltas():
-        for command_type in ('build building', 'collect resource', 'farm'):
+        for command_type in (BUILD_BUILDING, COLLECT_RESOURCE, FARM):
             remove_unit_from_command_if_there(player, unit, command_type)
 
         unit.current_action = 'moving to {}'.format(unit.position + delta)
 
         if delta.magnitude > 15:
             beginning, the_rest = delta.beginning_plus_the_rest()
-            player.commands['now']['move'][unit] = beginning
-            player.commands['later']['move'][unit] = the_rest
+            player.commands[NOW][MOVE][unit] = beginning
+            player.commands[LATER][MOVE][unit] = the_rest
         else:
-            player.commands['now']['move'][unit] = delta
-            if unit in player.commands['later']['move']:
-                del player.commands['later']['move'][unit]
+            player.commands[NOW][MOVE][unit] = delta
+            if unit in player.commands[LATER][MOVE]:
+                del player.commands[LATER][MOVE][unit]
 
 
 def insert_move_later_command(player, command):
@@ -223,13 +225,13 @@ def insert_move_later_command(player, command):
         return
 
     for unit, delta in command.units_and_deltas():
-        player.commands['later']['move'][unit] = delta
+        player.commands[LATER][MOVE][unit] = delta
         unit.current_action = 'moving to {}'.format(unit.position + delta)
 
 
 def insert_build_unit_command(player, command):
-    """Modifies player.commands['now']['build unit'] and...
-    also modifies player.commands['later']['build unit']
+    """Modifies player.commands[NOW][BUILD_UNIT] and...
+    also modifies player.commands[LATER][BUILD_UNIT]
     """
     if not is_initialized_instance(command, BuildUnitCmd):
         return
@@ -254,9 +256,9 @@ def insert_build_unit_command(player, command):
 
     num_to_build_now = min(num_can_build, num_to_be_built)
     num_to_build_later = num_to_be_built - num_to_build_now
-    player.commands['now']['build unit'][building] = [unit_kind, num_to_build_now]
+    player.commands[NOW][BUILD_UNIT][building] = [unit_kind, num_to_build_now]
     if num_to_build_later > 0:
-        player.commands['later']['build unit'][building] = [unit_kind, num_to_build_later]
+        player.commands[LATER][BUILD_UNIT][building] = [unit_kind, num_to_build_later]
     return
 
 
@@ -296,13 +298,13 @@ def insert_research_command(player, command):
         print(thing_to_be_researched.name)
         return
     player.resources -= thing_to_be_researched.cost
-    if building in player.commands['now']['research']:
-        if building in player.commands['later']['research']:
-            player.commands['later']['research'][building].append(thing_to_be_researched)
+    if building in player.commands[NOW][RESEARCH]:
+        if building in player.commands[LATER][RESEARCH]:
+            player.commands[LATER][RESEARCH][building].append(thing_to_be_researched)
         else:
-            player.commands['later']['research'][building] = deque([thing_to_be_researched])
+            player.commands[LATER][RESEARCH][building] = deque([thing_to_be_researched])
     else:
-        player.commands['now']['research'][building] = thing_to_be_researched
+        player.commands[NOW][RESEARCH][building] = thing_to_be_researched
         print('Beginning the following research: {}\n'.format(thing_to_be_researched.name))
 
 
@@ -320,7 +322,7 @@ def insert_farm_command(player, command):
             if delta.magnitude >= 2:
                 villager.move_by(delta, game_map)
             if farm.number_of_farmers < 2:
-                player.commands['now']['farm'][villager] = farm
+                player.commands[NOW][FARM][villager] = farm
                 farm.add_farmer(villager)
                 villager.farm_currently_farming = farm
                 # TODO: Does the following print properly?
@@ -331,4 +333,4 @@ def insert_farm_command(player, command):
             new_command = MoveCmd()
             new_command.add_unit_with_delta(villager, delta)
             insert_move_command(player, new_command)
-            player.commands['later']['farm'][villager] = farm
+            player.commands[LATER][FARM][villager] = farm
