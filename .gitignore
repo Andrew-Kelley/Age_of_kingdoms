@@ -3,6 +3,9 @@ venv/
 *.idea
 __pycache__
 
+# I want to ignore complied Java progams:
+*.class
+
 # Why was this file added by my mac?
 .DS_Store
 
