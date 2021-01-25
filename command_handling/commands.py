@@ -3,10 +3,11 @@
 
 # Commands to add:
 # - attack a building or unit
-# - defend an area
+# - set selected military units' aggression level
 # - garrison units in buildings
 # - create a named "army" of military units
 # - create a named "group" of villagers
+# - add selected units to an already existing named "army" or "group"
 # - sell or buy a particular resource at the market
 # - give (or trade?) a resource with another player
 
