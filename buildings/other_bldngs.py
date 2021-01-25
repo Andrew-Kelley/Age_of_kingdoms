@@ -59,7 +59,8 @@ class TownCenter(Building):
         if self.initial_resource_to_collect:
             resource = self.initial_resource_to_collect
             command = CollectResourceCmd(resource, [new_villager])
-            if delta.magnitude <= 6:
+            collect_resource_now_bound = 6
+            if delta.magnitude <= collect_resource_now_bound:
                 insert_collect_resource_now_command(player, command)
             else:
                 insert_collect_resource_later_command(player, command)
