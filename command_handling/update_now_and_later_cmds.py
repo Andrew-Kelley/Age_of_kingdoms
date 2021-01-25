@@ -1,5 +1,6 @@
 from .insert_commands import number_of_units_can_build_in_one_turn
 from .insert_commands import collecting_resource_action
+from .insert_commands import MOVEMENT_BOUND
 from command_handling.strings import NOW, LATER, BUILD_BUILDING, BUILD_UNIT
 from command_handling.strings import COLLECT_RESOURCE, MOVE, RESEARCH, FARM
 
@@ -68,7 +69,7 @@ def update_move_commands(player):
 
     for unit in list(player.commands[LATER][MOVE]):
         delta = player.commands[LATER][MOVE][unit]
-        if delta.magnitude > 15:
+        if delta.magnitude > MOVEMENT_BOUND:
             beginning, the_rest = delta.beginning_plus_the_rest()
             player.commands[NOW][MOVE][unit] = beginning
             # The following line is necessary because the present function changed

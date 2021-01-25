@@ -13,6 +13,8 @@ from command_handling.commands import MoveCmd
 from command_handling.strings import NOW, LATER, BUILD_BUILDING, BUILD_UNIT
 from command_handling.strings import COLLECT_RESOURCE, MOVE, RESEARCH, FARM
 
+# The following is used to limit how far a unit can move in one turn:
+MOVEMENT_BOUND = 15
 
 def insert_command(player, command):
     if command is None:
@@ -209,7 +211,7 @@ def insert_move_command(player, command):
 
         unit.current_action = 'moving to {}'.format(unit.position + delta)
 
-        if delta.magnitude > 15:
+        if delta.magnitude > MOVEMENT_BOUND:
             beginning, the_rest = delta.beginning_plus_the_rest()
             player.commands[NOW][MOVE][unit] = beginning
             player.commands[LATER][MOVE][unit] = the_rest
