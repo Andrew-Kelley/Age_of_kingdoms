@@ -99,7 +99,12 @@ To print all villagers doing nothing type
 
 First select the unit or units to be moved.
 
-Next, type something like this:
+There are two ways you can command units to move. One is to command them
+to move to an absolute position on the map:
+"move to 50 75" (which moves them to the position with x coordinate 50 and
+y coordinate 75)
+
+Another is to specify a position relative to the unit's current position:
 "move w5"  (meaning this: move west 5, i.e. left 5)
 or
 "move e2 n6" (meaning: move east 2 and north 6, i.e. move left 2 and up 6)
@@ -113,10 +118,6 @@ move south 2 and east 13, etc. Later on, when siege weapons are implemented,
 those units will probably be able to move less per turn. Also, mounted troops
 (i.e. knights) will be able to move more per turn.
 
-
-NOTE: Later on, it would be nice if you could simply command units
-to move to an actual map location. So the following type of command
-should be implemented: "move to 70 40".
 
 --------------------------------
 ---------TO BUILD UNITS---------
@@ -312,7 +313,7 @@ There is an unfinished help system already built into the game.
 You can type this command:
 "print commands"
 
-TODO: Have the in-game help system print parts of this tutorial.
+TODO: Maybe have the in-game help system print parts of this tutorial.
 
 Note:
 Suppose you have a current population of 18 and a population cap
