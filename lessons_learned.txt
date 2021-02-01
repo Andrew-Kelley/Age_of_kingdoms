@@ -28,7 +28,7 @@ represent user commands, then the change would have been harder to make.
 
 When I started this project in 2018, I had never heard of encapsulation
 or information hiding. I hadn't yet heard about the idea of separating the
-implementation from the interface. (I first read about it this year, in 2020,
+implementation from the interface. (I first read about it in 2020,
 from the book "Code Complete 2" by Steve McConnell.)
 
 Disclaimer: I have not yet refactored player.commands with encapsulation in mind.
