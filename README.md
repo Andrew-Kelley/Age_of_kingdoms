@@ -1,6 +1,13 @@
 ## Age of Kingdoms
 This is a turn-based, text-based strategy game inspired by Age of Empires.
 
+### Potential employers, please read
+I started this project before I knew the basics of OOP. In particular, I had
+never even heard of information hiding. Right now, player.commands should be
+encapsulated (as should player.messages). While I have fixed other issues,
+I haven't fixed this yet. Also, I should have made more unit tests. For
+lessons I've learned since starting this project, see lessons_learned.txt
+
 ### Purpose
 Build a major project in Python, one that is significantly more
 substantial than anything I've done before. Also, I want to practice
