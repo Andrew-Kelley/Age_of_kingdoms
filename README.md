@@ -1,17 +1,16 @@
 ## Age of Kingdoms
-This is a turn-based, text-based strategy game inspired by Age of Empires.
+This is a turn-based, text-based strategy game inspired by the real time strategy game Age of Empires.
 
 ### Potential employers, please read
-I started this project before I knew the basics of OOP. In particular, I had
-never even heard of information hiding. Right now, player.commands should be
-encapsulated (as should player.messages). While I have fixed other issues,
-I haven't fixed this yet. Also, I should have made more unit tests. For
-lessons I've learned since starting this project, see lessons_learned.txt
+I started this project before I knew anything about OOP. For instance, I hadn't
+even heard of information hiding at that time. Also, note that this project
+is far from complete. Finally, note that all the code was written before working 
+as a software engineer.
 
 ### Purpose
 Build a major project in Python, one that is significantly more
 substantial than anything I've done before. Also, I want to practice
-doing some object-oriented programming.
+doing object-oriented programming.
 
 ### Game manual
 For a description of how to use this program, read manual.txt
